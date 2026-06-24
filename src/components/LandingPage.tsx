@@ -97,6 +97,8 @@ const stepTransition: any = {
 };
 
 export default function LandingPage() {
+  // Modal de checkout
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   // Controle de etapas do Checkout: 'form' -> 'pix'
   const [checkoutStep, setCheckoutStep] = useState<'form' | 'pix'>('form');
   
@@ -142,11 +144,26 @@ export default function LandingPage() {
   };
 
   const scrollToCheckout = () => {
-    const el = document.getElementById('checkout');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    setCheckoutStep('form');
+    setCheckoutOpen(true);
   };
+
+  // Bloqueia scroll do body quando modal aberto
+  useEffect(() => {
+    if (checkoutOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [checkoutOpen]);
+
+  // ESC fecha modal
+  useEffect(() => {
+    if (!checkoutOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setCheckoutOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [checkoutOpen]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,8 +179,6 @@ export default function LandingPage() {
         return;
       }
       setCheckoutStep('pix');
-      const el = document.getElementById('checkout-header');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 900);
   };
 
@@ -637,10 +652,37 @@ export default function LandingPage() {
 
 
         {/* ===================================================================== */}
-        {/* 7. CHECKOUT MULTI-STEP COM ANIMAÇÃO APPLE (STEP 1: FORM -> STEP 2: PIX) */}
+        {/* 7. CHECKOUT MODAL (abre via botões) */}
         {/* ===================================================================== */}
-        <section id="checkout" className="pt-8 max-w-4xl mx-auto scroll-mt-24">
-          <div className="glass-panel rounded-3xl p-6 sm:p-12 md:p-16 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
+        <AnimatePresence>
+          {checkoutOpen && (
+            <motion.div
+              key="checkout-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-xl overflow-y-auto"
+              onClick={() => setCheckoutOpen(false)}
+            >
+              <motion.div
+                key="checkout-card"
+                initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.97 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-4xl my-auto"
+              >
+                <button
+                  type="button"
+                  onClick={() => setCheckoutOpen(false)}
+                  aria-label="Fechar"
+                  className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 z-20 w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform cursor-pointer font-bold text-lg"
+                >
+                  ×
+                </button>
+          <div className="glass-panel rounded-3xl p-6 sm:p-12 md:p-14 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)] max-h-[92vh] overflow-y-auto">
             
             {/* Efeito luminoso de fundo */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-white/[0.08] rounded-full blur-[100px] pointer-events-none" />
@@ -973,7 +1015,10 @@ export default function LandingPage() {
             </div>
 
           </div>
-        </section>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
 
         {/* PSICOLOGIA REVERSA FINAL BANNER */}
