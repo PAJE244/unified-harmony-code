@@ -838,7 +838,7 @@ export default function LandingPage() {
                         </div>
                         <div className="text-center pt-1">
                           <span className="text-xs font-mono font-black tracking-wider uppercase px-3 py-1.5 bg-black text-white rounded-full block">
-                            PIX OFICIAL • R$ 9,90
+                            PIX OFICIAL • {settings.priceLabel}
                           </span>
                         </div>
                       </div>
