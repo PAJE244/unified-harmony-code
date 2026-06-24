@@ -190,7 +190,7 @@ export default function LandingPage() {
         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-black text-[10px] font-extrabold tracking-wider animate-pulse">
           <Flame className="w-3 h-3 text-black fill-black" /> LOTE OFICIAL
         </span>
-        <span className="truncate">Últimos 37 acessos liberados por R$9,90. O valor sobe amanhã.</span>
+        <span className="truncate">{settings.loteText}</span>
       </motion.div>
 
       {/* NAVEGAÇÃO PRINCIPAL */}
