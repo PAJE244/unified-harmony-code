@@ -1152,6 +1152,17 @@ export default function PlatformApp() {
                     <Key className="w-4 h-4" />
                     <span>Minhas Credenciais</span>
                   </button>
+                  <button
+                    onClick={() => setAdminTab("site")}
+                    className={`px-5 py-3 border-b-2 text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-2 flex-shrink-0 ${
+                      adminTab === "site"
+                        ? "border-white text-white"
+                        : "border-transparent text-[#444444] hover:text-[#666666]"
+                    }`}
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span>Configurações do Site</span>
+                  </button>
                 </div>
 
                 {/* Tab Content: Users Management */}
