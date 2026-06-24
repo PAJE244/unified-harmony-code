@@ -1015,7 +1015,10 @@ export default function LandingPage() {
             </div>
 
           </div>
-        </section>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
 
         {/* PSICOLOGIA REVERSA FINAL BANNER */}
