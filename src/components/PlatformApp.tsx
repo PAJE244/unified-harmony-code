@@ -3,11 +3,11 @@ import {
   Terminal, Shield, User, Lock, LogOut, Search, Plus,
   Edit2, Trash2, UserPlus, Users, Activity, FileCode,
   AlertTriangle, RefreshCw, Eye, EyeOff, UserCheck,
-  UserX, X, ChevronRight, Menu, HelpCircle, Key, CheckCircle,
+  UserX, X, ChevronRight, Menu, HelpCircle, Key, CheckCircle, Settings,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { apiFetch, subscribeRealtime } from "@/lib/scriptando-db";
-import type { PublicUser as UserType, DbScript as ScriptType, DbLog as ActionLogType } from "@/lib/scriptando-db";
+import { apiFetch, subscribeRealtime, getSiteSettings, updateSiteSettings, DEFAULT_SETTINGS } from "@/lib/scriptando-db";
+import type { PublicUser as UserType, DbScript as ScriptType, DbLog as ActionLogType, SiteSettings } from "@/lib/scriptando-db";
 
 interface ToastType { id: string; message: string; type: "success" | "error" | "info" | "warning"; }
 
