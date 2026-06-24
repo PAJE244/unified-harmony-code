@@ -179,8 +179,6 @@ export default function LandingPage() {
         return;
       }
       setCheckoutStep('pix');
-      const el = document.getElementById('checkout-header');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 900);
   };
 
