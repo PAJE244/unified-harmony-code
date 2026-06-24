@@ -126,15 +126,6 @@ function load(): DbSchema {
     if (!parsed.sessions) parsed.sessions = {};
     if (!parsed.settings) parsed.settings = { ...DEFAULT_SETTINGS };
     else parsed.settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      const fresh = defaultDb();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
-      return fresh;
-    }
-    const parsed = JSON.parse(raw) as DbSchema;
-    if (!parsed.users || !parsed.scripts || !parsed.logs) throw new Error("bad");
-    if (!parsed.sessions) parsed.sessions = {};
     return parsed;
   } catch {
     const fresh = defaultDb();
