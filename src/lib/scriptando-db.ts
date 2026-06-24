@@ -148,7 +148,8 @@ type RealtimeMsg =
   | { type: "scripts_updated"; data: DbScript[] }
   | { type: "account_modified"; data: { passwordChanged: boolean; usernameChanged: boolean; user: PublicUser }; targetUserId: string }
   | { type: "account_deleted"; message: string; targetUserId: string }
-  | { type: "account_banned"; message: string; targetUserId: string };
+  | { type: "account_banned"; message: string; targetUserId: string }
+  | { type: "settings_updated"; data: SiteSettings };
 
 const channel: BroadcastChannel | null =
   typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("scriptando-bus") : null;
