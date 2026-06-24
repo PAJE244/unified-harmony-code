@@ -245,10 +245,10 @@ export default function LandingPage() {
         </motion.div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 pt-8 pb-32 space-y-32 md:space-y-44">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-24 sm:pb-32 space-y-20 sm:space-y-32 md:space-y-44">
 
         {/* 1. SEÇÃO HERÓI */}
-        <section className="text-center space-y-8 pt-6 md:pt-16 max-w-4xl mx-auto relative">
+        <section className="text-center space-y-6 sm:space-y-8 pt-2 sm:pt-6 md:pt-16 max-w-4xl mx-auto relative">
           
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
