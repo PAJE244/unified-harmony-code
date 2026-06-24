@@ -67,8 +67,30 @@ export default function PlatformApp() {
   const [myCredsMessage, setMyCredsMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   // Admin Panel Active Tab
-  const [adminTab, setAdminTab] = useState<"users" | "scripts" | "logs" | "profile">("users");
+  const [adminTab, setAdminTab] = useState<"users" | "scripts" | "logs" | "profile" | "site">("users");
   const [userSearchQuery, setUserSearchQuery] = useState("");
+
+  // Site settings (admin editable)
+  const [siteForm, setSiteForm] = useState<SiteSettings>(() => getSiteSettings());
+  const [siteSaveMsg, setSiteSaveMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  useEffect(() => { setSiteForm(getSiteSettings()); }, [adminTab]);
+  const handleSaveSite = (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      updateSiteSettings(siteForm);
+      setSiteSaveMsg({ text: "Configurações salvas! A landing page foi atualizada em tempo real.", type: "success" });
+      showToast("Configurações do site atualizadas.", "success");
+      setTimeout(() => setSiteSaveMsg(null), 4000);
+    } catch (err: any) {
+      setSiteSaveMsg({ text: err?.message || "Erro ao salvar.", type: "error" });
+    }
+  };
+  const handleResetSite = () => {
+    if (!confirm("Restaurar configurações padrão?")) return;
+    const next = updateSiteSettings({ ...DEFAULT_SETTINGS });
+    setSiteForm(next);
+    showToast("Configurações restauradas para o padrão.", "info");
+  };
 
   // Toast System
   const [toasts, setToasts] = useState<ToastType[]>([]);
