@@ -144,11 +144,26 @@ export default function LandingPage() {
   };
 
   const scrollToCheckout = () => {
-    const el = document.getElementById('checkout');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    setCheckoutStep('form');
+    setCheckoutOpen(true);
   };
+
+  // Bloqueia scroll do body quando modal aberto
+  useEffect(() => {
+    if (checkoutOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [checkoutOpen]);
+
+  // ESC fecha modal
+  useEffect(() => {
+    if (!checkoutOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setCheckoutOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [checkoutOpen]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
