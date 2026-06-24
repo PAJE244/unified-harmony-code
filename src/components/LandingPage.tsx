@@ -97,6 +97,8 @@ const stepTransition: any = {
 };
 
 export default function LandingPage() {
+  // Modal de checkout
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   // Controle de etapas do Checkout: 'form' -> 'pix'
   const [checkoutStep, setCheckoutStep] = useState<'form' | 'pix'>('form');
   
