@@ -900,7 +900,7 @@ export default function LandingPage() {
                         ) : (
                           <div className="space-y-3">
                             <span className="text-xs sm:text-sm font-mono text-neutral-300 block">
-                              1. Copie a chave e-mail abaixo e digite o valor de <strong className="text-white">R$9,90</strong> no seu banco:
+                              1. Copie a chave e-mail abaixo e digite o valor de <strong className="text-white">{settings.priceLabel}</strong> no seu banco:
                             </span>
                             <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                               <input 
