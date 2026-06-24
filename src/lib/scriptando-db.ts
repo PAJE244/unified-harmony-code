@@ -59,7 +59,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   pixAmount: "9.90",
   pixName: "SCRIPTANDO PAJE",
   pixCity: "CURITIBA",
-  whatsappNumber: "5541999999999",
+  whatsappNumber: "5547991295765",
   supportEmail: "gabrieldacechen6@gmail.com",
   heroTitle: "CANSADO DE PERDER TEMPO COM ATIVIDADES ESCOLARES?",
   heroSubtitle: "Automatize Khan Academy, Quizizz, Redação PR, Inglês PR e Leia PR em segundos.",

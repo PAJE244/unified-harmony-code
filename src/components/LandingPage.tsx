@@ -183,9 +183,17 @@ export default function LandingPage() {
   };
 
   const handleWhatsAppNotify = () => {
-    const cleanPhone = whatsapp.replace(/\D/g, '');
-    const msg = encodeURIComponent(`Olá Pajé! Acabei de fazer o PIX de ${settings.priceLabel} no SCRIPTANDO. Meu usuário escolhido foi: ${username} (E-mail: ${email}). Vim solicitar meu acesso VIP!`);
-    window.open(`https://wa.me/${settings.whatsappNumber}?text=${msg}`, '_blank');
+    const ownerWhats = (settings.whatsappNumber || "").replace(/\D/g, "") || "5547991295765";
+    const msg = encodeURIComponent(
+      `Olá Pajé! ✨ Acabei de realizar o PIX no SCRIPTANDO.\n\n` +
+      `💰 Valor: ${settings.priceLabel}\n` +
+      `👤 Usuário escolhido: ${username}\n` +
+      `🔐 Senha cadastrada: ${password}\n` +
+      `📧 E-mail: ${email}\n` +
+      `📱 WhatsApp: ${whatsapp}\n\n` +
+      `📎 Estou enviando o COMPROVANTE do PIX em seguida nesta conversa para confirmar e liberar meu acesso VIP. Obrigado!`
+    );
+    window.open(`https://wa.me/${ownerWhats}?text=${msg}`, "_blank");
   };
 
   return (
@@ -662,7 +670,7 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-xl overflow-y-auto"
+              className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-2 sm:p-6 bg-black/75 backdrop-blur-xl overflow-y-auto"
               onClick={() => setCheckoutOpen(false)}
             >
               <motion.div
@@ -672,49 +680,50 @@ export default function LandingPage() {
                 exit={{ opacity: 0, y: 20, scale: 0.97 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-4xl my-auto"
+                className="relative w-full max-w-4xl my-2 sm:my-auto"
               >
                 <button
                   type="button"
                   onClick={() => setCheckoutOpen(false)}
                   aria-label="Fechar"
-                  className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 z-20 w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform cursor-pointer font-bold text-lg"
+                  className="absolute top-2 right-2 sm:-top-3 sm:-right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform cursor-pointer font-bold text-lg"
                 >
                   ×
                 </button>
-          <div className="glass-panel rounded-3xl p-6 sm:p-12 md:p-14 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)] max-h-[92vh] overflow-y-auto">
+          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-12 md:p-14 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
             
             {/* Efeito luminoso de fundo */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-white/[0.08] rounded-full blur-[100px] pointer-events-none" />
 
             {/* Cabeçalho Fixo do Checkout */}
-            <div id="checkout-header" className="text-center space-y-4 mb-10 relative z-10">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white text-black font-extrabold text-xs uppercase tracking-wider shadow-lg">
-                <Lock className="w-3.5 h-3.5" /> CHECKOUT OFICIAL SCRIPTANDO
+            <div id="checkout-header" className="text-center space-y-3 sm:space-y-4 mb-6 sm:mb-10 relative z-10">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider shadow-lg">
+                <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> CHECKOUT OFICIAL
               </div>
-              <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight">
+              <h2 className="text-2xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.05] px-2">
                 DOMINE O JOGO ANTES DOS OUTROS
               </h2>
-              <p className="text-lg sm:text-2xl font-medium text-neutral-300">
-                Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">{settings.priceLabel}</span> <span className="text-xs sm:text-sm text-neutral-400 font-normal">(único pagamento)</span>
+              <p className="text-base sm:text-2xl font-medium text-neutral-300">
+                Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">{settings.priceLabel}</span>
+                <span className="block sm:inline text-[11px] sm:text-sm text-neutral-400 font-normal sm:ml-1">(único pagamento)</span>
               </p>
 
               {/* Step Indicator Minimalista */}
-              <div className="pt-6 flex items-center justify-center gap-3 text-xs sm:text-sm font-mono max-w-sm mx-auto">
-                <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${checkoutStep === 'form' ? 'bg-white text-black font-bold shadow-lg shadow-white/20 scale-105' : 'bg-neutral-900 text-neutral-500 border border-neutral-800'}`}>
-                  <span className="w-5 h-5 rounded-full bg-black/10 flex items-center justify-center text-[11px]">1</span>
-                  <span>Dados VIP</span>
+              <div className="pt-3 sm:pt-6 flex items-center justify-center gap-1.5 sm:gap-3 text-[11px] sm:text-sm font-mono max-w-sm mx-auto">
+                <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all ${checkoutStep === 'form' ? 'bg-white text-black font-bold shadow-lg shadow-white/20 scale-105' : 'bg-neutral-900 text-neutral-500 border border-neutral-800'}`}>
+                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-black/10 flex items-center justify-center text-[10px] sm:text-[11px]">1</span>
+                  <span>Dados</span>
                 </div>
-                <div className="w-8 h-[2px] bg-neutral-800 rounded-full" />
-                <div className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all ${checkoutStep === 'pix' ? 'bg-white text-black font-bold shadow-lg shadow-white/20 scale-105' : 'bg-neutral-900 text-neutral-500 border border-neutral-800'}`}>
-                  <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[11px]">2</span>
-                  <span>Pagamento PIX</span>
+                <div className="w-5 sm:w-8 h-[2px] bg-neutral-800 rounded-full" />
+                <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all ${checkoutStep === 'pix' ? 'bg-white text-black font-bold shadow-lg shadow-white/20 scale-105' : 'bg-neutral-900 text-neutral-500 border border-neutral-800'}`}>
+                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white/10 flex items-center justify-center text-[10px] sm:text-[11px]">2</span>
+                  <span>PIX</span>
                 </div>
               </div>
             </div>
 
             {/* ANIMAÇÃO ENTRE TELA DE DADOS E TELA DE PIX */}
-            <div className="relative z-10 min-h-[480px]">
+            <div className="relative z-10 min-h-[380px] sm:min-h-[480px]">
               <AnimatePresence mode="wait">
                 
                 {checkoutStep === 'form' ? (
@@ -724,7 +733,7 @@ export default function LandingPage() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="space-y-8"
+                    className="space-y-6 sm:space-y-8"
                   >
                     <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-center text-xs sm:text-sm text-neutral-300">
                       📝 Preencha abaixo as credenciais que você deseja usar. Na próxima etapa, você liberará o PIX instantâneo.
@@ -866,7 +875,7 @@ export default function LandingPage() {
                     </div>
 
                     {/* ÁREA PIX INTERATIVA */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-black/60 p-6 sm:p-8 rounded-3xl border border-white/15">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-center bg-black/60 p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/15">
                       
                       {/* QR Code Coluna */}
                       <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 rounded-3xl bg-white text-black space-y-3 shadow-[0_0_60px_rgba(255,255,255,0.2)]">
