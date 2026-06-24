@@ -194,7 +194,7 @@ export default function LandingPage() {
       </motion.div>
 
       {/* NAVEGAÇÃO PRINCIPAL */}
-      <header className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between relative z-10">
+      <header className="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-8 flex items-center justify-between gap-3 relative z-10">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
