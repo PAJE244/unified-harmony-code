@@ -1458,6 +1458,96 @@ export default function PlatformApp() {
                   </div>
                 )}
 
+                {/* Tab Content: Site Settings (PIX, WhatsApp, hero) */}
+                {adminTab === "site" && (
+                  <div className="max-w-3xl">
+                    <div className="bg-[#0a0a0a] border border-[#222222] p-6 sm:p-8 rounded-[32px] space-y-6">
+                      <div className="flex items-start justify-between gap-3 flex-wrap">
+                        <div>
+                          <h3 className="font-bold text-lg text-white flex items-center gap-2"><Settings className="w-5 h-5" /> Configurações da Landing Page</h3>
+                          <p className="text-xs text-[#666666] mt-1">Edite o PIX, WhatsApp e textos principais. As alterações aparecem ao vivo na landing.</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleResetSite}
+                          className="text-[10px] uppercase tracking-widest font-semibold px-3 py-2 rounded-xl border border-[#222222] text-[#888] hover:text-white hover:border-[#444]"
+                        >
+                          Restaurar padrão
+                        </button>
+                      </div>
+
+                      <form onSubmit={handleSaveSite} className="space-y-5">
+                        <fieldset className="space-y-4">
+                          <legend className="text-[10px] font-mono uppercase tracking-widest text-[#666] mb-2">Pagamento PIX</legend>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Chave PIX</label>
+                              <input value={siteForm.pixKey} onChange={(e) => setSiteForm({ ...siteForm, pixKey: e.target.value })} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none" />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Valor (ex: 9.90)</label>
+                              <input value={siteForm.pixAmount} onChange={(e) => setSiteForm({ ...siteForm, pixAmount: e.target.value })} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none font-mono" />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Nome do Recebedor</label>
+                              <input value={siteForm.pixName} onChange={(e) => setSiteForm({ ...siteForm, pixName: e.target.value })} maxLength={25} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none" />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Cidade</label>
+                              <input value={siteForm.pixCity} onChange={(e) => setSiteForm({ ...siteForm, pixCity: e.target.value })} maxLength={15} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none" />
+                            </div>
+                            <div className="sm:col-span-2">
+                              <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Rótulo do Preço (exibido na landing)</label>
+                              <input value={siteForm.priceLabel} onChange={(e) => setSiteForm({ ...siteForm, priceLabel: e.target.value })} placeholder="R$9,90" className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none" />
+                            </div>
+                          </div>
+                        </fieldset>
+
+                        <fieldset className="space-y-4 pt-2 border-t border-[#1a1a1a]">
+                          <legend className="text-[10px] font-mono uppercase tracking-widest text-[#666] mb-2">Contato</legend>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">WhatsApp (com DDI, só números)</label>
+                              <input value={siteForm.whatsappNumber} onChange={(e) => setSiteForm({ ...siteForm, whatsappNumber: e.target.value.replace(/\D/g, '') })} placeholder="5541999999999" className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none font-mono" />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">E-mail de suporte</label>
+                              <input type="email" value={siteForm.supportEmail} onChange={(e) => setSiteForm({ ...siteForm, supportEmail: e.target.value })} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none" />
+                            </div>
+                          </div>
+                        </fieldset>
+
+                        <fieldset className="space-y-4 pt-2 border-t border-[#1a1a1a]">
+                          <legend className="text-[10px] font-mono uppercase tracking-widest text-[#666] mb-2">Textos principais</legend>
+                          <div>
+                            <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Barra de urgência (topo)</label>
+                            <input value={siteForm.loteText} onChange={(e) => setSiteForm({ ...siteForm, loteText: e.target.value })} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Título principal (Hero)</label>
+                            <textarea rows={2} value={siteForm.heroTitle} onChange={(e) => setSiteForm({ ...siteForm, heroTitle: e.target.value })} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none resize-none" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-mono uppercase tracking-wider text-[#444] mb-2">Subtítulo curto</label>
+                            <textarea rows={2} value={siteForm.heroSubtitle} onChange={(e) => setSiteForm({ ...siteForm, heroSubtitle: e.target.value })} className="w-full bg-[#111] border border-[#222] focus:border-[#444] rounded-xl py-3 px-4 text-sm text-white outline-none resize-none" />
+                          </div>
+                        </fieldset>
+
+                        {siteSaveMsg && (
+                          <div className={`p-4 text-xs font-medium rounded-xl border ${siteSaveMsg.type === "success" ? "bg-emerald-950/20 border-emerald-500/20 text-emerald-300" : "bg-rose-950/20 border-rose-500/20 text-rose-300"}`}>
+                            {siteSaveMsg.text}
+                          </div>
+                        )}
+
+                        <button type="submit" className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all active:scale-98">
+                          Salvar configurações
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                )}
+
+
               </div>
             )}
 
