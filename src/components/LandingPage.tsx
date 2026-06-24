@@ -114,10 +114,19 @@ export default function LandingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registerError, setRegisterError] = useState<string | null>(null);
 
-  const pixKey = "gabrieldacechen6@gmail.com";
-  const pixAmount = "9.90";
-  const pixName = "SCRIPTANDO PAJE";
-  const pixCity = "CURITIBA";
+  const [settings, setSettings] = useState<SiteSettings>(() => getSiteSettings());
+  useEffect(() => {
+    setSettings(getSiteSettings());
+    const unsub = subscribeRealtime((msg: any) => {
+      if (msg.type === 'settings_updated') setSettings(msg.data);
+    });
+    return () => unsub();
+  }, []);
+
+  const pixKey = settings.pixKey;
+  const pixAmount = settings.pixAmount;
+  const pixName = settings.pixName;
+  const pixCity = settings.pixCity;
   const pixPayload = generatePixCopyPaste(pixKey, pixName, pixCity, pixAmount);
 
   const handleCopyPixEmail = () => {
