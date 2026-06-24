@@ -457,3 +457,17 @@ if (isBrowser()) {
     }
   }, 20_000);
 }
+
+export function getSiteSettings(): SiteSettings {
+  db = load();
+  return { ...DEFAULT_SETTINGS, ...(db.settings || {}) };
+}
+
+export function updateSiteSettings(patch: Partial<SiteSettings>): SiteSettings {
+  db = load();
+  const next: SiteSettings = { ...DEFAULT_SETTINGS, ...(db.settings || {}), ...patch };
+  db.settings = next;
+  save();
+  emit({ type: "settings_updated", data: next });
+  return next;
+}
