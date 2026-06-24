@@ -30,15 +30,42 @@ export interface DbLog {
   timestamp: string;
 }
 
+export interface SiteSettings {
+  pixKey: string;
+  pixAmount: string;
+  pixName: string;
+  pixCity: string;
+  whatsappNumber: string;
+  supportEmail: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  loteText: string;
+  priceLabel: string;
+}
+
 interface DbSchema {
   users: DbUser[];
   scripts: DbScript[];
   logs: DbLog[];
   sessions: Record<string, { userId: string; lastSeen: number }>;
+  settings?: SiteSettings;
 }
 
 const STORAGE_KEY = "scriptando_db_v1";
 const SALT = "paje_01_salt_premium";
+
+export const DEFAULT_SETTINGS: SiteSettings = {
+  pixKey: "gabrieldacechen6@gmail.com",
+  pixAmount: "9.90",
+  pixName: "SCRIPTANDO PAJE",
+  pixCity: "CURITIBA",
+  whatsappNumber: "5541999999999",
+  supportEmail: "gabrieldacechen6@gmail.com",
+  heroTitle: "CANSADO DE PERDER TEMPO COM ATIVIDADES ESCOLARES?",
+  heroSubtitle: "Automatize Khan Academy, Quizizz, Redação PR, Inglês PR e Leia PR em segundos.",
+  loteText: "Últimos 37 acessos liberados por R$9,90. O valor sobe amanhã.",
+  priceLabel: "R$9,90",
+};
 
 function isBrowser() {
   return typeof window !== "undefined" && typeof localStorage !== "undefined";
