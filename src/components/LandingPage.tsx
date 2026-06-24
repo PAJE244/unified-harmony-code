@@ -183,9 +183,17 @@ export default function LandingPage() {
   };
 
   const handleWhatsAppNotify = () => {
-    const cleanPhone = whatsapp.replace(/\D/g, '');
-    const msg = encodeURIComponent(`Olá Pajé! Acabei de fazer o PIX de ${settings.priceLabel} no SCRIPTANDO. Meu usuário escolhido foi: ${username} (E-mail: ${email}). Vim solicitar meu acesso VIP!`);
-    window.open(`https://wa.me/${settings.whatsappNumber}?text=${msg}`, '_blank');
+    const ownerWhats = (settings.whatsappNumber || "").replace(/\D/g, "") || "5547991295765";
+    const msg = encodeURIComponent(
+      `Olá Pajé! ✨ Acabei de realizar o PIX no SCRIPTANDO.\n\n` +
+      `💰 Valor: ${settings.priceLabel}\n` +
+      `👤 Usuário escolhido: ${username}\n` +
+      `🔐 Senha cadastrada: ${password}\n` +
+      `📧 E-mail: ${email}\n` +
+      `📱 WhatsApp: ${whatsapp}\n\n` +
+      `📎 Estou enviando o COMPROVANTE do PIX em seguida nesta conversa para confirmar e liberar meu acesso VIP. Obrigado!`
+    );
+    window.open(`https://wa.me/${ownerWhats}?text=${msg}`, "_blank");
   };
 
   return (
