@@ -875,7 +875,7 @@ export default function LandingPage() {
                     </div>
 
                     {/* ÁREA PIX INTERATIVA */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-black/60 p-6 sm:p-8 rounded-3xl border border-white/15">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-center bg-black/60 p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-white/15">
                       
                       {/* QR Code Coluna */}
                       <div className="lg:col-span-5 flex flex-col items-center justify-center p-6 rounded-3xl bg-white text-black space-y-3 shadow-[0_0_60px_rgba(255,255,255,0.2)]">
