@@ -654,7 +654,7 @@ export default function LandingPage() {
                 DOMINE O JOGO ANTES DOS OUTROS
               </h2>
               <p className="text-lg sm:text-2xl font-medium text-neutral-300">
-                Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">R$9,90</span> <span className="text-xs sm:text-sm text-neutral-400 font-normal">(único pagamento)</span>
+                Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">{settings.priceLabel}</span> <span className="text-xs sm:text-sm text-neutral-400 font-normal">(único pagamento)</span>
               </p>
 
               {/* Step Indicator Minimalista */}
