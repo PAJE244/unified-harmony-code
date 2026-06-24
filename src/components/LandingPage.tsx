@@ -519,7 +519,7 @@ export default function LandingPage() {
               },
               {
                 step: "02",
-                title: "Efetue o PIX de R$9,90",
+                title: `Efetue o PIX de ${settings.priceLabel}`,
                 desc: "Na próxima tela do checkout, copie o BR Code oficial ou a chave e-mail e faça o PIX de pagamento único."
               },
               {
