@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from '@tanstack/react-router';
-import { registerPublicUser } from '@/lib/scriptando-db';
+import { registerPublicUser, getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
   Zap, 
   Clock, 
@@ -114,10 +114,19 @@ export default function LandingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registerError, setRegisterError] = useState<string | null>(null);
 
-  const pixKey = "gabrieldacechen6@gmail.com";
-  const pixAmount = "9.90";
-  const pixName = "SCRIPTANDO PAJE";
-  const pixCity = "CURITIBA";
+  const [settings, setSettings] = useState<SiteSettings>(() => getSiteSettings());
+  useEffect(() => {
+    setSettings(getSiteSettings());
+    const unsub = subscribeRealtime((msg: any) => {
+      if (msg.type === 'settings_updated') setSettings(msg.data);
+    });
+    return () => unsub();
+  }, []);
+
+  const pixKey = settings.pixKey;
+  const pixAmount = settings.pixAmount;
+  const pixName = settings.pixName;
+  const pixCity = settings.pixCity;
   const pixPayload = generatePixCopyPaste(pixKey, pixName, pixCity, pixAmount);
 
   const handleCopyPixEmail = () => {
@@ -160,8 +169,8 @@ export default function LandingPage() {
 
   const handleWhatsAppNotify = () => {
     const cleanPhone = whatsapp.replace(/\D/g, '');
-    const msg = encodeURIComponent(`Olá Pajé! Acabei de fazer o PIX de R$9,90 no SCRIPTANDO. Meu usuário escolhido foi: ${username} (E-mail: ${email}). Vim solicitar meu acesso VIP!`);
-    window.open(`https://wa.me/5541999999999?text=${msg}`, '_blank');
+    const msg = encodeURIComponent(`Olá Pajé! Acabei de fazer o PIX de ${settings.priceLabel} no SCRIPTANDO. Meu usuário escolhido foi: ${username} (E-mail: ${email}). Vim solicitar meu acesso VIP!`);
+    window.open(`https://wa.me/${settings.whatsappNumber}?text=${msg}`, '_blank');
   };
 
   return (
@@ -181,11 +190,11 @@ export default function LandingPage() {
         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-black text-[10px] font-extrabold tracking-wider animate-pulse">
           <Flame className="w-3 h-3 text-black fill-black" /> LOTE OFICIAL
         </span>
-        <span className="truncate">Últimos 37 acessos liberados por R$9,90. O valor sobe amanhã.</span>
+        <span className="truncate">{settings.loteText}</span>
       </motion.div>
 
       {/* NAVEGAÇÃO PRINCIPAL */}
-      <header className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between relative z-10">
+      <header className="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-8 flex items-center justify-between gap-3 relative z-10">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -236,10 +245,10 @@ export default function LandingPage() {
         </motion.div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 pt-8 pb-32 space-y-32 md:space-y-44">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-24 sm:pb-32 space-y-20 sm:space-y-32 md:space-y-44">
 
         {/* 1. SEÇÃO HERÓI */}
-        <section className="text-center space-y-8 pt-6 md:pt-16 max-w-4xl mx-auto relative">
+        <section className="text-center space-y-6 sm:space-y-8 pt-2 sm:pt-6 md:pt-16 max-w-4xl mx-auto relative">
           
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -254,9 +263,9 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-gradient leading-[1.06]"
+            className="text-[2rem] leading-[1.05] sm:text-6xl md:text-7xl font-black tracking-tight text-gradient"
           >
-            CANSADO DE PERDER TEMPO COM ATIVIDADES ESCOLARES?
+            {settings.heroTitle}
           </motion.h1>
 
           <motion.p 
@@ -510,7 +519,7 @@ export default function LandingPage() {
               },
               {
                 step: "02",
-                title: "Efetue o PIX de R$9,90",
+                title: `Efetue o PIX de ${settings.priceLabel}`,
                 desc: "Na próxima tela do checkout, copie o BR Code oficial ou a chave e-mail e faça o PIX de pagamento único."
               },
               {
@@ -645,7 +654,7 @@ export default function LandingPage() {
                 DOMINE O JOGO ANTES DOS OUTROS
               </h2>
               <p className="text-lg sm:text-2xl font-medium text-neutral-300">
-                Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">R$9,90</span> <span className="text-xs sm:text-sm text-neutral-400 font-normal">(único pagamento)</span>
+                Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">{settings.priceLabel}</span> <span className="text-xs sm:text-sm text-neutral-400 font-normal">(único pagamento)</span>
               </p>
 
               {/* Step Indicator Minimalista */}
@@ -829,7 +838,7 @@ export default function LandingPage() {
                         </div>
                         <div className="text-center pt-1">
                           <span className="text-xs font-mono font-black tracking-wider uppercase px-3 py-1.5 bg-black text-white rounded-full block">
-                            PIX OFICIAL • R$ 9,90
+                            PIX OFICIAL • {settings.priceLabel}
                           </span>
                         </div>
                       </div>
@@ -891,7 +900,7 @@ export default function LandingPage() {
                         ) : (
                           <div className="space-y-3">
                             <span className="text-xs sm:text-sm font-mono text-neutral-300 block">
-                              1. Copie a chave e-mail abaixo e digite o valor de <strong className="text-white">R$9,90</strong> no seu banco:
+                              1. Copie a chave e-mail abaixo e digite o valor de <strong className="text-white">{settings.priceLabel}</strong> no seu banco:
                             </span>
                             <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
                               <input 
@@ -992,7 +1001,7 @@ export default function LandingPage() {
         <div className="space-y-2 text-sm">
           <p className="text-neutral-300">Criado com magia pelo <strong className="text-white font-black underline decoration-white/40">Pajé</strong></p>
           <p>Todos os direitos reservados ao gênio por trás dos scripts.</p>
-          <p className="pt-2 text-neutral-500">Suporte técnico: <span className="text-neutral-300 select-all underline">gabrieldacechen6@gmail.com</span></p>
+          <p className="pt-2 text-neutral-500">Suporte técnico: <span className="text-neutral-300 select-all underline">{settings.supportEmail}</span></p>
         </div>
 
         <div className="pt-8 text-[11px] text-neutral-600 max-w-lg mx-auto leading-relaxed border-t border-neutral-900">

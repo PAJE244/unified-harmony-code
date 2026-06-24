@@ -30,15 +30,42 @@ export interface DbLog {
   timestamp: string;
 }
 
+export interface SiteSettings {
+  pixKey: string;
+  pixAmount: string;
+  pixName: string;
+  pixCity: string;
+  whatsappNumber: string;
+  supportEmail: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  loteText: string;
+  priceLabel: string;
+}
+
 interface DbSchema {
   users: DbUser[];
   scripts: DbScript[];
   logs: DbLog[];
   sessions: Record<string, { userId: string; lastSeen: number }>;
+  settings?: SiteSettings;
 }
 
 const STORAGE_KEY = "scriptando_db_v1";
 const SALT = "paje_01_salt_premium";
+
+export const DEFAULT_SETTINGS: SiteSettings = {
+  pixKey: "gabrieldacechen6@gmail.com",
+  pixAmount: "9.90",
+  pixName: "SCRIPTANDO PAJE",
+  pixCity: "CURITIBA",
+  whatsappNumber: "5541999999999",
+  supportEmail: "gabrieldacechen6@gmail.com",
+  heroTitle: "CANSADO DE PERDER TEMPO COM ATIVIDADES ESCOLARES?",
+  heroSubtitle: "Automatize Khan Academy, Quizizz, Redação PR, Inglês PR e Leia PR em segundos.",
+  loteText: "Últimos 37 acessos liberados por R$9,90. O valor sobe amanhã.",
+  priceLabel: "R$9,90",
+};
 
 function isBrowser() {
   return typeof window !== "undefined" && typeof localStorage !== "undefined";
@@ -81,6 +108,7 @@ function defaultDb(): DbSchema {
       { id: "log-1", username: "Sistema", action: "Plataforma inicializada por Pajé 01.", timestamp: now },
     ],
     sessions: {},
+    settings: { ...DEFAULT_SETTINGS },
   };
 }
 
@@ -96,6 +124,8 @@ function load(): DbSchema {
     const parsed = JSON.parse(raw) as DbSchema;
     if (!parsed.users || !parsed.scripts || !parsed.logs) throw new Error("bad");
     if (!parsed.sessions) parsed.sessions = {};
+    if (!parsed.settings) parsed.settings = { ...DEFAULT_SETTINGS };
+    else parsed.settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
     return parsed;
   } catch {
     const fresh = defaultDb();
@@ -118,7 +148,8 @@ type RealtimeMsg =
   | { type: "scripts_updated"; data: DbScript[] }
   | { type: "account_modified"; data: { passwordChanged: boolean; usernameChanged: boolean; user: PublicUser }; targetUserId: string }
   | { type: "account_deleted"; message: string; targetUserId: string }
-  | { type: "account_banned"; message: string; targetUserId: string };
+  | { type: "account_banned"; message: string; targetUserId: string }
+  | { type: "settings_updated"; data: SiteSettings };
 
 const channel: BroadcastChannel | null =
   typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("scriptando-bus") : null;
@@ -425,4 +456,18 @@ if (isBrowser()) {
       broadcastStats();
     }
   }, 20_000);
+}
+
+export function getSiteSettings(): SiteSettings {
+  db = load();
+  return { ...DEFAULT_SETTINGS, ...(db.settings || {}) };
+}
+
+export function updateSiteSettings(patch: Partial<SiteSettings>): SiteSettings {
+  db = load();
+  const next: SiteSettings = { ...DEFAULT_SETTINGS, ...(db.settings || {}), ...patch };
+  db.settings = next;
+  save();
+  emit({ type: "settings_updated", data: next });
+  return next;
 }
