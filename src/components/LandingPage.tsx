@@ -1001,7 +1001,7 @@ export default function LandingPage() {
         <div className="space-y-2 text-sm">
           <p className="text-neutral-300">Criado com magia pelo <strong className="text-white font-black underline decoration-white/40">Pajé</strong></p>
           <p>Todos os direitos reservados ao gênio por trás dos scripts.</p>
-          <p className="pt-2 text-neutral-500">Suporte técnico: <span className="text-neutral-300 select-all underline">gabrieldacechen6@gmail.com</span></p>
+          <p className="pt-2 text-neutral-500">Suporte técnico: <span className="text-neutral-300 select-all underline">{settings.supportEmail}</span></p>
         </div>
 
         <div className="pt-8 text-[11px] text-neutral-600 max-w-lg mx-auto leading-relaxed border-t border-neutral-900">
