@@ -70,7 +70,7 @@ function generatePixCopyPaste(key: string, name: string, city: string, amount: s
 }
 
 // Variantes de animação Apple-style
-const fadeInUp = {
+const fadeInUp: any = {
   hidden: { opacity: 0, y: 36 },
   visible: { 
     opacity: 1, 
@@ -79,7 +79,7 @@ const fadeInUp = {
   }
 };
 
-const staggerContainer = {
+const staggerContainer: any = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -90,7 +90,7 @@ const staggerContainer = {
   }
 };
 
-const stepTransition = {
+const stepTransition: any = {
   initial: { opacity: 0, x: 20, scale: 0.98 },
   animate: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
   exit: { opacity: 0, x: -20, scale: 0.98, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }
