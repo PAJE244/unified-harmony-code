@@ -114,13 +114,13 @@ export const apiCall = createServerFn({ method: "POST" })
         .from("app_sessions")
         .select("*")
         .eq("token", tok)
-        .maybeSingle();
+        .maybeSingle() as any;
       if (!sess) return null;
       const { data: user } = await db
         .from("app_users")
         .select("*")
         .eq("id", sess.user_id)
-        .maybeSingle();
+        .maybeSingle() as any;
       if (!user || user.status === "banned") {
         await db.from("app_sessions").delete().eq("token", tok);
         return null;
@@ -140,7 +140,7 @@ export const apiCall = createServerFn({ method: "POST" })
         .from("app_users")
         .select("*")
         .ilike("username", String(username))
-        .maybeSingle();
+        .maybeSingle() as any;
       if (!user) return res(401, { error: "Credenciais incorretas" });
       if (user.status === "banned") return res(403, { error: "Sua conta foi banida pelo administrador." });
       if (user.password_hash !== hashPassword(password))
@@ -160,7 +160,7 @@ export const apiCall = createServerFn({ method: "POST" })
         .from("app_users")
         .select("id")
         .ilike("username", uname)
-        .maybeSingle();
+        .maybeSingle() as any;
       if (exists) return res(400, { error: "Este nome de usuário já está em uso." });
       const { data: created } = await db
         .from("app_users")
@@ -179,7 +179,7 @@ export const apiCall = createServerFn({ method: "POST" })
     }
 
     if (url === "/api/public/settings" && method === "GET") {
-      const { data: s } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle();
+      const { data: s } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle() as any;
       return res(200, s?.data || {});
     }
 
@@ -231,12 +231,12 @@ export const apiCall = createServerFn({ method: "POST" })
       if (!username || !password) return res(400, { error: "Usuário e senha são obrigatórios" });
       const uname = String(username).trim();
       const { data: exists } = await db
-        .from("app_users").select("id").ilike("username", uname).maybeSingle();
+        .from("app_users").select("id").ilike("username", uname).maybeSingle() as any;
       if (exists) return res(400, { error: "Este nome de usuário já está em uso" });
       const { data: created } = await db
         .from("app_users")
         .insert({ username: uname, password_hash: hashPassword(password), role: "user", status: "active" })
-        .select().single();
+        .select().single() as any;
       await addLog(me.username, `Criou o usuário "${uname}".`);
       await broadcastStats();
       await broadcastUsers();
@@ -247,7 +247,7 @@ export const apiCall = createServerFn({ method: "POST" })
     if (userIdMatch) {
       const id = userIdMatch[1];
       const sub = userIdMatch[3];
-      const { data: user } = await db.from("app_users").select("*").eq("id", id).maybeSingle();
+      const { data: user } = await db.from("app_users").select("*").eq("id", id).maybeSingle() as any;
       if (!user) return res(404, { error: "Usuário não encontrado" });
 
       if (method === "DELETE") {
@@ -282,7 +282,7 @@ export const apiCall = createServerFn({ method: "POST" })
         if (body.username && String(body.username).trim().toLowerCase() !== user.username.toLowerCase()) {
           const uname = String(body.username).trim();
           const { data: clash } = await db
-            .from("app_users").select("id").ilike("username", uname).neq("id", id).maybeSingle();
+            .from("app_users").select("id").ilike("username", uname).neq("id", id).maybeSingle() as any;
           if (clash) return res(400, { error: "Este nome de usuário já está em uso" });
           patch.username = uname;
         }
@@ -295,7 +295,7 @@ export const apiCall = createServerFn({ method: "POST" })
           patch.status = body.status;
         }
         const { data: updated } = await db
-          .from("app_users").update(patch).eq("id", id).select().single();
+          .from("app_users").update(patch).eq("id", id).select().single() as any;
         await addLog(me.username, `Editou o usuário "${oldUsername}"${passwordChanged ? " (senha alterada)" : ""}.`);
         events.push({
           type: "account_modified", targetUserId: id,
@@ -319,14 +319,14 @@ export const apiCall = createServerFn({ method: "POST" })
       if (body.username && String(body.username).trim() !== me.username) {
         const uname = String(body.username).trim();
         const { data: clash } = await db
-          .from("app_users").select("id").ilike("username", uname).neq("id", me.id).maybeSingle();
+          .from("app_users").select("id").ilike("username", uname).neq("id", me.id).maybeSingle() as any;
         if (clash) return res(400, { error: "Este nome de usuário já está em uso" });
         patch.username = uname;
       }
       if (body.password && String(body.password).trim() !== "")
         patch.password_hash = hashPassword(body.password);
       const { data: updated } = await db
-        .from("app_users").update(patch).eq("id", me.id).select().single();
+        .from("app_users").update(patch).eq("id", me.id).select().single() as any;
       await addLog(updated.username, `Atualizou as próprias credenciais (antes: "${oldUsername}").`);
       await broadcastUsers();
       return res(200, { username: updated.username });
@@ -346,7 +346,7 @@ export const apiCall = createServerFn({ method: "POST" })
       const { data: created } = await db
         .from("app_scripts")
         .insert({ title: String(title).trim(), content, description: String(description || "").trim() })
-        .select().single();
+        .select().single() as any;
       await addLog(me.username, `Adicionou o script "${created.title}".`);
       await broadcastScripts();
       return res(201, {
@@ -358,7 +358,7 @@ export const apiCall = createServerFn({ method: "POST" })
     const scriptMatch = url.match(/^\/api\/admin\/scripts\/([^/]+)$/);
     if (scriptMatch) {
       const id = scriptMatch[1];
-      const { data: s } = await db.from("app_scripts").select("*").eq("id", id).maybeSingle();
+      const { data: s } = await db.from("app_scripts").select("*").eq("id", id).maybeSingle() as any;
       if (!s) return res(404, { error: "Script não encontrado" });
       if (method === "DELETE") {
         await db.from("app_scripts").delete().eq("id", id);
@@ -372,7 +372,7 @@ export const apiCall = createServerFn({ method: "POST" })
         if (body.content !== undefined) patch.content = body.content;
         if (body.description !== undefined) patch.description = String(body.description).trim();
         const { data: updated } = await db
-          .from("app_scripts").update(patch).eq("id", id).select().single();
+          .from("app_scripts").update(patch).eq("id", id).select().single() as any;
         await addLog(me.username, `Editou o script "${updated.title}".`);
         await broadcastScripts();
         return res(200, {
@@ -383,7 +383,7 @@ export const apiCall = createServerFn({ method: "POST" })
     }
 
     if (url === "/api/admin/settings" && method === "PUT") {
-      const { data: cur } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle();
+      const { data: cur } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle() as any;
       const merged = { ...(cur?.data || {}), ...(body || {}) };
       await db.from("app_settings").upsert({ id: 1, data: merged });
       await addLog(me.username, "Atualizou as configurações do site.");
