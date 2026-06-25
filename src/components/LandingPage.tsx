@@ -171,8 +171,8 @@ export default function LandingPage() {
     if (!email || !whatsapp || !username || !password) return;
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      const result = registerPublicUser(username, password);
+    setTimeout(async () => {
+      const result = await registerPublicUser(username, password);
       setIsSubmitting(false);
       if (!result.ok) {
         setRegisterError(result.error || "Erro ao cadastrar usuário.");

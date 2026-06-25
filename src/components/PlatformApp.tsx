@@ -74,10 +74,10 @@ export default function PlatformApp() {
   const [siteForm, setSiteForm] = useState<SiteSettings>(() => getSiteSettings());
   const [siteSaveMsg, setSiteSaveMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
   useEffect(() => { setSiteForm(getSiteSettings()); }, [adminTab]);
-  const handleSaveSite = (e: React.FormEvent) => {
+  const handleSaveSite = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      updateSiteSettings(siteForm);
+      await updateSiteSettings(siteForm);
       setSiteSaveMsg({ text: "Configurações salvas! A landing page foi atualizada em tempo real.", type: "success" });
       showToast("Configurações do site atualizadas.", "success");
       setTimeout(() => setSiteSaveMsg(null), 4000);
@@ -85,9 +85,9 @@ export default function PlatformApp() {
       setSiteSaveMsg({ text: err?.message || "Erro ao salvar.", type: "error" });
     }
   };
-  const handleResetSite = () => {
+  const handleResetSite = async () => {
     if (!confirm("Restaurar configurações padrão?")) return;
-    const next = updateSiteSettings({ ...DEFAULT_SETTINGS });
+    const next = await updateSiteSettings({ ...DEFAULT_SETTINGS });
     setSiteForm(next);
     showToast("Configurações restauradas para o padrão.", "info");
   };
