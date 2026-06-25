@@ -14,7 +14,119 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      app_logs: {
+        Row: {
+          action: string
+          id: string
+          timestamp: string
+          username: string
+        }
+        Insert: {
+          action: string
+          id?: string
+          timestamp?: string
+          username: string
+        }
+        Update: {
+          action?: string
+          id?: string
+          timestamp?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      app_scripts: {
+        Row: {
+          content: string
+          created_at: string
+          description: string
+          id: string
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          description?: string
+          id?: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          description?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      app_sessions: {
+        Row: {
+          last_seen: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          last_seen?: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          last_seen?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "app_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      app_settings: {
+        Row: {
+          data: Json
+          id: number
+        }
+        Insert: {
+          data: Json
+          id?: number
+        }
+        Update: {
+          data?: Json
+          id?: number
+        }
+        Relationships: []
+      }
+      app_users: {
+        Row: {
+          created_at: string
+          id: string
+          password_hash: string
+          role: string
+          status: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          password_hash: string
+          role?: string
+          status?: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          password_hash?: string
+          role?: string
+          status?: string
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
