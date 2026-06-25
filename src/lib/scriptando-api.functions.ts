@@ -384,7 +384,7 @@ export const apiCall = createServerFn({ method: "POST" })
 
     if (url === "/api/admin/settings" && method === "PUT") {
       const { data: cur } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle() as any;
-      const merged = { ...(cur?.data || {}), ...(body || {}) };
+      const merged = { ...((cur?.data as any) || {}), ...(body || {}) };
       await db.from("app_settings").upsert({ id: 1, data: merged });
       await addLog(me.username, "Atualizou as configurações do site.");
       events.push({ type: "settings_updated", data: merged });
