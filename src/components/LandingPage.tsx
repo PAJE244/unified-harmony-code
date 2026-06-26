@@ -989,36 +989,53 @@ export default function LandingPage() {
 
                     </div>
 
+                    {/* AVISO CRÍTICO: contato com comprovante */}
+                    <div className="mt-5 p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-400/30 space-y-2">
+                      <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
+                        <AlertTriangle className="w-4 h-4" />
+                        <span>IMPORTANTE — leia antes de fechar</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-amber-100/90 leading-relaxed">
+                        Seu acesso <strong>não é criado automaticamente</strong>. Após realizar o PIX, envie o
+                        <strong> comprovante</strong> junto dos seus dados (usuário e senha desejados) por um dos canais abaixo.
+                        Assim que eu confirmar o pagamento, libero seu acesso VIP manualmente. ✨
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 text-xs">
+                        <a
+                          href={`https://wa.me/${ownerWhats}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-200 hover:bg-emerald-500/25 transition-all font-semibold cursor-pointer"
+                        >
+                          📱 WhatsApp: {ownerWhatsDisplay}
+                        </a>
+                        <a
+                          href={`mailto:${settings.supportEmail}`}
+                          className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/5 border border-white/15 text-neutral-200 hover:bg-white/10 transition-all font-semibold cursor-pointer break-all"
+                        >
+                          ✉️ {settings.supportEmail}
+                        </a>
+                      </div>
+                    </div>
+
                     {/* Botão de Confirmação no WhatsApp */}
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-3 pt-3">
                       <motion.button 
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.98 }}
                         type="button"
                         onClick={handleWhatsAppNotify}
-                        className="w-full py-5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-black text-base sm:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer shadow-[0_0_45px_rgba(16,185,129,0.35)] transition-all"
+                        className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-black text-base sm:text-lg tracking-tight flex items-center justify-center gap-3 cursor-pointer shadow-[0_0_45px_rgba(16,185,129,0.35)] transition-all"
                       >
-                        <Send className="w-6 h-6 fill-black" />
-                        <span>JÁ FIZ O PIX • RECEBER ACESSO NO WHATSAPP</span>
+                        <Send className="w-5 h-5 fill-black" />
+                        <span>JÁ FIZ O PIX • ENVIAR COMPROVANTE NO WHATSAPP</span>
                       </motion.button>
 
-                      <p className="text-xs text-center text-neutral-400 leading-relaxed max-w-xl mx-auto">
-                        "Após o pagamento, criarei seu acesso personalizado com os dados cadastrados.
-                        O sistema enviará tudo diretamente no seu WhatsApp em <strong>1 a 3 dias úteis</strong>. Tenho outras 'magias' para fazer, mas já já te respondo!"
+                      <p className="text-[11px] text-center text-neutral-500 leading-relaxed max-w-xl mx-auto">
+                        Liberação do acesso em até <strong className="text-neutral-300">1 a 3 dias úteis</strong> após confirmação do comprovante.
                       </p>
-
-                      <div className="pt-2">
-                        <Link
-                          to="/app"
-                          className="block w-full text-center py-4 rounded-2xl bg-white/5 border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition-all"
-                        >
-                          Acessar a plataforma agora →
-                        </Link>
-                        <p className="text-[10px] text-center text-neutral-500 mt-2 font-mono">
-                          Use o usuário e senha que você acabou de cadastrar.
-                        </p>
-                      </div>
                     </div>
+
 
                   </motion.div>
                 )}
