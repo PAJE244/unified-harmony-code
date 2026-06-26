@@ -813,31 +813,32 @@ export default function LandingPage() {
                       </div>
 
                       {registerError && (
-                        <div className="p-4 rounded-2xl bg-rose-950/30 border border-rose-500/30 text-rose-300 text-sm font-mono">
+                        <div className="p-3 rounded-2xl bg-rose-950/30 border border-rose-500/30 text-rose-300 text-sm font-mono">
                           {registerError}
                         </div>
                       )}
-                      <div className="pt-6">
+                      <div className="pt-2">
                         <motion.button 
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.98 }}
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full glass-button py-5 rounded-2xl font-extrabold text-base sm:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+                          className="w-full glass-button py-4 rounded-2xl font-extrabold text-base sm:text-lg tracking-tight flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
                         >
                           {isSubmitting ? (
                             <span className="inline-flex items-center gap-3 font-mono">
                               <span className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                              Salvando no servidor do Pajé...
+                              Continuando...
                             </span>
                           ) : (
                             <>
-                              <span>PROSSEGUIR PARA PAGAMENTO PIX</span>
+                              <span>PROSSEGUIR PARA O PIX</span>
                               <ChevronRight className="w-6 h-6" />
                             </>
                           )}
                         </motion.button>
                       </div>
+
                       
                       <div className="flex items-center justify-center gap-4 text-xs font-mono text-neutral-500 pt-2">
                         <span className="flex items-center gap-1">🔒 SSL 256-bit Encrypted</span>
