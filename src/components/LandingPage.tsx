@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from '@tanstack/react-router';
-import { registerPublicUser, getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
+import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
   Zap, 
   Clock, 
@@ -170,28 +170,27 @@ export default function LandingPage() {
     setRegisterError(null);
     if (!email || !whatsapp || !username || !password) return;
 
+    // IMPORTANTE: NÃO cria conta aqui. O acesso só é liberado manualmente pelo Pajé
+    // após confirmação do pagamento via comprovante.
     setIsSubmitting(true);
-    setTimeout(async () => {
-      const result = await registerPublicUser(username, password);
+    setTimeout(() => {
       setIsSubmitting(false);
-      if (!result.ok) {
-        setRegisterError(result.error || "Erro ao cadastrar usuário.");
-        return;
-      }
       setCheckoutStep('pix');
-    }, 900);
+    }, 600);
   };
 
+  const ownerWhats = (settings.whatsappNumber || "").replace(/\D/g, "") || "5547991295765";
+  const ownerWhatsDisplay = "(47) 99129-5765";
+
   const handleWhatsAppNotify = () => {
-    const ownerWhats = (settings.whatsappNumber || "").replace(/\D/g, "") || "5547991295765";
     const msg = encodeURIComponent(
-      `Olá Pajé! ✨ Acabei de realizar o PIX no SCRIPTANDO.\n\n` +
+      `Olá Pajé! ✨ Acabei de realizar o PIX no SCRIPTANDO e estou enviando o COMPROVANTE em seguida.\n\n` +
       `💰 Valor: ${settings.priceLabel}\n` +
-      `👤 Usuário escolhido: ${username}\n` +
-      `🔐 Senha cadastrada: ${password}\n` +
+      `👤 Usuário desejado: ${username}\n` +
+      `🔐 Senha desejada: ${password}\n` +
       `📧 E-mail: ${email}\n` +
       `📱 WhatsApp: ${whatsapp}\n\n` +
-      `📎 Estou enviando o COMPROVANTE do PIX em seguida nesta conversa para confirmar e liberar meu acesso VIP. Obrigado!`
+      `📎 Por favor confirme o pagamento e libere meu acesso VIP. Obrigado!`
     );
     window.open(`https://wa.me/${ownerWhats}?text=${msg}`, "_blank");
   };
@@ -670,17 +669,17 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-2 sm:p-6 bg-black/75 backdrop-blur-xl overflow-y-auto"
+              className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-2xl overflow-y-auto"
               onClick={() => setCheckoutOpen(false)}
             >
               <motion.div
                 key="checkout-card"
-                initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                initial={{ opacity: 0, y: 24, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.97 }}
+                exit={{ opacity: 0, y: 16, scale: 0.97 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-4xl my-2 sm:my-auto"
+                className="relative w-full max-w-3xl my-auto"
               >
                 <button
                   type="button"
@@ -690,26 +689,26 @@ export default function LandingPage() {
                 >
                   ×
                 </button>
-          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-12 md:p-14 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
+          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-10 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
             
             {/* Efeito luminoso de fundo */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-white/[0.08] rounded-full blur-[100px] pointer-events-none" />
 
             {/* Cabeçalho Fixo do Checkout */}
-            <div id="checkout-header" className="text-center space-y-3 sm:space-y-4 mb-6 sm:mb-10 relative z-10">
+            <div id="checkout-header" className="text-center space-y-2 sm:space-y-3 mb-5 sm:mb-7 relative z-10">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider shadow-lg">
                 <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> CHECKOUT OFICIAL
               </div>
-              <h2 className="text-2xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.05] px-2">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-tight text-white leading-[1.05] px-2">
                 DOMINE O JOGO ANTES DOS OUTROS
               </h2>
-              <p className="text-base sm:text-2xl font-medium text-neutral-300">
+              <p className="text-sm sm:text-lg font-medium text-neutral-300">
                 Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">{settings.priceLabel}</span>
                 <span className="block sm:inline text-[11px] sm:text-sm text-neutral-400 font-normal sm:ml-1">(único pagamento)</span>
               </p>
 
               {/* Step Indicator Minimalista */}
-              <div className="pt-3 sm:pt-6 flex items-center justify-center gap-1.5 sm:gap-3 text-[11px] sm:text-sm font-mono max-w-sm mx-auto">
+              <div className="pt-2 sm:pt-3 flex items-center justify-center gap-1.5 sm:gap-3 text-[11px] sm:text-sm font-mono max-w-sm mx-auto">
                 <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all ${checkoutStep === 'form' ? 'bg-white text-black font-bold shadow-lg shadow-white/20 scale-105' : 'bg-neutral-900 text-neutral-500 border border-neutral-800'}`}>
                   <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-black/10 flex items-center justify-center text-[10px] sm:text-[11px]">1</span>
                   <span>Dados</span>
@@ -723,8 +722,10 @@ export default function LandingPage() {
             </div>
 
             {/* ANIMAÇÃO ENTRE TELA DE DADOS E TELA DE PIX */}
-            <div className="relative z-10 min-h-[380px] sm:min-h-[480px]">
+            <div className="relative z-10">
               <AnimatePresence mode="wait">
+                
+
                 
                 {checkoutStep === 'form' ? (
                   <motion.div
@@ -733,15 +734,16 @@ export default function LandingPage() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="space-y-6 sm:space-y-8"
+                    className="space-y-4 sm:space-y-5"
                   >
-                    <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-center text-xs sm:text-sm text-neutral-300">
-                      📝 Preencha abaixo as credenciais que você deseja usar. Na próxima etapa, você liberará o PIX instantâneo.
+                    <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 text-center text-xs sm:text-sm text-neutral-300">
+                      📝 Escolha as credenciais que você deseja. Seu acesso é liberado manualmente pelo Pajé após a confirmação do PIX.
                     </div>
 
-                    <form onSubmit={handleFormSubmit} className="space-y-6">
+                    <form onSubmit={handleFormSubmit} className="space-y-4">
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
                         <div className="space-y-2">
                           <label className="text-xs font-mono uppercase tracking-wider text-neutral-300 font-semibold block">
                             Seu melhor e-mail *
@@ -752,7 +754,7 @@ export default function LandingPage() {
                             placeholder="aluno@escola.pr.gov.br"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
+                            className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
                           />
                         </div>
 
@@ -766,12 +768,12 @@ export default function LandingPage() {
                             placeholder="(41) 99999-9999"
                             value={whatsapp}
                             onChange={(e) => setWhatsapp(e.target.value)}
-                            className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
+                            className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
                           />
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <label className="text-xs font-mono uppercase tracking-wider text-neutral-300 font-semibold block">
                             Crie um Usuário Desejado *
@@ -782,7 +784,7 @@ export default function LandingPage() {
                             placeholder="paje_aluno01"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner"
+                            className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner"
                           />
                         </div>
 
@@ -797,7 +799,7 @@ export default function LandingPage() {
                               placeholder="••••••••"
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
-                              className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner pr-12"
+                              className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner pr-12"
                             />
                             <button 
                               type="button"
@@ -811,31 +813,32 @@ export default function LandingPage() {
                       </div>
 
                       {registerError && (
-                        <div className="p-4 rounded-2xl bg-rose-950/30 border border-rose-500/30 text-rose-300 text-sm font-mono">
+                        <div className="p-3 rounded-2xl bg-rose-950/30 border border-rose-500/30 text-rose-300 text-sm font-mono">
                           {registerError}
                         </div>
                       )}
-                      <div className="pt-6">
+                      <div className="pt-2">
                         <motion.button 
                           whileHover={{ scale: 1.01 }}
                           whileTap={{ scale: 0.98 }}
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full glass-button py-5 rounded-2xl font-extrabold text-base sm:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+                          className="w-full glass-button py-4 rounded-2xl font-extrabold text-base sm:text-lg tracking-tight flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
                         >
                           {isSubmitting ? (
                             <span className="inline-flex items-center gap-3 font-mono">
                               <span className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                              Salvando no servidor do Pajé...
+                              Continuando...
                             </span>
                           ) : (
                             <>
-                              <span>PROSSEGUIR PARA PAGAMENTO PIX</span>
+                              <span>PROSSEGUIR PARA O PIX</span>
                               <ChevronRight className="w-6 h-6" />
                             </>
                           )}
                         </motion.button>
                       </div>
+
                       
                       <div className="flex items-center justify-center gap-4 text-xs font-mono text-neutral-500 pt-2">
                         <span className="flex items-center gap-1">🔒 SSL 256-bit Encrypted</span>
@@ -986,36 +989,53 @@ export default function LandingPage() {
 
                     </div>
 
+                    {/* AVISO CRÍTICO: contato com comprovante */}
+                    <div className="mt-5 p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-400/30 space-y-2">
+                      <div className="flex items-center gap-2 text-amber-300 font-bold text-sm">
+                        <AlertTriangle className="w-4 h-4" />
+                        <span>IMPORTANTE — leia antes de fechar</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-amber-100/90 leading-relaxed">
+                        Seu acesso <strong>não é criado automaticamente</strong>. Após realizar o PIX, envie o
+                        <strong> comprovante</strong> junto dos seus dados (usuário e senha desejados) por um dos canais abaixo.
+                        Assim que eu confirmar o pagamento, libero seu acesso VIP manualmente. ✨
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 text-xs">
+                        <a
+                          href={`https://wa.me/${ownerWhats}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-200 hover:bg-emerald-500/25 transition-all font-semibold cursor-pointer"
+                        >
+                          📱 WhatsApp: {ownerWhatsDisplay}
+                        </a>
+                        <a
+                          href={`mailto:${settings.supportEmail}`}
+                          className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/5 border border-white/15 text-neutral-200 hover:bg-white/10 transition-all font-semibold cursor-pointer break-all"
+                        >
+                          ✉️ {settings.supportEmail}
+                        </a>
+                      </div>
+                    </div>
+
                     {/* Botão de Confirmação no WhatsApp */}
-                    <div className="space-y-4 pt-4">
+                    <div className="space-y-3 pt-3">
                       <motion.button 
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.98 }}
                         type="button"
                         onClick={handleWhatsAppNotify}
-                        className="w-full py-5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-black text-base sm:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer shadow-[0_0_45px_rgba(16,185,129,0.35)] transition-all"
+                        className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-black text-base sm:text-lg tracking-tight flex items-center justify-center gap-3 cursor-pointer shadow-[0_0_45px_rgba(16,185,129,0.35)] transition-all"
                       >
-                        <Send className="w-6 h-6 fill-black" />
-                        <span>JÁ FIZ O PIX • RECEBER ACESSO NO WHATSAPP</span>
+                        <Send className="w-5 h-5 fill-black" />
+                        <span>JÁ FIZ O PIX • ENVIAR COMPROVANTE NO WHATSAPP</span>
                       </motion.button>
 
-                      <p className="text-xs text-center text-neutral-400 leading-relaxed max-w-xl mx-auto">
-                        "Após o pagamento, criarei seu acesso personalizado com os dados cadastrados.
-                        O sistema enviará tudo diretamente no seu WhatsApp em <strong>1 a 3 dias úteis</strong>. Tenho outras 'magias' para fazer, mas já já te respondo!"
+                      <p className="text-[11px] text-center text-neutral-500 leading-relaxed max-w-xl mx-auto">
+                        Liberação do acesso em até <strong className="text-neutral-300">1 a 3 dias úteis</strong> após confirmação do comprovante.
                       </p>
-
-                      <div className="pt-2">
-                        <Link
-                          to="/app"
-                          className="block w-full text-center py-4 rounded-2xl bg-white/5 border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition-all"
-                        >
-                          Acessar a plataforma agora →
-                        </Link>
-                        <p className="text-[10px] text-center text-neutral-500 mt-2 font-mono">
-                          Use o usuário e senha que você acabou de cadastrar.
-                        </p>
-                      </div>
                     </div>
+
 
                   </motion.div>
                 )}
