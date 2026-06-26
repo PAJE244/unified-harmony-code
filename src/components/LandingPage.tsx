@@ -773,7 +773,7 @@ export default function LandingPage() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <label className="text-xs font-mono uppercase tracking-wider text-neutral-300 font-semibold block">
                             Crie um Usuário Desejado *
