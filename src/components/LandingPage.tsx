@@ -170,28 +170,27 @@ export default function LandingPage() {
     setRegisterError(null);
     if (!email || !whatsapp || !username || !password) return;
 
+    // IMPORTANTE: NÃO cria conta aqui. O acesso só é liberado manualmente pelo Pajé
+    // após confirmação do pagamento via comprovante.
     setIsSubmitting(true);
-    setTimeout(async () => {
-      const result = await registerPublicUser(username, password);
+    setTimeout(() => {
       setIsSubmitting(false);
-      if (!result.ok) {
-        setRegisterError(result.error || "Erro ao cadastrar usuário.");
-        return;
-      }
       setCheckoutStep('pix');
-    }, 900);
+    }, 600);
   };
 
+  const ownerWhats = (settings.whatsappNumber || "").replace(/\D/g, "") || "5547991295765";
+  const ownerWhatsDisplay = "(47) 99129-5765";
+
   const handleWhatsAppNotify = () => {
-    const ownerWhats = (settings.whatsappNumber || "").replace(/\D/g, "") || "5547991295765";
     const msg = encodeURIComponent(
-      `Olá Pajé! ✨ Acabei de realizar o PIX no SCRIPTANDO.\n\n` +
+      `Olá Pajé! ✨ Acabei de realizar o PIX no SCRIPTANDO e estou enviando o COMPROVANTE em seguida.\n\n` +
       `💰 Valor: ${settings.priceLabel}\n` +
-      `👤 Usuário escolhido: ${username}\n` +
-      `🔐 Senha cadastrada: ${password}\n` +
+      `👤 Usuário desejado: ${username}\n` +
+      `🔐 Senha desejada: ${password}\n` +
       `📧 E-mail: ${email}\n` +
       `📱 WhatsApp: ${whatsapp}\n\n` +
-      `📎 Estou enviando o COMPROVANTE do PIX em seguida nesta conversa para confirmar e liberar meu acesso VIP. Obrigado!`
+      `📎 Por favor confirme o pagamento e libere meu acesso VIP. Obrigado!`
     );
     window.open(`https://wa.me/${ownerWhats}?text=${msg}`, "_blank");
   };
