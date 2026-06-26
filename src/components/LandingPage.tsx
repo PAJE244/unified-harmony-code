@@ -734,15 +734,16 @@ export default function LandingPage() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="space-y-6 sm:space-y-8"
+                    className="space-y-4 sm:space-y-5"
                   >
-                    <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-center text-xs sm:text-sm text-neutral-300">
-                      📝 Preencha abaixo as credenciais que você deseja usar. Na próxima etapa, você liberará o PIX instantâneo.
+                    <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 text-center text-xs sm:text-sm text-neutral-300">
+                      📝 Escolha as credenciais que você deseja. Seu acesso é liberado manualmente pelo Pajé após a confirmação do PIX.
                     </div>
 
-                    <form onSubmit={handleFormSubmit} className="space-y-6">
+                    <form onSubmit={handleFormSubmit} className="space-y-4">
                       
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
                         <div className="space-y-2">
                           <label className="text-xs font-mono uppercase tracking-wider text-neutral-300 font-semibold block">
                             Seu melhor e-mail *
