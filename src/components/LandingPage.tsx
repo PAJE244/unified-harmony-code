@@ -669,17 +669,17 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-2 sm:p-6 bg-black/75 backdrop-blur-xl overflow-y-auto"
+              className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-2xl overflow-y-auto"
               onClick={() => setCheckoutOpen(false)}
             >
               <motion.div
                 key="checkout-card"
-                initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                initial={{ opacity: 0, y: 24, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.97 }}
+                exit={{ opacity: 0, y: 16, scale: 0.97 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-4xl my-2 sm:my-auto"
+                className="relative w-full max-w-3xl my-auto"
               >
                 <button
                   type="button"
@@ -689,26 +689,26 @@ export default function LandingPage() {
                 >
                   ×
                 </button>
-          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-12 md:p-14 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
+          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-10 relative overflow-hidden border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
             
             {/* Efeito luminoso de fundo */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-white/[0.08] rounded-full blur-[100px] pointer-events-none" />
 
             {/* Cabeçalho Fixo do Checkout */}
-            <div id="checkout-header" className="text-center space-y-3 sm:space-y-4 mb-6 sm:mb-10 relative z-10">
+            <div id="checkout-header" className="text-center space-y-2 sm:space-y-3 mb-5 sm:mb-7 relative z-10">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-black font-extrabold text-[10px] sm:text-xs uppercase tracking-wider shadow-lg">
                 <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> CHECKOUT OFICIAL
               </div>
-              <h2 className="text-2xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-[1.05] px-2">
+              <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-tight text-white leading-[1.05] px-2">
                 DOMINE O JOGO ANTES DOS OUTROS
               </h2>
-              <p className="text-base sm:text-2xl font-medium text-neutral-300">
+              <p className="text-sm sm:text-lg font-medium text-neutral-300">
                 Acesso vitalício: <span className="text-white font-bold underline decoration-white underline-offset-4">{settings.priceLabel}</span>
                 <span className="block sm:inline text-[11px] sm:text-sm text-neutral-400 font-normal sm:ml-1">(único pagamento)</span>
               </p>
 
               {/* Step Indicator Minimalista */}
-              <div className="pt-3 sm:pt-6 flex items-center justify-center gap-1.5 sm:gap-3 text-[11px] sm:text-sm font-mono max-w-sm mx-auto">
+              <div className="pt-2 sm:pt-3 flex items-center justify-center gap-1.5 sm:gap-3 text-[11px] sm:text-sm font-mono max-w-sm mx-auto">
                 <div className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all ${checkoutStep === 'form' ? 'bg-white text-black font-bold shadow-lg shadow-white/20 scale-105' : 'bg-neutral-900 text-neutral-500 border border-neutral-800'}`}>
                   <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-black/10 flex items-center justify-center text-[10px] sm:text-[11px]">1</span>
                   <span>Dados</span>
@@ -722,8 +722,10 @@ export default function LandingPage() {
             </div>
 
             {/* ANIMAÇÃO ENTRE TELA DE DADOS E TELA DE PIX */}
-            <div className="relative z-10 min-h-[380px] sm:min-h-[480px]">
+            <div className="relative z-10">
               <AnimatePresence mode="wait">
+                
+
                 
                 {checkoutStep === 'form' ? (
                   <motion.div
