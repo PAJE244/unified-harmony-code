@@ -754,7 +754,7 @@ export default function LandingPage() {
                             placeholder="aluno@escola.pr.gov.br"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
+                            className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
                           />
                         </div>
 
@@ -768,7 +768,7 @@ export default function LandingPage() {
                             placeholder="(41) 99999-9999"
                             value={whatsapp}
                             onChange={(e) => setWhatsapp(e.target.value)}
-                            className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
+                            className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base shadow-inner"
                           />
                         </div>
                       </div>
@@ -784,7 +784,7 @@ export default function LandingPage() {
                             placeholder="paje_aluno01"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner"
+                            className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner"
                           />
                         </div>
 
@@ -799,7 +799,7 @@ export default function LandingPage() {
                               placeholder="••••••••"
                               value={password}
                               onChange={(e) => setPassword(e.target.value)}
-                              className="w-full px-4 py-4 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner pr-12"
+                              className="w-full px-4 py-3 rounded-2xl bg-black/80 border border-white/20 text-white placeholder:text-neutral-600 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all text-sm sm:text-base font-mono shadow-inner pr-12"
                             />
                             <button 
                               type="button"
