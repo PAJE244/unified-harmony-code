@@ -3,6 +3,14 @@ import QRCode from 'react-qr-code';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from '@tanstack/react-router';
 import scriptandoIcon from '@/assets/scriptando-icon.png.asset.json';
+import tut1 from '@/assets/tutorial/tutorial-1.png.asset.json';
+import tut2 from '@/assets/tutorial/tutorial-2.png.asset.json';
+import tut3 from '@/assets/tutorial/tutorial-3.png.asset.json';
+import tut4 from '@/assets/tutorial/tutorial-4.png.asset.json';
+import tut5 from '@/assets/tutorial/tutorial-5.png.asset.json';
+import tut6 from '@/assets/tutorial/tutorial-6.png.asset.json';
+import tut7 from '@/assets/tutorial/tutorial-7.png.asset.json';
+import tut8 from '@/assets/tutorial/tutorial-8.png.asset.json';
 
 import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
@@ -587,51 +595,9 @@ export default function LandingPage() {
         </motion.section>
 
 
-        {/* 5. TUTORIAL MINIMALISTA */}
-        <motion.section 
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="glass-panel rounded-3xl p-8 md:p-16 space-y-12 border-white/15"
-        >
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-8">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Guia de execução</span>
-              <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white mt-1">
-                ASSIM ATÉ CRIANÇA USA
-              </h2>
-            </div>
-            <span className="text-xs font-mono tracking-wider px-3.5 py-1.5 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 uppercase shrink-0">
-              MAS NÃO CONTA PARA NINGUÉM 🤫
-            </span>
-          </div>
+        {/* 5. TUTORIAL — Celular / Computador */}
+        <TutorialSection />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-5">
-            {[
-              { t: "Faça login normal na plataforma escolar desejada", icon: Laptop },
-              { t: "Abra o portal do SCRIPTANDO em outra aba no navegador", icon: Smartphone },
-              { t: "Selecione a plataforma escolar que quer automatizar", icon: CheckCircle },
-              { t: "Clique no botão grande 'INICIAR AUTOMAÇÃO'", icon: Zap },
-              { t: "Volte para a aba escolar e veja a mágica acontecendo", icon: Sparkles }
-            ].map((step, idx) => {
-              const IconComp = step.icon;
-              return (
-                <div key={idx} className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 space-y-4 flex flex-col justify-between hover:bg-white/[0.06] transition-colors">
-                  <div className="flex items-center justify-between text-neutral-400">
-                    <span className="w-8 h-8 rounded-xl bg-white/10 font-mono text-sm font-extrabold flex items-center justify-center text-white shadow">
-                      {idx + 1}
-                    </span>
-                    <IconComp className="w-5 h-5 text-neutral-300" />
-                  </div>
-                  <p className="text-sm md:text-base text-neutral-200 font-normal leading-snug">
-                    {step.t}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </motion.section>
 
 
         {/* 6. AVISO LEGAL */}
