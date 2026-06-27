@@ -226,9 +226,10 @@ export default function LandingPage() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-neutral-200 to-white flex items-center justify-center text-black font-black text-xl tracking-tighter shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-            S
+          <div className="w-11 h-11 rounded-2xl overflow-hidden bg-gradient-to-tr from-neutral-900 to-neutral-700 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.25)] ring-1 ring-white/20">
+            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover" />
           </div>
+
           <div className="flex flex-col">
             <span className="font-extrabold tracking-tight text-lg text-white leading-none">SCRIPTANDO</span>
             <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase mt-1">PR Public Schools</span>
