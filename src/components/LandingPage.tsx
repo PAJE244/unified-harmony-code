@@ -818,10 +818,12 @@ export default function LandingPage() {
                       </div>
 
                       
-                      <div className="flex items-center justify-center gap-4 text-xs font-mono text-neutral-500 pt-2">
-                        <span className="flex items-center gap-1">🔒 SSL 256-bit Encrypted</span>
-                        <span>●</span>
-                        <span>⚡ Liberação Imediata</span>
+                      <div className="flex items-center justify-center gap-3 sm:gap-4 text-[11px] sm:text-xs font-mono text-neutral-400 pt-3 flex-wrap">
+                        <span className="inline-flex items-center gap-1.5"><Lock className="w-3.5 h-3.5 text-emerald-400" /> SSL 256-bit</span>
+                        <span className="text-neutral-700">•</span>
+                        <span className="inline-flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Ambiente Protegido</span>
+                        <span className="text-neutral-700">•</span>
+                        <span className="inline-flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-amber-300" /> Liberação Rápida</span>
                       </div>
                     </form>
                   </motion.div>
