@@ -609,15 +609,27 @@ export default function PlatformApp() {
     }
   };
 
-  // Copy Script content to clipboard
-  const handleCopyScript = (scriptContent: string, scriptTitle: string) => {
-    navigator.clipboard.writeText(scriptContent)
-      .then(() => {
-        showToast("Script copiado com sucesso.", "success");
-      })
-      .catch((err) => {
-        showToast("Falha ao copiar script.", "error");
-      });
+  // Copy Script content to clipboard (with fallback for insecure contexts)
+  const handleCopyScript = async (scriptContent: string, _scriptTitle: string) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(scriptContent);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = scriptContent;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        ta.setAttribute("readonly", "");
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (!ok) throw new Error("execCommand failed");
+      }
+      showToast("Script copiado com sucesso.", "success");
+    } catch (err) {
+      showToast("Falha ao copiar script.", "error");
+    }
   };
 
   // Filter and Search computed lists
