@@ -3,14 +3,14 @@ import QRCode from 'react-qr-code';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from '@tanstack/react-router';
 import scriptandoIcon from '@/assets/scriptando-icon.png.asset.json';
-import tut1 from '@/assets/tutorial/tutorial-1.png.asset.json';
-import tut2 from '@/assets/tutorial/tutorial-2.png.asset.json';
-import tut3 from '@/assets/tutorial/tutorial-3.png.asset.json';
-import tut4 from '@/assets/tutorial/tutorial-4.png.asset.json';
-import tut5 from '@/assets/tutorial/tutorial-5.png.asset.json';
-import tut6 from '@/assets/tutorial/tutorial-6.png.asset.json';
-import tut7 from '@/assets/tutorial/tutorial-7.png.asset.json';
-import tut8 from '@/assets/tutorial/tutorial-8.png.asset.json';
+import tut1 from '@/assets/tutorial/tutorial-1.jpg.asset.json';
+import tut2 from '@/assets/tutorial/tutorial-2.jpg.asset.json';
+import tut3 from '@/assets/tutorial/tutorial-3.jpg.asset.json';
+import tut4 from '@/assets/tutorial/tutorial-4.jpg.asset.json';
+import tut5 from '@/assets/tutorial/tutorial-5.jpg.asset.json';
+import tut6 from '@/assets/tutorial/tutorial-6.jpg.asset.json';
+import tut7 from '@/assets/tutorial/tutorial-7.jpg.asset.json';
+import tut8 from '@/assets/tutorial/tutorial-8.jpg.asset.json';
 
 import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
