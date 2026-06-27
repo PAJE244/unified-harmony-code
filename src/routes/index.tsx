@@ -4,7 +4,7 @@ import LandingPage from "@/components/LandingPage";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SCRIPTANDO — Plataforma Premium de Scripts por Pajé 01" },
+      { title: "Scriptando" },
       { name: "description", content: "Automatize Khan Academy, Quizizz, Redação PR, Inglês PR e Leia PR. Acesso vitalício por R$9,90." },
       { property: "og:title", content: "SCRIPTANDO — Automação Escolar Premium" },
       { property: "og:description", content: "A plataforma premium de scripts do Pajé. Acesso vitalício por R$9,90." },
