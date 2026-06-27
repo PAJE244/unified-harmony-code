@@ -1135,7 +1135,7 @@ function TutorialSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7"
           >
             {mobileSteps.map((step, idx) => (
               <motion.div
@@ -1144,24 +1144,28 @@ function TutorialSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative rounded-2xl bg-white/[0.03] border border-white/10 overflow-hidden hover:bg-white/[0.06] hover:border-white/20 hover:-translate-y-1 transition-all duration-500 flex flex-col"
+                className="group relative rounded-3xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/15 overflow-hidden hover:border-white/30 hover:-translate-y-1.5 transition-all duration-500 flex flex-col shadow-[0_8px_40px_-12px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_60px_-12px_rgba(255,255,255,0.12)]"
               >
+                {/* Glow accent */}
+                <div className="absolute -top-px left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+
                 {/* Image */}
-                <div className="relative aspect-[9/16] overflow-hidden bg-black/40">
-                  <img
-                    src={step.img}
-                    alt={`Passo ${idx + 1} — ${step.title}`}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                  />
-                  <div className="absolute top-3 left-3 w-9 h-9 rounded-xl bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white text-sm font-black shadow-lg">
+                <div className="relative aspect-[9/16] overflow-hidden bg-gradient-to-br from-neutral-900 via-black to-neutral-900 p-3">
+                  <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black/60 ring-1 ring-white/10">
+                    <img
+                      src={step.img}
+                      alt={`Passo ${idx + 1} — ${step.title}`}
+                      loading="lazy"
+                      className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <div className="absolute top-5 left-5 w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center text-sm font-black shadow-xl shadow-black/40 ring-1 ring-white/40">
                     {idx + 1}
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
                 </div>
 
                 {/* Text */}
-                <div className="p-5 space-y-1.5 flex-1 flex flex-col">
+                <div className="p-5 pt-4 space-y-1.5 flex-1 flex flex-col border-t border-white/5">
                   <h3 className="text-white font-bold text-base tracking-tight leading-snug">
                     {step.title}
                   </h3>
