@@ -379,24 +379,23 @@ export default function LandingPage() {
           <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-white/[0.07] rounded-full blur-3xl pointer-events-none" />
           
           <div className="max-w-3xl space-y-6 relative z-10">
-            <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">O bastidor revelado</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Deixa de ser idiota</span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
-              A VERDADE QUE NINGUÉM CONTA SOBRE ESTUDAR NO PARANÁ
+              A VERDADE QUE VAI INCOMODAR VOCÊ
             </h2>
 
             <p className="text-neutral-300 text-base md:text-xl leading-relaxed">
-              Você sabia que <strong className="text-white font-bold underline decoration-white/40">87% dos alunos da rede pública</strong> gastam mais tempo tentando entender o funcionamento burocrático das plataformas do que estudando de verdade? 
-              Enquanto isso, os melhores alunos... bem, você sabe como eles conseguem notas altas, né? 🤫
+              Você acha que tem problema. <strong className="text-white font-bold">Tem.</strong><br />
+              Enquanto <strong className="text-white font-bold underline decoration-white/40">87% dos alunos públicos</strong> se perdem em burocracia, os que passam usam um atalho. Um segredo. Um método que não aparece no Google e que ninguém tem coragem de te contar.
             </p>
 
             <div className="p-7 rounded-2xl bg-white/[0.04] border border-white/15 space-y-3 backdrop-blur-md">
               <div className="flex items-center gap-2.5 text-white font-bold text-lg">
                 <Cpu className="w-6 h-6 text-neutral-200" />
-                <span>A Solução do Pajé:</span>
+                <span>O Método do Pajé:</span>
               </div>
               <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-normal">
-                Eu desenvolvi SCRIPTANDO exatamente para otimizar seu tempo. Scripts inteligentes que automatizam tudo, 
-                sem precisar se esforçar, sem precisar estudar horas a fio na frente de uma tela cansativa.
+                Eu não vou te ensinar a "estudar melhor". Vou te entregar o script que faz o trabalho por você. Sem esforço. Sem se humilhar tentando entender o que não importa. Sem perder tempo.
               </p>
             </div>
 
@@ -405,15 +404,12 @@ export default function LandingPage() {
                 onClick={scrollToCheckout}
                 className="glass-button-secondary px-8 py-4 rounded-full text-sm font-semibold flex items-center gap-3 cursor-pointer group"
               >
-                QUERO SER MAIS EFICIENTE TAMBÉM
+                QUERO PARAR DE PERDER TEMPO
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
 
-          <p className="text-right text-xs font-mono tracking-wider text-neutral-500 pt-4">
-            * A verdade é que os melhores alunos não necessariamente estudam mais.
-          </p>
         </motion.section>
 
 
