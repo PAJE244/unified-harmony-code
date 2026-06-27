@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from '@tanstack/react-router';
+import scriptandoIcon from '@/assets/scriptando-icon.png.asset.json';
+
 import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
   Zap, 
@@ -224,9 +226,10 @@ export default function LandingPage() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-neutral-200 to-white flex items-center justify-center text-black font-black text-xl tracking-tighter shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-            S
+          <div className="w-11 h-11 rounded-2xl overflow-hidden bg-gradient-to-tr from-neutral-900 to-neutral-700 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.25)] ring-1 ring-white/20">
+            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover" />
           </div>
+
           <div className="flex flex-col">
             <span className="font-extrabold tracking-tight text-lg text-white leading-none">SCRIPTANDO</span>
             <span className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase mt-1">PR Public Schools</span>
@@ -254,16 +257,17 @@ export default function LandingPage() {
         >
           <Link
             to="/app"
-            className="text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all cursor-pointer"
+            className="text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-white backdrop-blur-md hover:bg-white/20 transition-all cursor-pointer active:scale-95 duration-150"
           >
             Entrar
           </Link>
           <button
             onClick={scrollToCheckout}
-            className="text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full bg-white text-black hover:bg-neutral-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer hover:scale-105 active:scale-95"
+            className="text-xs sm:text-sm font-extrabold px-5 py-2.5 rounded-full bg-white text-black backdrop-blur-md hover:bg-neutral-100 transition-all shadow-[0_0_25px_rgba(255,255,255,0.35)] cursor-pointer hover:scale-105 active:scale-95 duration-150 border border-white/60"
           >
             Acesso Vitalício
           </button>
+
         </motion.div>
       </header>
 
@@ -669,7 +673,7 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md overflow-hidden"
+              className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-lg overflow-y-auto"
 
               onClick={() => setCheckoutOpen(false)}
             >
@@ -680,17 +684,18 @@ export default function LandingPage() {
                 exit={{ opacity: 0, y: 12, scale: 0.97 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-2xl max-h-[95vh] flex"
+                className="relative w-full max-w-2xl my-2 sm:my-4 sm:max-h-[92dvh] sm:flex"
               >
                 <button
                   type="button"
                   onClick={() => setCheckoutOpen(false)}
                   aria-label="Fechar"
-                  className="absolute top-2 right-2 sm:-top-3 sm:-right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform cursor-pointer font-bold text-lg"
+                  className="absolute top-3 right-3 sm:-top-3 sm:-right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-transform cursor-pointer font-bold text-lg backdrop-blur-md"
                 >
                   ×
                 </button>
-          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 relative overflow-y-auto w-full border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
+          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 relative sm:overflow-y-auto w-full border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
+
             
             {/* Efeito luminoso de fundo */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-white/[0.08] rounded-full blur-[100px] pointer-events-none" />
@@ -1068,10 +1073,13 @@ export default function LandingPage() {
 
       {/* RODAPÉ MINIMALISTA */}
       <footer className="border-t border-white/10 bg-black py-16 px-6 text-center space-y-8 text-xs text-neutral-500 font-mono relative z-10">
-        <div className="flex items-center justify-center gap-2 text-white font-sans font-extrabold tracking-tight text-lg">
-          <ShieldCheck className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-center gap-3 text-white font-sans font-extrabold tracking-tight text-lg">
+          <div className="w-9 h-9 rounded-xl overflow-hidden ring-1 ring-white/20 shadow-[0_0_24px_rgba(255,255,255,0.2)]">
+            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover" />
+          </div>
           <span>SCRIPTANDO PLATFORM</span>
         </div>
+
 
         <div className="space-y-2 text-sm">
           <p className="text-neutral-300">Criado com magia pelo <strong className="text-white font-black underline decoration-white/40">Pajé</strong></p>
