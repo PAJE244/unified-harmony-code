@@ -609,27 +609,79 @@ export default function PlatformApp() {
     }
   };
 
-  // Copy Script content to clipboard (with fallback for insecure contexts)
-  const handleCopyScript = async (scriptContent: string, _scriptTitle: string) => {
+  const copyTextWithTextarea = (text: string) => {
+    const selection = document.getSelection();
+    const selectedRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+    const textarea = document.createElement("textarea");
+
+    textarea.value = text;
+    textarea.readOnly = true;
+    textarea.setAttribute("aria-hidden", "true");
+    textarea.style.position = "fixed";
+    textarea.style.top = "0";
+    textarea.style.left = "0";
+    textarea.style.width = "1px";
+    textarea.style.height = "1px";
+    textarea.style.padding = "0";
+    textarea.style.border = "0";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+    textarea.style.zIndex = "-1";
+
+    document.body.appendChild(textarea);
+    textarea.focus({ preventScroll: true });
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+
+    let copied = false;
     try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(scriptContent);
-      } else {
-        const ta = document.createElement("textarea");
-        ta.value = scriptContent;
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
-        ta.setAttribute("readonly", "");
-        document.body.appendChild(ta);
-        ta.select();
-        const ok = document.execCommand("copy");
-        document.body.removeChild(ta);
-        if (!ok) throw new Error("execCommand failed");
+      copied = document.execCommand("copy");
+    } finally {
+      document.body.removeChild(textarea);
+      if (selectedRange && selection) {
+        selection.removeAllRanges();
+        selection.addRange(selectedRange);
       }
-      showToast("Script copiado com sucesso.", "success");
-    } catch (err) {
-      showToast("Falha ao copiar script.", "error");
     }
+
+    return copied;
+  };
+
+  // Copy Script content to clipboard with a reliable fallback for iframe/mobile contexts
+  const handleCopyScript = async (scriptContent: string, _scriptTitle: string) => {
+    const textToCopy = String(scriptContent ?? "");
+
+    if (!textToCopy.trim()) {
+      showToast("Este script está vazio.", "warning");
+      return;
+    }
+
+    let copied = false;
+
+    try {
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(textToCopy);
+        copied = true;
+      }
+    } catch {
+      copied = false;
+    }
+
+    if (!copied) {
+      try {
+        copied = copyTextWithTextarea(textToCopy);
+      } catch {
+        copied = false;
+      }
+    }
+
+    if (copied) {
+      showToast("Script copiado com sucesso.", "success");
+      return;
+    }
+
+    window.prompt("Copie o script manualmente:", textToCopy);
+    showToast("O navegador bloqueou a cópia automática. O script foi aberto para copiar manualmente.", "info");
   };
 
   // Filter and Search computed lists
