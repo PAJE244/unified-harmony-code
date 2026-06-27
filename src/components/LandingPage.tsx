@@ -669,8 +669,8 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/75 overflow-hidden"
-              style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' } as React.CSSProperties}
+              className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md overflow-hidden"
+
               onClick={() => setCheckoutOpen(false)}
             >
               <motion.div
