@@ -1072,10 +1072,13 @@ export default function LandingPage() {
 
       {/* RODAPÉ MINIMALISTA */}
       <footer className="border-t border-white/10 bg-black py-16 px-6 text-center space-y-8 text-xs text-neutral-500 font-mono relative z-10">
-        <div className="flex items-center justify-center gap-2 text-white font-sans font-extrabold tracking-tight text-lg">
-          <ShieldCheck className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-center gap-3 text-white font-sans font-extrabold tracking-tight text-lg">
+          <div className="w-9 h-9 rounded-xl overflow-hidden ring-1 ring-white/20 shadow-[0_0_24px_rgba(255,255,255,0.2)]">
+            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover" />
+          </div>
           <span>SCRIPTANDO PLATFORM</span>
         </div>
+
 
         <div className="space-y-2 text-sm">
           <p className="text-neutral-300">Criado com magia pelo <strong className="text-white font-black underline decoration-white/40">Pajé</strong></p>
