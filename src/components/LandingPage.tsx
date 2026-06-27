@@ -3,6 +3,14 @@ import QRCode from 'react-qr-code';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from '@tanstack/react-router';
 import scriptandoIcon from '@/assets/scriptando-icon.png.asset.json';
+import tut1 from '@/assets/tutorial/tutorial-1.png.asset.json';
+import tut2 from '@/assets/tutorial/tutorial-2.png.asset.json';
+import tut3 from '@/assets/tutorial/tutorial-3.png.asset.json';
+import tut4 from '@/assets/tutorial/tutorial-4.png.asset.json';
+import tut5 from '@/assets/tutorial/tutorial-5.png.asset.json';
+import tut6 from '@/assets/tutorial/tutorial-6.png.asset.json';
+import tut7 from '@/assets/tutorial/tutorial-7.png.asset.json';
+import tut8 from '@/assets/tutorial/tutorial-8.png.asset.json';
 
 import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
@@ -587,51 +595,9 @@ export default function LandingPage() {
         </motion.section>
 
 
-        {/* 5. TUTORIAL MINIMALISTA */}
-        <motion.section 
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="glass-panel rounded-3xl p-8 md:p-16 space-y-12 border-white/15"
-        >
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-8">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Guia de execução</span>
-              <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white mt-1">
-                ASSIM ATÉ CRIANÇA USA
-              </h2>
-            </div>
-            <span className="text-xs font-mono tracking-wider px-3.5 py-1.5 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-300 uppercase shrink-0">
-              MAS NÃO CONTA PARA NINGUÉM 🤫
-            </span>
-          </div>
+        {/* 5. TUTORIAL — Celular / Computador */}
+        <TutorialSection />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-5">
-            {[
-              { t: "Faça login normal na plataforma escolar desejada", icon: Laptop },
-              { t: "Abra o portal do SCRIPTANDO em outra aba no navegador", icon: Smartphone },
-              { t: "Selecione a plataforma escolar que quer automatizar", icon: CheckCircle },
-              { t: "Clique no botão grande 'INICIAR AUTOMAÇÃO'", icon: Zap },
-              { t: "Volte para a aba escolar e veja a mágica acontecendo", icon: Sparkles }
-            ].map((step, idx) => {
-              const IconComp = step.icon;
-              return (
-                <div key={idx} className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 space-y-4 flex flex-col justify-between hover:bg-white/[0.06] transition-colors">
-                  <div className="flex items-center justify-between text-neutral-400">
-                    <span className="w-8 h-8 rounded-xl bg-white/10 font-mono text-sm font-extrabold flex items-center justify-center text-white shadow">
-                      {idx + 1}
-                    </span>
-                    <IconComp className="w-5 h-5 text-neutral-300" />
-                  </div>
-                  <p className="text-sm md:text-base text-neutral-200 font-normal leading-snug">
-                    {step.t}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </motion.section>
 
 
         {/* 6. AVISO LEGAL */}
@@ -1095,3 +1061,149 @@ export default function LandingPage() {
     </div>
   );
 }
+
+// ============================================================
+// TUTORIAL SECTION — Celular / Computador
+// ============================================================
+const mobileSteps = [
+  { img: tut1.url, title: 'Copie o script', desc: 'Acesse o Scriptando e toque em "Copiar Script" da plataforma desejada.' },
+  { img: tut2.url, title: 'Adicione aos favoritos', desc: 'Abra o menu do navegador e toque na estrela para salvar o site nos favoritos.' },
+  { img: tut3.url, title: 'Abra seus favoritos', desc: 'Toque em "Favoritos" para visualizar a lista de sites salvos.' },
+  { img: tut4.url, title: 'Edite o favorito', desc: 'Toque nos três pontos ao lado do favorito recém criado e selecione "Editar".' },
+  { img: tut5.url, title: 'Renomeie (opcional)', desc: 'Altere o nome do favorito para algo fácil de identificar depois.' },
+  { img: tut6.url, title: 'Cole o script na URL', desc: 'Apague a URL existente e cole o script copiado no campo de endereço. Salve.' },
+  { img: tut7.url, title: 'Abra a plataforma', desc: 'Acesse normalmente a plataforma escolar onde deseja executar o script.' },
+  { img: tut8.url, title: 'Execute o favorito', desc: 'Toque no favorito que você criou e veja a automação acontecer instantaneamente.' },
+];
+
+function TutorialSection() {
+  const [tab, setTab] = useState<'mobile' | 'desktop'>('mobile');
+
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="glass-panel rounded-3xl p-6 sm:p-10 md:p-14 space-y-10 border-white/15"
+    >
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
+        <div className="min-w-0">
+          <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Tutorial passo a passo</span>
+          <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white mt-2">
+            APRENDA EM MINUTOS
+          </h2>
+          <p className="text-sm text-neutral-400 mt-2 max-w-xl">
+            Um guia visual, simples e direto. Escolha sua plataforma abaixo.
+          </p>
+        </div>
+
+        {/* Tabs */}
+        <div className="inline-flex p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md shrink-0 self-start md:self-end">
+          <button
+            onClick={() => setTab('mobile')}
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              tab === 'mobile'
+                ? 'bg-white text-black shadow-lg shadow-white/10 scale-[1.02]'
+                : 'text-neutral-400 hover:text-white'
+            }`}
+          >
+            <Smartphone className="w-4 h-4" />
+            Celular
+          </button>
+          <button
+            onClick={() => setTab('desktop')}
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              tab === 'desktop'
+                ? 'bg-white text-black shadow-lg shadow-white/10 scale-[1.02]'
+                : 'text-neutral-400 hover:text-white'
+            }`}
+          >
+            <Laptop className="w-4 h-4" />
+            Computador
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <AnimatePresence mode="wait">
+        {tab === 'mobile' ? (
+          <motion.div
+            key="mobile"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6"
+          >
+            {mobileSteps.map((step, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                className="group relative rounded-2xl bg-white/[0.03] border border-white/10 overflow-hidden hover:bg-white/[0.06] hover:border-white/20 hover:-translate-y-1 transition-all duration-500 flex flex-col"
+              >
+                {/* Image */}
+                <div className="relative aspect-[9/16] overflow-hidden bg-black/40">
+                  <img
+                    src={step.img}
+                    alt={`Passo ${idx + 1} — ${step.title}`}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute top-3 left-3 w-9 h-9 rounded-xl bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white text-sm font-black shadow-lg">
+                    {idx + 1}
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
+                </div>
+
+                {/* Text */}
+                <div className="p-5 space-y-1.5 flex-1 flex flex-col">
+                  <h3 className="text-white font-bold text-base tracking-tight leading-snug">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-neutral-400 leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="desktop"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="flex justify-center"
+          >
+            <div className="relative w-full max-w-2xl rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] backdrop-blur-xl p-10 md:p-14 text-center overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_60%)] pointer-events-none" />
+              <div className="relative space-y-5">
+                <div className="inline-flex p-4 rounded-2xl bg-white/[0.05] border border-white/10 shadow-inner">
+                  <Laptop className="w-8 h-8 text-white" />
+                </div>
+                <div className="space-y-2">
+                  <span className="inline-block text-[11px] font-mono uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-white/10 border border-white/15 text-neutral-200">
+                    Em breve
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+                    Tutorial para Computador
+                  </h3>
+                  <p className="text-sm md:text-base text-neutral-400 max-w-md mx-auto leading-relaxed">
+                    Estamos preparando um guia completo para desktop com o mesmo nível de detalhe. Aguarde — vai valer a pena.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.section>
+  );
+}
+
