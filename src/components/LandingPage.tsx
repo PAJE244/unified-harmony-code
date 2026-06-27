@@ -713,8 +713,9 @@ export default function LandingPage() {
                     exit="exit"
                     className="space-y-4 sm:space-y-5"
                   >
-                    <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/10 text-center text-xs sm:text-sm text-neutral-300">
-                      📝 Escolha as credenciais que você deseja. Seu acesso é liberado manualmente pelo Pajé após a confirmação do PIX.
+                    <div className="p-3.5 rounded-2xl bg-gradient-to-r from-white/[0.05] to-white/[0.02] border border-white/10 flex items-start gap-3 text-xs sm:text-sm text-neutral-300">
+                      <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>Escolha as credenciais que deseja. Seu acesso é liberado manualmente pelo Pajé após a confirmação do PIX.</span>
                     </div>
 
                     <form onSubmit={handleFormSubmit} className="space-y-4">
