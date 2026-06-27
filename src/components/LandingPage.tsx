@@ -673,7 +673,7 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md overflow-hidden"
+              className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-lg overflow-y-auto"
 
               onClick={() => setCheckoutOpen(false)}
             >
@@ -684,17 +684,18 @@ export default function LandingPage() {
                 exit={{ opacity: 0, y: 12, scale: 0.97 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-2xl max-h-[95vh] flex"
+                className="relative w-full max-w-2xl my-2 sm:my-4 sm:max-h-[92dvh] sm:flex"
               >
                 <button
                   type="button"
                   onClick={() => setCheckoutOpen(false)}
                   aria-label="Fechar"
-                  className="absolute top-2 right-2 sm:-top-3 sm:-right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform cursor-pointer font-bold text-lg"
+                  className="absolute top-3 right-3 sm:-top-3 sm:-right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-transform cursor-pointer font-bold text-lg backdrop-blur-md"
                 >
                   ×
                 </button>
-          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 relative overflow-y-auto w-full border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
+          <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-6 relative sm:overflow-y-auto w-full border-white/25 shadow-[0_0_80px_rgba(255,255,255,0.08)]">
+
             
             {/* Efeito luminoso de fundo */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-white/[0.08] rounded-full blur-[100px] pointer-events-none" />
