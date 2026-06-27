@@ -257,16 +257,17 @@ export default function LandingPage() {
         >
           <Link
             to="/app"
-            className="text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all cursor-pointer"
+            className="text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full bg-white/10 border border-white/20 text-white backdrop-blur-md hover:bg-white/20 transition-all cursor-pointer active:scale-95 duration-150"
           >
             Entrar
           </Link>
           <button
             onClick={scrollToCheckout}
-            className="text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full bg-white text-black hover:bg-neutral-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer hover:scale-105 active:scale-95"
+            className="text-xs sm:text-sm font-extrabold px-5 py-2.5 rounded-full bg-white text-black backdrop-blur-md hover:bg-neutral-100 transition-all shadow-[0_0_25px_rgba(255,255,255,0.35)] cursor-pointer hover:scale-105 active:scale-95 duration-150 border border-white/60"
           >
             Acesso Vitalício
           </button>
+
         </motion.div>
       </header>
 
