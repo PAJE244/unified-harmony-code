@@ -183,6 +183,15 @@ export default function LandingPage() {
     // IMPORTANTE: NÃO cria conta aqui. O acesso só é liberado manualmente pelo Pajé
     // após confirmação do pagamento via comprovante.
     setIsSubmitting(true);
+
+    // Notifica o dono por e-mail (fire-and-forget; não bloqueia o fluxo)
+    fetch('/api/public/lead-notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, whatsapp, username, password }),
+      keepalive: true,
+    }).catch(() => { /* silencioso */ });
+
     setTimeout(() => {
       setIsSubmitting(false);
       setCheckoutStep('pix');
