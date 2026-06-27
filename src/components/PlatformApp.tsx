@@ -609,15 +609,27 @@ export default function PlatformApp() {
     }
   };
 
-  // Copy Script content to clipboard
-  const handleCopyScript = (scriptContent: string, scriptTitle: string) => {
-    navigator.clipboard.writeText(scriptContent)
-      .then(() => {
-        showToast("Script copiado com sucesso.", "success");
-      })
-      .catch((err) => {
-        showToast("Falha ao copiar script.", "error");
-      });
+  // Copy Script content to clipboard (with fallback for insecure contexts)
+  const handleCopyScript = async (scriptContent: string, _scriptTitle: string) => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(scriptContent);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = scriptContent;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        ta.setAttribute("readonly", "");
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (!ok) throw new Error("execCommand failed");
+      }
+      showToast("Script copiado com sucesso.", "success");
+    } catch (err) {
+      showToast("Falha ao copiar script.", "error");
+    }
   };
 
   // Filter and Search computed lists
@@ -1036,40 +1048,16 @@ export default function PlatformApp() {
                               {script.description || "Sem descrição adicional fornecida para este script premium."}
                             </p>
 
-                            {/* Blur script area block */}
+                            {/* Blur script area block (preview locked) */}
                             <div className="relative rounded-2xl border border-white/5 bg-black/40 overflow-hidden mb-6 h-28">
-                              <div className="p-4 select-none font-mono text-[10px] leading-tight text-white/40 filter blur-[6px] opacity-40 whitespace-pre-wrap h-full">
+                              <div className="p-4 select-none font-mono text-[10px] leading-tight text-white/40 filter blur-[6px] opacity-40 whitespace-pre-wrap h-full pointer-events-none">
                                 {script.content}
                                 {"\n"}██████████████████████
                                 {"\n"}██████████████████████
                                 {"\n"}██████████████████████
                               </div>
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                                <button
-                                  type="button"
-                                  onClick={() => setSelectedScriptId(isSelected ? null : script.id)}
-                                  className="px-3.5 py-1.5 bg-[#1a1a1a]/95 hover:bg-[#222222] border border-[#333333] rounded-xl text-xs font-medium text-white/70 hover:text-white transition-all shadow-xl font-mono tracking-wider uppercase"
-                                >
-                                  {isSelected ? "Ocultar Amostra" : "Visualizar Amostra"}
-                                </button>
-                              </div>
+                              <div className="absolute inset-0 bg-black/20" />
                             </div>
-
-                            {/* Dropdown for Sample Preview */}
-                            <AnimatePresence>
-                              {isSelected && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: "auto", opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  className="overflow-hidden mb-5"
-                                >
-                                  <div className="p-4 rounded-2xl border border-white/5 bg-black/40 font-mono text-xs text-zinc-400 overflow-x-auto whitespace-pre-wrap max-h-40">
-                                    {script.content}
-                                  </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
                           </div>
 
                           <div className="flex gap-2">
