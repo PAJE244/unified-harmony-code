@@ -677,8 +677,148 @@ export default function LandingPage() {
         </motion.section>
 
 
+        {/* PROVA SOCIAL */}
+        <motion.section
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="space-y-10"
+        >
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Prova Social</span>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white">
+              JUNTE-SE A CENTENAS DE ALUNOS QUE JÁ REVOLUCIONARAM SEUS ESTUDOS
+            </h2>
+            <div className="pt-4 inline-flex items-baseline gap-3 px-6 py-3 rounded-2xl bg-white/[0.04] border border-white/15 backdrop-blur-md">
+              <span className="text-4xl md:text-5xl font-black text-white tabular-nums">
+                +<AnimatedCounter target={847} />
+              </span>
+              <span className="text-xs sm:text-sm font-mono uppercase tracking-wider text-neutral-400">
+                alunos usando Scriptando
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { name: 'Lucas M.', course: 'Ensino Médio — Curitiba', quote: 'Minha média subiu de 6 para 9 em um mês. Tempo livre que nunca tive antes.' },
+              { name: 'Júlia R.', course: 'Engenharia — UFPR', quote: 'O Scriptando salvou meu semestre. Foco no que importa, o resto é com o Pajé.' },
+              { name: 'Pedro H.', course: 'CTI Paraná', quote: 'Em segundos resolvo o que levava horas. Meus amigos não acreditam.' },
+              { name: 'Mariana S.', course: 'Direito — PUCPR', quote: 'Vale cada centavo. Acesso vitalício por menos que um lanche, sério.' },
+            ].map((t, i) => (
+              <motion.div
+                key={i}
+                variants={fadeInUp}
+                className="glass-panel glass-panel-hover rounded-3xl p-6 space-y-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-neutral-700 to-neutral-900 border border-white/15 flex items-center justify-center text-white font-bold">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white font-bold text-sm truncate">{t.name}</div>
+                    <div className="text-[11px] font-mono text-neutral-500 uppercase tracking-wider truncate">{t.course}</div>
+                  </div>
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, k) => (
+                      <Sparkles key={k} className="w-3 h-3 text-amber-300 fill-amber-300" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-neutral-300 text-sm leading-relaxed">"{t.quote}"</p>
+                <div className="text-[10px] font-mono uppercase tracking-widest text-neutral-600">Foto em breve</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+
+        {/* OFERTA IRRESISTÍVEL */}
+        <motion.section
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="relative"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.08),transparent_60%)] pointer-events-none" />
+          <div className="relative max-w-3xl mx-auto rounded-[2rem] p-8 md:p-14 bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/20 backdrop-blur-xl shadow-[0_0_80px_rgba(255,255,255,0.08)] space-y-8">
+            <div className="text-center space-y-3">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-300/10 border border-amber-300/30 text-amber-200 text-[10px] font-mono uppercase tracking-widest">
+                <Flame className="w-3 h-3" /> Oferta especial do Pajé
+              </span>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
+                ACESSO VITALÍCIO POR APENAS R$9,90
+              </h2>
+              <div className="flex items-baseline justify-center gap-3 pt-4">
+                <span className="text-neutral-500 text-lg md:text-xl line-through font-medium">De R$97,00</span>
+                <span className="text-5xl md:text-7xl font-black text-white tracking-tighter">R$9,90</span>
+              </div>
+              <p className="text-neutral-400 text-sm md:text-base">
+                Pagamento único. Acesso vitalício a <strong className="text-white">todos os scripts e atualizações</strong>.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                'Acesso imediato a todos os scripts exclusivos',
+                'Tutorial passo a passo do Método do Pajé',
+                'Grupo exclusivo no Telegram (em breve)',
+                'Atualizações gratuitas para sempre',
+              ].map((b, i) => (
+                <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-neutral-200 text-sm leading-snug">{b}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center pt-2">
+              <button
+                onClick={scrollToCheckout}
+                className="w-full sm:w-auto glass-button px-7 sm:px-10 py-5 rounded-full font-extrabold text-sm sm:text-lg tracking-tight inline-flex items-center justify-center gap-3 cursor-pointer group relative overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                <span className="relative">DESBLOQUEAR MEU ACESSO VITALÍCIO</span>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform relative" />
+              </button>
+              <p className="text-[11px] font-mono uppercase tracking-widest text-neutral-500 mt-4">
+                Vagas limitadas — preço sobe amanhã
+              </p>
+            </div>
+          </div>
+        </motion.section>
+
+
+        {/* GARANTIA */}
+        <motion.section
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="rounded-3xl p-8 md:p-12 bg-gradient-to-br from-emerald-500/[0.04] to-transparent border border-emerald-400/20 text-center space-y-5 backdrop-blur-md">
+            <div className="inline-flex p-4 rounded-2xl bg-emerald-400/10 border border-emerald-400/30">
+              <ShieldCheck className="w-9 h-9 text-emerald-300" />
+            </div>
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white">
+              GARANTIA INCONDICIONAL DO PAJÉ
+            </h2>
+            <p className="text-neutral-300 text-sm md:text-lg leading-relaxed max-w-2xl mx-auto">
+              Se em <strong className="text-white">7 dias</strong> você não sentir que o Scriptando revolucionou seus estudos e te deu uma vantagem injusta, devolvemos <strong className="text-white">100% do seu investimento</strong>. Sem perguntas, sem burocracia.
+            </p>
+            <div className="pt-2 text-2xl md:text-3xl text-white font-bold italic" style={{ fontFamily: 'cursive' }}>
+              — Pajé
+            </div>
+          </div>
+        </motion.section>
+
+
         {/* 5. TUTORIAL — Celular / Computador */}
         <TutorialSection />
+
 
 
 
