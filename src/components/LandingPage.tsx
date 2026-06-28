@@ -369,41 +369,53 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="text-[2rem] leading-[1.05] sm:text-6xl md:text-7xl font-black tracking-tight text-gradient"
           >
-            {settings.heroTitle}
+            CANSADO DE PERDER NOITES COM ATIVIDADES ESCOLARES?
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg sm:text-2xl text-neutral-300 font-normal max-w-3xl mx-auto leading-relaxed"
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="text-lg sm:text-2xl md:text-3xl text-white font-semibold max-w-3xl mx-auto leading-tight tracking-tight"
           >
-            Eu, o <span className="text-white font-bold underline decoration-white/50 underline-offset-4">Pajé</span>, criei <strong className="text-white font-extrabold">SCRIPTANDO</strong> para você automatizar 
-            <span className="text-white font-semibold"> Khan Academy</span>, <span className="text-white font-semibold">Quizizz</span>, <span className="text-white font-semibold">Redação Paraná</span>, <span className="text-white font-semibold">Inglês Paraná</span> e <span className="text-white font-semibold">Leia Paraná</span> em segundos!
+            Desbloqueie o segredo para <span className="text-white underline decoration-white/40 underline-offset-4">notas altas</span> e <span className="text-white underline decoration-white/40 underline-offset-4">tempo livre</span> com Scriptando.
           </motion.p>
 
           <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-sm md:text-base text-neutral-400 max-w-2xl mx-auto font-light leading-normal"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.25 }}
+            className="text-base sm:text-lg text-neutral-300 max-w-2xl mx-auto leading-relaxed"
           >
-            Enquanto seus colegas perdem noites estudando, você estará à frente, conquistando excelentes notas sem esforço. 
-            Isso é privilégio ou inteligência? Com SCRIPTANDO, você decide!
+            O <span className="text-white font-bold">Pajé</span> revela a automação exclusiva que permite a estudantes do PR dominar qualquer plataforma em segundos, enquanto seus colegas ainda estão estudando.
           </motion.p>
+
+          {/* Placeholder do Pajé */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.35 }}
+            className="mx-auto w-40 h-40 sm:w-48 sm:h-48 rounded-3xl bg-gradient-to-br from-neutral-900 to-black border border-white/15 flex flex-col items-center justify-center gap-2 shadow-[0_0_60px_rgba(255,255,255,0.08)] relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
+            <Sparkles className="w-10 h-10 text-white/70 relative z-10" />
+            <span className="text-white font-bold text-sm tracking-tight relative z-10">O Pajé</span>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-500 relative z-10">Foto em breve</span>
+          </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4"
+            transition={{ duration: 0.8, delay: 0.45 }}
+            className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <button 
               onClick={scrollToCheckout}
-              className="w-full sm:w-auto glass-button px-9 py-5 rounded-full font-extrabold text-base md:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer group shadow-[0_0_50px_rgba(255,255,255,0.25)]"
+              className="w-full sm:w-auto glass-button px-7 sm:px-9 py-5 rounded-full font-extrabold text-sm sm:text-lg md:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer group shadow-[0_0_50px_rgba(255,255,255,0.3)] relative overflow-hidden"
             >
-              QUERO AUTOMATIZAR O SISTEMA AGORA
-              <ChevronRight className="w-6 h-6 group-hover:translate-x-1.5 transition-transform" />
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+              <span className="relative">SIM! QUERO MINHAS NOTAS ALTAS AGORA</span>
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1.5 transition-transform relative animate-pulse" />
             </button>
           </motion.div>
 
@@ -411,12 +423,13 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="pt-4 block"
+            className="pt-2 block"
           >
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 italic">
-              "Seus amigos estão se esforçando demais enquanto você lê isso"
+              "Enquanto você lê isso, seus colegas continuam se esforçando"
             </p>
           </motion.div>
+
 
           {/* Plataformas Grid */}
           <motion.div 
