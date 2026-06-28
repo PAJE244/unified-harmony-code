@@ -462,9 +462,10 @@ export default function LandingPage() {
           <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-white/[0.07] rounded-full blur-3xl pointer-events-none" />
           
           <div className="max-w-3xl space-y-6 relative z-10">
-            <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Deixa de ser idiota</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Transformação</span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
-              A VERDADE QUE VAI INCOMODAR VOCÊ
+              DEIXE DE SER MAIS UM NO SISTEMA. TORNE-SE O MESTRE DO JOGO.
+
             </h2>
 
             <p className="text-neutral-300 text-base md:text-xl leading-relaxed">
