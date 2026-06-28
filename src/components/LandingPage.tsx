@@ -830,23 +830,22 @@ export default function LandingPage() {
           viewport={{ once: true, margin: "-100px" }}
           className="max-w-3xl mx-auto rounded-3xl p-8 md:p-12 border border-neutral-800 bg-gradient-to-b from-neutral-900/60 to-[#050505] text-center space-y-6 shadow-2xl"
         >
-          <div className="inline-flex p-3.5 rounded-2xl bg-neutral-800 border border-neutral-700 text-white mb-2 shadow">
-            <AlertTriangle className="w-7 h-7 text-amber-400" />
+          <div className="inline-flex p-3.5 rounded-2xl bg-white/5 border border-white/15 text-white mb-2 shadow">
+            <Sparkles className="w-7 h-7 text-white" />
           </div>
           
           <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white uppercase">
-            VERDADES QUE PRECISAM SER DITAS
+            DESCUBRA A VANTAGEM QUE O SISTEMA NÃO QUER QUE VOCÊ TENHA
           </h2>
 
-          <p className="text-neutral-400 text-sm md:text-base leading-relaxed text-justify sm:text-center font-light">
-            Vamos ser claros: <span className="text-white font-medium">isso é ilegal</span>. Você estará burlando o sistema. 
-            Eu, o <strong className="text-white font-bold">Pajé</strong>, não me responsabilizo por qualquer dano, suspensão ou problema escolar que você possa ter. 
-            Use por sua conta e risco. 
+          <p className="text-neutral-300 text-sm md:text-base leading-relaxed text-justify sm:text-center font-light">
+            O <strong className="text-white">Scriptando</strong> foi desenvolvido para <strong className="text-white">otimizar seu tempo</strong> e maximizar seus resultados. É uma ferramenta de uso pessoal para automatizar tarefas repetitivas, permitindo que você foque no que realmente importa: aprender de forma eficiente e conquistar sua liberdade.
           </p>
 
-          <p className="text-neutral-300 font-medium text-sm md:text-base italic pt-2">
-            "Mas vamos combinar... o risco faz parte da emoção, não é mesmo?"
+          <p className="text-neutral-500 text-[11px] md:text-xs leading-relaxed pt-2 font-light">
+            O uso responsável da ferramenta é de inteira responsabilidade do usuário. Consulte os termos de uso para mais informações.
           </p>
+
         </motion.section>
 
 
