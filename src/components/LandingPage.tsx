@@ -268,18 +268,22 @@ export default function LandingPage() {
       <div className="fixed top-[-15%] left-[15%] w-[700px] h-[700px] rounded-full bg-gradient-to-br from-white/[0.04] via-neutral-800/[0.03] to-transparent blur-[160px] pointer-events-none -z-10" />
       <div className="fixed bottom-[-10%] right-[10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tl from-neutral-800/[0.15] to-transparent blur-[140px] pointer-events-none -z-10" />
 
-      {/* BARRA DE URGÊNCIA FLUTUANTE */}
+      {/* BARRA DE URGÊNCIA FLUTUANTE COM COUNTDOWN */}
       <motion.div 
         initial={{ y: -50 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="sticky top-0 z-50 bg-[#050505]/85 backdrop-blur-xl border-b border-white/10 px-4 py-2.5 text-center text-xs md:text-sm font-medium tracking-wide flex items-center justify-center gap-2 text-neutral-300 shadow-2xl"
+        className="sticky top-0 z-50 bg-gradient-to-r from-black via-[#1a0505] to-black backdrop-blur-xl border-b border-red-500/30 px-3 py-2 text-center text-[11px] sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-2 sm:gap-3 text-red-100 shadow-[0_0_30px_rgba(239,68,68,0.35)]"
+        style={{ animation: 'pulse 2.6s ease-in-out infinite' }}
       >
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-black text-[10px] font-extrabold tracking-wider animate-pulse">
-          <Flame className="w-3 h-3 text-black fill-black" /> LOTE OFICIAL
-        </span>
-        <span className="truncate">{settings.loteText}</span>
+        <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400 flex-shrink-0 animate-pulse" />
+        <span className="hidden sm:inline text-red-300 font-extrabold uppercase tracking-wider">Últimos 37 acessos</span>
+        <span className="sm:hidden text-red-300 font-extrabold uppercase">37 vagas</span>
+        <span className="text-white font-bold">por R$9,90</span>
+        <span className="hidden md:inline text-red-200/80">— sobe amanhã</span>
+        <CountdownBadge />
       </motion.div>
+
 
       {/* NAVEGAÇÃO PRINCIPAL */}
       <header className="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-8 flex items-center justify-between gap-3 relative z-10">
