@@ -106,63 +106,6 @@ const stepTransition: any = {
   exit: { opacity: 0, x: -20, scale: 0.98, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }
 };
 
-// Countdown regressivo para urgência (reinicia a cada 24h)
-function useCountdown() {
-  const [time, setTime] = useState({ h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    const target = (() => {
-      const stored = typeof window !== 'undefined' ? localStorage.getItem('scriptando_offer_end') : null;
-      if (stored) {
-        const t = parseInt(stored, 10);
-        if (t > Date.now()) return t;
-      }
-      const t = Date.now() + 23 * 3600 * 1000 + 47 * 60 * 1000;
-      if (typeof window !== 'undefined') localStorage.setItem('scriptando_offer_end', String(t));
-      return t;
-    })();
-    const tick = () => {
-      const diff = Math.max(0, target - Date.now());
-      setTime({
-        h: Math.floor(diff / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-  const pad = (n: number) => n.toString().padStart(2, '0');
-  return `${pad(time.h)}:${pad(time.m)}:${pad(time.s)}`;
-}
-
-// Contador animado de alunos
-function AnimatedCounter({ target, duration = 2000 }: { target: number; duration?: number }) {
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    let raf = 0;
-    const start = performance.now();
-    const step = (now: number) => {
-      const p = Math.min(1, (now - start) / duration);
-      setN(Math.floor(p * target));
-      if (p < 1) raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
-  return <span>{n.toLocaleString('pt-BR')}</span>;
-}
-
-function CountdownBadge() {
-  const t = useCountdown();
-  return (
-    <span className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-500/15 border border-red-500/40 text-red-200 font-mono text-[10px] sm:text-xs tracking-wider tabular-nums">
-      <Clock className="w-3 h-3" /> {t}
-    </span>
-  );
-}
-
-
 export default function LandingPage() {
   // Modal de checkout
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -278,22 +221,18 @@ export default function LandingPage() {
       <div className="fixed top-[-15%] left-[15%] w-[700px] h-[700px] rounded-full bg-gradient-to-br from-white/[0.04] via-neutral-800/[0.03] to-transparent blur-[160px] pointer-events-none -z-10" />
       <div className="fixed bottom-[-10%] right-[10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tl from-neutral-800/[0.15] to-transparent blur-[140px] pointer-events-none -z-10" />
 
-      {/* BARRA DE URGÊNCIA FLUTUANTE COM COUNTDOWN */}
+      {/* BARRA DE URGÊNCIA FLUTUANTE */}
       <motion.div 
         initial={{ y: -50 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="sticky top-0 z-50 bg-gradient-to-r from-black via-[#1a0505] to-black backdrop-blur-xl border-b border-red-500/30 px-3 py-2 text-center text-[11px] sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-2 sm:gap-3 text-red-100 shadow-[0_0_30px_rgba(239,68,68,0.35)]"
-        style={{ animation: 'pulse 2.6s ease-in-out infinite' }}
+        className="sticky top-0 z-50 bg-[#050505]/85 backdrop-blur-xl border-b border-white/10 px-4 py-2.5 text-center text-xs md:text-sm font-medium tracking-wide flex items-center justify-center gap-2 text-neutral-300 shadow-2xl"
       >
-        <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400 flex-shrink-0 animate-pulse" />
-        <span className="hidden sm:inline text-red-300 font-extrabold uppercase tracking-wider">Últimos 37 acessos</span>
-        <span className="sm:hidden text-red-300 font-extrabold uppercase">37 vagas</span>
-        <span className="text-white font-bold">por R$9,90</span>
-        <span className="hidden md:inline text-red-200/80">— sobe amanhã</span>
-        <CountdownBadge />
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-black text-[10px] font-extrabold tracking-wider animate-pulse">
+          <Flame className="w-3 h-3 text-black fill-black" /> LOTE OFICIAL
+        </span>
+        <span className="truncate">{settings.loteText}</span>
       </motion.div>
-
 
       {/* NAVEGAÇÃO PRINCIPAL */}
       <header className="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-8 flex items-center justify-between gap-3 relative z-10">
@@ -369,53 +308,41 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="text-[2rem] leading-[1.05] sm:text-6xl md:text-7xl font-black tracking-tight text-gradient"
           >
-            CANSADO DE PERDER NOITES COM ATIVIDADES ESCOLARES?
+            {settings.heroTitle}
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="text-lg sm:text-2xl md:text-3xl text-white font-semibold max-w-3xl mx-auto leading-tight tracking-tight"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-lg sm:text-2xl text-neutral-300 font-normal max-w-3xl mx-auto leading-relaxed"
           >
-            Desbloqueie o segredo para <span className="text-white underline decoration-white/40 underline-offset-4">notas altas</span> e <span className="text-white underline decoration-white/40 underline-offset-4">tempo livre</span> com Scriptando.
+            Eu, o <span className="text-white font-bold underline decoration-white/50 underline-offset-4">Pajé</span>, criei <strong className="text-white font-extrabold">SCRIPTANDO</strong> para você automatizar 
+            <span className="text-white font-semibold"> Khan Academy</span>, <span className="text-white font-semibold">Quizizz</span>, <span className="text-white font-semibold">Redação Paraná</span>, <span className="text-white font-semibold">Inglês Paraná</span> e <span className="text-white font-semibold">Leia Paraná</span> em segundos!
           </motion.p>
 
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25 }}
-            className="text-base sm:text-lg text-neutral-300 max-w-2xl mx-auto leading-relaxed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-sm md:text-base text-neutral-400 max-w-2xl mx-auto font-light leading-normal"
           >
-            O <span className="text-white font-bold">Pajé</span> revela a automação exclusiva que permite a estudantes do PR dominar qualquer plataforma em segundos, enquanto seus colegas ainda estão estudando.
+            Enquanto seus colegas perdem noites estudando, você estará à frente, conquistando excelentes notas sem esforço. 
+            Isso é privilégio ou inteligência? Com SCRIPTANDO, você decide!
           </motion.p>
-
-          {/* Placeholder do Pajé */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
-            className="mx-auto w-40 h-40 sm:w-48 sm:h-48 rounded-3xl bg-gradient-to-br from-neutral-900 to-black border border-white/15 flex flex-col items-center justify-center gap-2 shadow-[0_0_60px_rgba(255,255,255,0.08)] relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
-            <Sparkles className="w-10 h-10 text-white/70 relative z-10" />
-            <span className="text-white font-bold text-sm tracking-tight relative z-10">O Pajé</span>
-            <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-500 relative z-10">Foto em breve</span>
-          </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
-            className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4"
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <button 
               onClick={scrollToCheckout}
-              className="w-full sm:w-auto glass-button px-7 sm:px-9 py-5 rounded-full font-extrabold text-sm sm:text-lg md:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer group shadow-[0_0_50px_rgba(255,255,255,0.3)] relative overflow-hidden"
+              className="w-full sm:w-auto glass-button px-9 py-5 rounded-full font-extrabold text-base md:text-xl tracking-tight flex items-center justify-center gap-3 cursor-pointer group shadow-[0_0_50px_rgba(255,255,255,0.25)]"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-              <span className="relative">SIM! QUERO MINHAS NOTAS ALTAS AGORA</span>
-              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1.5 transition-transform relative animate-pulse" />
+              QUERO AUTOMATIZAR O SISTEMA AGORA
+              <ChevronRight className="w-6 h-6 group-hover:translate-x-1.5 transition-transform" />
             </button>
           </motion.div>
 
@@ -423,13 +350,12 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="pt-2 block"
+            className="pt-4 block"
           >
             <p className="text-xs font-mono uppercase tracking-widest text-neutral-500 italic">
-              "Enquanto você lê isso, seus colegas continuam se esforçando"
+              "Seus amigos estão se esforçando demais enquanto você lê isso"
             </p>
           </motion.div>
-
 
           {/* Plataformas Grid */}
           <motion.div 
@@ -462,17 +388,15 @@ export default function LandingPage() {
           <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-white/[0.07] rounded-full blur-3xl pointer-events-none" />
           
           <div className="max-w-3xl space-y-6 relative z-10">
-            <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Transformação</span>
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-400">Deixa de ser idiota</span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
-              DEIXE DE SER MAIS UM NO SISTEMA. TORNE-SE O MESTRE DO JOGO.
-
+              A VERDADE QUE VAI INCOMODAR VOCÊ
             </h2>
 
             <p className="text-neutral-300 text-base md:text-xl leading-relaxed">
-              Você se esforça, dedica horas, mas sente que está sempre <strong className="text-white">um passo atrás</strong>? O sistema foi projetado para te manter ocupado, não para te fazer vencer. <br className="hidden sm:block" />
-              <span className="text-neutral-400">Mas e se houvesse um atalho?</span>
+              Você acha que tem problema. <strong className="text-white font-bold">Tem.</strong><br />
+              Enquanto <strong className="text-white font-bold underline decoration-white/40">87% dos alunos públicos</strong> se perdem em burocracia, os que passam usam um atalho. Um segredo. Um método que não aparece no Google e que ninguém tem coragem de te contar.
             </p>
-
 
             <div className="p-7 rounded-2xl bg-white/[0.04] border border-white/15 space-y-3 backdrop-blur-md">
               <div className="flex items-center gap-2.5 text-white font-bold text-lg">
@@ -480,9 +404,8 @@ export default function LandingPage() {
                 <span>O Método do Pajé:</span>
               </div>
               <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-normal">
-                Eu não vou te ensinar a "estudar melhor". Eu vou te dar o poder de <strong className="text-white">reprogramar o jogo a seu favor</strong>. Com o Método do Pajé, você não estuda mais — você <strong className="text-white">domina</strong>.
+                Eu não vou te ensinar a "estudar melhor". Vou te entregar o script que faz o trabalho por você. Sem esforço. Sem se humilhar tentando entender o que não importa. Sem perder tempo.
               </p>
-
             </div>
 
             <div className="pt-4">
@@ -617,7 +540,7 @@ export default function LandingPage() {
           <div className="text-center space-y-3">
             <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Início Rápido</span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white">
-              COMO O MÉTODO DO PAJÉ TRANSFORMA SEUS ESTUDOS EM 3 PASSOS
+              AUTOMATIZE O SISTEMA EM 3 PASSOS
             </h2>
             <p className="text-neutral-400 text-sm font-mono tracking-wide">
               (ATÉ SEU PRIMO CONSEGUE)
@@ -677,148 +600,8 @@ export default function LandingPage() {
         </motion.section>
 
 
-        {/* PROVA SOCIAL */}
-        <motion.section
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="space-y-10"
-        >
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Prova Social</span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white">
-              JUNTE-SE A CENTENAS DE ALUNOS QUE JÁ REVOLUCIONARAM SEUS ESTUDOS
-            </h2>
-            <div className="pt-4 inline-flex items-baseline gap-3 px-6 py-3 rounded-2xl bg-white/[0.04] border border-white/15 backdrop-blur-md">
-              <span className="text-4xl md:text-5xl font-black text-white tabular-nums">
-                +<AnimatedCounter target={847} />
-              </span>
-              <span className="text-xs sm:text-sm font-mono uppercase tracking-wider text-neutral-400">
-                alunos usando Scriptando
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
-              { name: 'Lucas M.', course: 'Ensino Médio — Curitiba', quote: 'Minha média subiu de 6 para 9 em um mês. Tempo livre que nunca tive antes.' },
-              { name: 'Júlia R.', course: 'Engenharia — UFPR', quote: 'O Scriptando salvou meu semestre. Foco no que importa, o resto é com o Pajé.' },
-              { name: 'Pedro H.', course: 'CTI Paraná', quote: 'Em segundos resolvo o que levava horas. Meus amigos não acreditam.' },
-              { name: 'Mariana S.', course: 'Direito — PUCPR', quote: 'Vale cada centavo. Acesso vitalício por menos que um lanche, sério.' },
-            ].map((t, i) => (
-              <motion.div
-                key={i}
-                variants={fadeInUp}
-                className="glass-panel glass-panel-hover rounded-3xl p-6 space-y-4"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-neutral-700 to-neutral-900 border border-white/15 flex items-center justify-center text-white font-bold">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-white font-bold text-sm truncate">{t.name}</div>
-                    <div className="text-[11px] font-mono text-neutral-500 uppercase tracking-wider truncate">{t.course}</div>
-                  </div>
-                  <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, k) => (
-                      <Sparkles key={k} className="w-3 h-3 text-amber-300 fill-amber-300" />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-neutral-300 text-sm leading-relaxed">"{t.quote}"</p>
-                <div className="text-[10px] font-mono uppercase tracking-widest text-neutral-600">Foto em breve</div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
-
-
-        {/* OFERTA IRRESISTÍVEL */}
-        <motion.section
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="relative"
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.08),transparent_60%)] pointer-events-none" />
-          <div className="relative max-w-3xl mx-auto rounded-[2rem] p-8 md:p-14 bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/20 backdrop-blur-xl shadow-[0_0_80px_rgba(255,255,255,0.08)] space-y-8">
-            <div className="text-center space-y-3">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-300/10 border border-amber-300/30 text-amber-200 text-[10px] font-mono uppercase tracking-widest">
-                <Flame className="w-3 h-3" /> Oferta especial do Pajé
-              </span>
-              <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight">
-                ACESSO VITALÍCIO POR APENAS R$9,90
-              </h2>
-              <div className="flex items-baseline justify-center gap-3 pt-4">
-                <span className="text-neutral-500 text-lg md:text-xl line-through font-medium">De R$97,00</span>
-                <span className="text-5xl md:text-7xl font-black text-white tracking-tighter">R$9,90</span>
-              </div>
-              <p className="text-neutral-400 text-sm md:text-base">
-                Pagamento único. Acesso vitalício a <strong className="text-white">todos os scripts e atualizações</strong>.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                'Acesso imediato a todos os scripts exclusivos',
-                'Tutorial passo a passo do Método do Pajé',
-                'Grupo exclusivo no Telegram (em breve)',
-                'Atualizações gratuitas para sempre',
-              ].map((b, i) => (
-                <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-neutral-200 text-sm leading-snug">{b}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center pt-2">
-              <button
-                onClick={scrollToCheckout}
-                className="w-full sm:w-auto glass-button px-7 sm:px-10 py-5 rounded-full font-extrabold text-sm sm:text-lg tracking-tight inline-flex items-center justify-center gap-3 cursor-pointer group relative overflow-hidden"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <span className="relative">DESBLOQUEAR MEU ACESSO VITALÍCIO</span>
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform relative" />
-              </button>
-              <p className="text-[11px] font-mono uppercase tracking-widest text-neutral-500 mt-4">
-                Vagas limitadas — preço sobe amanhã
-              </p>
-            </div>
-          </div>
-        </motion.section>
-
-
-        {/* GARANTIA */}
-        <motion.section
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-3xl mx-auto"
-        >
-          <div className="rounded-3xl p-8 md:p-12 bg-gradient-to-br from-emerald-500/[0.04] to-transparent border border-emerald-400/20 text-center space-y-5 backdrop-blur-md">
-            <div className="inline-flex p-4 rounded-2xl bg-emerald-400/10 border border-emerald-400/30">
-              <ShieldCheck className="w-9 h-9 text-emerald-300" />
-            </div>
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight text-white">
-              GARANTIA INCONDICIONAL DO PAJÉ
-            </h2>
-            <p className="text-neutral-300 text-sm md:text-lg leading-relaxed max-w-2xl mx-auto">
-              Se em <strong className="text-white">7 dias</strong> você não sentir que o Scriptando revolucionou seus estudos e te deu uma vantagem injusta, devolvemos <strong className="text-white">100% do seu investimento</strong>. Sem perguntas, sem burocracia.
-            </p>
-            <div className="pt-2 text-2xl md:text-3xl text-white font-bold italic" style={{ fontFamily: 'cursive' }}>
-              — Pajé
-            </div>
-          </div>
-        </motion.section>
-
-
         {/* 5. TUTORIAL — Celular / Computador */}
         <TutorialSection />
-
 
 
 
@@ -830,22 +613,23 @@ export default function LandingPage() {
           viewport={{ once: true, margin: "-100px" }}
           className="max-w-3xl mx-auto rounded-3xl p-8 md:p-12 border border-neutral-800 bg-gradient-to-b from-neutral-900/60 to-[#050505] text-center space-y-6 shadow-2xl"
         >
-          <div className="inline-flex p-3.5 rounded-2xl bg-white/5 border border-white/15 text-white mb-2 shadow">
-            <Sparkles className="w-7 h-7 text-white" />
+          <div className="inline-flex p-3.5 rounded-2xl bg-neutral-800 border border-neutral-700 text-white mb-2 shadow">
+            <AlertTriangle className="w-7 h-7 text-amber-400" />
           </div>
           
           <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white uppercase">
-            DESCUBRA A VANTAGEM QUE O SISTEMA NÃO QUER QUE VOCÊ TENHA
+            VERDADES QUE PRECISAM SER DITAS
           </h2>
 
-          <p className="text-neutral-300 text-sm md:text-base leading-relaxed text-justify sm:text-center font-light">
-            O <strong className="text-white">Scriptando</strong> foi desenvolvido para <strong className="text-white">otimizar seu tempo</strong> e maximizar seus resultados. É uma ferramenta de uso pessoal para automatizar tarefas repetitivas, permitindo que você foque no que realmente importa: aprender de forma eficiente e conquistar sua liberdade.
+          <p className="text-neutral-400 text-sm md:text-base leading-relaxed text-justify sm:text-center font-light">
+            Vamos ser claros: <span className="text-white font-medium">isso é ilegal</span>. Você estará burlando o sistema. 
+            Eu, o <strong className="text-white font-bold">Pajé</strong>, não me responsabilizo por qualquer dano, suspensão ou problema escolar que você possa ter. 
+            Use por sua conta e risco. 
           </p>
 
-          <p className="text-neutral-500 text-[11px] md:text-xs leading-relaxed pt-2 font-light">
-            O uso responsável da ferramenta é de inteira responsabilidade do usuário. Consulte os termos de uso para mais informações.
+          <p className="text-neutral-300 font-medium text-sm md:text-base italic pt-2">
+            "Mas vamos combinar... o risco faz parte da emoção, não é mesmo?"
           </p>
-
         </motion.section>
 
 
