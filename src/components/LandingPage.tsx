@@ -469,9 +469,10 @@ export default function LandingPage() {
             </h2>
 
             <p className="text-neutral-300 text-base md:text-xl leading-relaxed">
-              Você acha que tem problema. <strong className="text-white font-bold">Tem.</strong><br />
-              Enquanto <strong className="text-white font-bold underline decoration-white/40">87% dos alunos públicos</strong> se perdem em burocracia, os que passam usam um atalho. Um segredo. Um método que não aparece no Google e que ninguém tem coragem de te contar.
+              Você se esforça, dedica horas, mas sente que está sempre <strong className="text-white">um passo atrás</strong>? O sistema foi projetado para te manter ocupado, não para te fazer vencer. <br className="hidden sm:block" />
+              <span className="text-neutral-400">Mas e se houvesse um atalho?</span>
             </p>
+
 
             <div className="p-7 rounded-2xl bg-white/[0.04] border border-white/15 space-y-3 backdrop-blur-md">
               <div className="flex items-center gap-2.5 text-white font-bold text-lg">
