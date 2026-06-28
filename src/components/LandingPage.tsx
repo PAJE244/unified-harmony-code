@@ -106,6 +106,53 @@ const stepTransition: any = {
   exit: { opacity: 0, x: -20, scale: 0.98, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }
 };
 
+// Countdown regressivo para urgência (reinicia a cada 24h)
+function useCountdown() {
+  const [time, setTime] = useState({ h: 0, m: 0, s: 0 });
+  useEffect(() => {
+    const target = (() => {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('scriptando_offer_end') : null;
+      if (stored) {
+        const t = parseInt(stored, 10);
+        if (t > Date.now()) return t;
+      }
+      const t = Date.now() + 23 * 3600 * 1000 + 47 * 60 * 1000;
+      if (typeof window !== 'undefined') localStorage.setItem('scriptando_offer_end', String(t));
+      return t;
+    })();
+    const tick = () => {
+      const diff = Math.max(0, target - Date.now());
+      setTime({
+        h: Math.floor(diff / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${pad(time.h)}:${pad(time.m)}:${pad(time.s)}`;
+}
+
+// Contador animado de alunos
+function AnimatedCounter({ target, duration = 2000 }: { target: number; duration?: number }) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = Math.min(1, (now - start) / duration);
+      setN(Math.floor(p * target));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return <span>{n.toLocaleString('pt-BR')}</span>;
+}
+
 export default function LandingPage() {
   // Modal de checkout
   const [checkoutOpen, setCheckoutOpen] = useState(false);
