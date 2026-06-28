@@ -617,7 +617,7 @@ export default function LandingPage() {
           <div className="text-center space-y-3">
             <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Início Rápido</span>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white">
-              AUTOMATIZE O SISTEMA EM 3 PASSOS
+              COMO O MÉTODO DO PAJÉ TRANSFORMA SEUS ESTUDOS EM 3 PASSOS
             </h2>
             <p className="text-neutral-400 text-sm font-mono tracking-wide">
               (ATÉ SEU PRIMO CONSEGUE)
