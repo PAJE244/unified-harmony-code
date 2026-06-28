@@ -480,8 +480,9 @@ export default function LandingPage() {
                 <span>O Método do Pajé:</span>
               </div>
               <p className="text-neutral-300 text-sm md:text-base leading-relaxed font-normal">
-                Eu não vou te ensinar a "estudar melhor". Vou te entregar o script que faz o trabalho por você. Sem esforço. Sem se humilhar tentando entender o que não importa. Sem perder tempo.
+                Eu não vou te ensinar a "estudar melhor". Eu vou te dar o poder de <strong className="text-white">reprogramar o jogo a seu favor</strong>. Com o Método do Pajé, você não estuda mais — você <strong className="text-white">domina</strong>.
               </p>
+
             </div>
 
             <div className="pt-4">
