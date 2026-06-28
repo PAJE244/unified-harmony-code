@@ -153,6 +153,16 @@ function AnimatedCounter({ target, duration = 2000 }: { target: number; duration
   return <span>{n.toLocaleString('pt-BR')}</span>;
 }
 
+function CountdownBadge() {
+  const t = useCountdown();
+  return (
+    <span className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-500/15 border border-red-500/40 text-red-200 font-mono text-[10px] sm:text-xs tracking-wider tabular-nums">
+      <Clock className="w-3 h-3" /> {t}
+    </span>
+  );
+}
+
+
 export default function LandingPage() {
   // Modal de checkout
   const [checkoutOpen, setCheckoutOpen] = useState(false);
