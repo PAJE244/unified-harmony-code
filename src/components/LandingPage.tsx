@@ -11,6 +11,14 @@ import tut5 from '@/assets/tutorial/tutorial-5.jpg.asset.json';
 import tut6 from '@/assets/tutorial/tutorial-6.jpg.asset.json';
 import tut7 from '@/assets/tutorial/tutorial-7.jpg.asset.json';
 import tut8 from '@/assets/tutorial/tutorial-8.jpg.asset.json';
+import photoGabriel from '@/assets/testimonials/CRiRvn4.jpg.asset.json';
+import photoAna from '@/assets/testimonials/CRiRetf.jpg.asset.json';
+import photoAnon from '@/assets/testimonials/CRsckl4.jpg.asset.json';
+import photoJoao from '@/assets/testimonials/CRiRNus.jpg.asset.json';
+import photoLucas from '@/assets/testimonials/CRiROwG.jpg.asset.json';
+import photoLarissa from '@/assets/testimonials/CRiRSP2.jpg.asset.json';
+import photoMariaE from '@/assets/testimonials/CRiRgFS.jpg.asset.json';
+import useEmblaCarousel from 'embla-carousel-react';
 
 import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
