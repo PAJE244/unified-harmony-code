@@ -538,7 +538,12 @@ export default function LandingPage() {
         </motion.section>
 
 
+        {/* 3.5 FEEDBACKS / DEPOIMENTOS */}
+        <TestimonialsSection />
+
+
         {/* 4. COMO FUNCIONA */}
+
         <motion.section 
           variants={fadeInUp}
           initial="hidden"
