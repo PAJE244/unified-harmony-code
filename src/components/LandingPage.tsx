@@ -42,6 +42,7 @@ import {
   EyeOff,
   Flame,
   ArrowLeft,
+  ChevronLeft,
   CheckCircle,
   Smartphone,
   Laptop,
