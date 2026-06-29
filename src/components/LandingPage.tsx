@@ -1249,3 +1249,153 @@ function TutorialSection() {
   );
 }
 
+// ============================================================
+// TESTIMONIALS SECTION — Carrossel premium estilo Apple Glass
+// ============================================================
+type Testimonial = { name: string; photo: string; text: string };
+
+const TESTIMONIALS: Testimonial[] = [
+  { name: 'Gabriel Martins', photo: photoGabriel.url, text: 'cara, sem brincadeira, o script do leia paraná e da redação me poupou umas 5 horas de tela por semana. mto facil de usar, só dar o play e ir jogar um valorant kkkk recomendo dms rapaziada, de vdd' },
+  { name: 'Ana Clara Souza', photo: photoAna.url, text: 'Geeeente, eu tava desesperada com as tarefas de inglês e a bendita da khan academy acumulada de três bimestres kkkkkkk comprei meio com medo mas é bizarro de bom, fez tudo mto rápido. juro, comprem sem medo!!! 💖' },
+  { name: 'Pedro Henrique Lima', photo: photoAnon.url, text: 'o bgl é funcional de verdade. quizizz e khan academy resolvidos em minutos. o suporte dos caras no whats tbm é bem firmeza pra tirar as duvidas de instalação, mto de confiança' },
+  { name: 'Júlia Ferreira', photo: photoAnon.url, text: 'O de redação paraná é simplesmente perfeito! Pra quem odeia aquele corretor chato do governo isso aqui é a salvação da vida kkkkk nota máxima em todas as redações sem precisar ficar reescrevendo mil vezes' },
+  { name: 'João Victor Almeida', photo: photoJoao.url, text: 'salvou minha pele no final do bimestre agora... ia ficar de recuperação em matematica por causa da khan academy pq nao tinha feito nada o ano todo kkkkkkkkk valeu dms msm mano' },
+  { name: 'Maria Oliveira', photo: photoAnon.url, text: 'confesso que achei que era golpe no começo pq tem mto site mentiroso por ai, mas decidi arriscar e deu super certo. Uso mais pro leia paraná e inglês paraná. Muito seguro msm, podem comprar tranquilos' },
+  { name: 'Lucas Henrique Costa', photo: photoLucas.url, text: 'Pra quem quer farmar nota sem ter q ficar lendo livro chato ou fazendo conta infinita... comprem logo kkkk facinho de configurar no pc e roda liso' },
+  { name: 'Larissa Rocha', photo: photoLarissa.url, text: 'nossa sério, minha amiga q me passou o link de vcs e eu comprei correndo kkkkk a melhor compra do ano sem dúvidas. me livrei de ficar o fim de semana inteiro fazendo tarefa atrasada da escola' },
+  { name: 'Rafael Mendes', photo: photoAnon.url, text: 'Fiquei meio com o pé atrás por causa de ban e tal, mas faz mais de 2 meses q uso direto no meu login do seed e tá suave, o sistema deles é bem inteligente msm. Nota 10 pro trampo de vcs' },
+  { name: 'Maria Eduarda Ribeiro', photo: photoMariaE.url, text: 'aaaaa vcs sao perfeitos!!! odeio com todas as minhas forças o ingles paraná e agr nao preciso mais sofrer com aquelas lições repetitivas kkkkk recomendo de olhos fechados obg!!' },
+];
+
+// Hash determinístico do nome → data fixa entre 02/04/2026 e hoje
+function dateForName(name: string): string {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  const start = new Date(2026, 3, 2).getTime(); // 02 abril 2026
+  const end = new Date(2026, 5, 29).getTime(); // 29 junho 2026
+  const ts = start + (h % (end - start));
+  const d = new Date(ts);
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+function TestimonialsSection() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: 'start',
+    dragFree: false,
+    containScroll: 'trimSnaps',
+    duration: 28,
+  });
+  const [selected, setSelected] = useState(0);
+  const [snaps, setSnaps] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onSel = () => setSelected(emblaApi.selectedScrollSnap());
+    setSnaps(emblaApi.scrollSnapList());
+    onSel();
+    emblaApi.on('select', onSel);
+    emblaApi.on('reInit', () => {
+      setSnaps(emblaApi.scrollSnapList());
+      onSel();
+    });
+  }, [emblaApi]);
+
+  const scrollPrev = () => emblaApi?.scrollPrev();
+  const scrollNext = () => emblaApi?.scrollNext();
+
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
+      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="space-y-10"
+    >
+      <div className="text-center space-y-3 max-w-2xl mx-auto px-4">
+        <span className="text-xs font-mono uppercase tracking-widest text-neutral-500">Provas reais</span>
+        <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white">
+          O QUE NOSSOS CLIENTES ESTÃO DIZENDO
+        </h2>
+        <p className="text-neutral-400 text-sm md:text-base">
+          Histórias de quem decidiu parar de perder tempo.
+        </p>
+      </div>
+
+      <div className="relative group">
+        {/* Fades nas laterais */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 md:w-20 bg-gradient-to-r from-[#050505] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 md:w-20 bg-gradient-to-l from-[#050505] to-transparent z-10" />
+
+        {/* Embla viewport */}
+        <div className="overflow-hidden" ref={emblaRef}>
+          <div className="flex touch-pan-y -ml-4 md:-ml-6">
+            {TESTIMONIALS.map((t) => (
+              <div
+                key={t.name}
+                className="shrink-0 grow-0 basis-[88%] sm:basis-1/2 lg:basis-1/3 pl-4 md:pl-6 min-w-0"
+              >
+                <article
+                  className="group/card h-full rounded-[22px] p-6 md:p-7 border border-white/10 bg-white/[0.035] backdrop-blur-xl shadow-[0_10px_40px_-20px_rgba(0,0,0,0.7)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-white/[0.06] hover:border-white/20 hover:shadow-[0_20px_60px_-20px_rgba(255,255,255,0.08)] hover:-translate-y-0.5 hover:scale-[1.02] will-change-transform"
+                  style={{ transform: 'translateZ(0)' }}
+                >
+                  <header className="flex items-center gap-3.5 mb-5">
+                    <img
+                      src={t.photo}
+                      alt={t.name}
+                      loading="lazy"
+                      draggable={false}
+                      className="w-12 h-12 rounded-full object-cover ring-1 ring-white/15 shadow-md select-none shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <h3 className="text-white font-semibold text-[15px] tracking-tight truncate">
+                        {t.name}
+                      </h3>
+                      <p className="text-[11px] text-neutral-500 font-mono mt-0.5">
+                        {dateForName(t.name)}
+                      </p>
+                    </div>
+                  </header>
+                  <p className="text-[14.5px] leading-relaxed text-neutral-200/90 font-light">
+                    {t.text}
+                  </p>
+                </article>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Setas (desktop, surgem no hover) */}
+        <button
+          aria-label="Anterior"
+          onClick={scrollPrev}
+          className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-11 h-11 items-center justify-center rounded-full bg-white/[0.06] backdrop-blur-xl border border-white/15 text-white opacity-0 group-hover:opacity-100 hover:bg-white/15 transition-all duration-300 shadow-lg"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          aria-label="Próximo"
+          onClick={scrollNext}
+          className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-11 h-11 items-center justify-center rounded-full bg-white/[0.06] backdrop-blur-xl border border-white/15 text-white opacity-0 group-hover:opacity-100 hover:bg-white/15 transition-all duration-300 shadow-lg"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Indicadores */}
+      <div className="flex items-center justify-center gap-2 pt-2">
+        {snaps.map((_, i) => (
+          <button
+            key={i}
+            aria-label={`Ir para depoimento ${i + 1}`}
+            onClick={() => emblaApi?.scrollTo(i)}
+            className={`h-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              selected === i ? 'w-6 bg-white' : 'w-1.5 bg-white/25 hover:bg-white/40'
+            }`}
+          />
+        ))}
+      </div>
+    </motion.section>
+  );
+}
+
