@@ -1069,7 +1069,7 @@ export default function LandingPage() {
       <footer className="border-t border-white/10 bg-black py-16 px-6 text-center space-y-8 text-xs text-neutral-500 font-mono relative z-10">
         <div className="flex items-center justify-center gap-3 text-white font-sans font-extrabold tracking-tight text-lg">
           <div className="w-9 h-9 rounded-xl overflow-hidden ring-1 ring-white/20 shadow-[0_0_24px_rgba(255,255,255,0.2)]">
-            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover" />
+            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover scale-[1.7]" />
           </div>
           <span>SCRIPTANDO PLATFORM</span>
         </div>
