@@ -1109,65 +1109,25 @@ export default function PlatformApp() {
                   </div>
                 </div>
 
-                {/* Library 5 Cards Showcase (Responsive Grid) */}
+                {/* Premium platform cards — no script ever exposed */}
                 {filteredScripts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredScripts.map((script) => {
-                      const isSelected = selectedScriptId === script.id;
-                      return (
-                        <motion.div
-                          key={script.id}
-                          layout
-                          className="bg-[#111111] border border-[#222222] hover:border-[#444444] rounded-[32px] p-6 transition-all duration-300 shadow-xl flex flex-col justify-between group relative overflow-hidden"
-                          whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                        >
-                          {/* Inner glowing top-border */}
-                          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                          <div>
-                            <div className="flex justify-between items-start mb-4">
-                              <h3 className="font-bold text-lg text-white group-hover:text-zinc-200 transition-colors">
-                                {script.title}
-                              </h3>
-                              <span className="px-2 py-1 bg-white/5 text-[9px] rounded-md border border-white/10 uppercase text-white/70 font-mono tracking-wider">
-                                Ativo
-                              </span>
-                            </div>
-
-                            <p className="text-sm text-[#666666] line-clamp-2 min-h-[40px] mb-5 leading-relaxed">
-                              {script.description || "Sem descrição adicional fornecida para este script premium."}
-                            </p>
-
-                            {/* Blur script area block (preview locked) */}
-                            <div className="relative rounded-2xl border border-white/5 bg-black/40 overflow-hidden mb-6 h-28">
-                              <div className="p-4 select-none font-mono text-[10px] leading-tight text-white/40 filter blur-[6px] opacity-40 whitespace-pre-wrap h-full pointer-events-none">
-                                {script.content}
-                                {"\n"}██████████████████████
-                                {"\n"}██████████████████████
-                                {"\n"}██████████████████████
-                              </div>
-                              <div className="absolute inset-0 bg-black/20" />
-                            </div>
-                          </div>
-
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleCopyScript(script.content, script.title)}
-                              className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
-                            >
-                              Copiar Script
-                            </button>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                    {filteredScripts.map((script, idx) => (
+                      <PlatformCard
+                        key={script.id}
+                        script={script}
+                        index={idx}
+                        onOpen={() => setOpenedScript(script)}
+                      />
+                    ))}
                   </div>
                 ) : (
                   <div className="text-center p-12 bg-zinc-950/40 border border-zinc-900 rounded-3xl">
                     <HelpCircle className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-                    <h3 className="font-display font-medium text-lg text-white">Nenhum script encontrado</h3>
+                    <h3 className="font-display font-medium text-lg text-white">Nenhuma plataforma encontrada</h3>
                     <p className="text-sm text-zinc-500 mt-1">Experimente alterar a sua palavra de busca.</p>
                   </div>
+
                 )}
 
                 <div className="pt-8 border-t border-[#111111] flex flex-col sm:flex-row justify-between items-center text-[#444444] gap-4">
