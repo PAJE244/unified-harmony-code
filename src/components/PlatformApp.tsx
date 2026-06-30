@@ -3,7 +3,7 @@ import {
   Terminal, Shield, User, Lock, LogOut, Search, Plus,
   Edit2, Trash2, UserPlus, Users, Activity, FileCode,
   AlertTriangle, RefreshCw, Eye, EyeOff, UserCheck,
-  UserX, X, ChevronRight, Menu, HelpCircle, Key, CheckCircle, Settings,
+  UserX, X, ChevronRight, Menu, HelpCircle, Key, CheckCircle, Settings, Smartphone,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { apiFetch, subscribeRealtime, getSiteSettings, updateSiteSettings, DEFAULT_SETTINGS } from "@/lib/scriptando-db";
