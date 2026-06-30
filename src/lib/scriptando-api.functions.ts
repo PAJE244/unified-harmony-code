@@ -93,18 +93,34 @@ export const apiCall = createServerFn({ method: "POST" })
       events.push({ type: "users_list_updated", data: (users || []).map(toPublic) });
     };
 
+    const mapScript = (s: any, opts: { includeContent?: boolean } = {}) => ({
+      id: s.id,
+      title: s.title,
+      ...(opts.includeContent ? { content: s.content } : {}),
+      description: s.description ?? "",
+      shortDescription: s.short_description ?? "",
+      longDescription: s.long_description ?? "",
+      tutorial: s.tutorial ?? "",
+      icon: s.icon ?? "Terminal",
+      status: (s.status as string) ?? "online",
+      accentColor: s.accent_color ?? null,
+      images: Array.isArray(s.images) ? s.images : [],
+      notices: Array.isArray(s.notices) ? s.notices : [],
+      extras: (s.extras && typeof s.extras === "object") ? s.extras : {},
+      sortOrder: typeof s.sort_order === "number" ? s.sort_order : 0,
+      active: s.active !== false,
+      updatedAt: s.updated_at,
+      createdAt: s.created_at,
+    });
+
     const broadcastScripts = async () => {
       const { data: scripts } = await db
         .from("app_scripts")
         .select("*")
+        .order("sort_order", { ascending: true })
         .order("created_at", { ascending: true });
-      const mapped = (scripts || []).map((s: any) => ({
-        id: s.id,
-        title: s.title,
-        content: s.content,
-        description: s.description,
-        createdAt: s.created_at,
-      }));
+      // Broadcasted list NEVER includes script content — admins refetch separately.
+      const mapped = (scripts || []).map((s: any) => mapScript(s));
       events.push({ type: "scripts_updated", data: mapped });
     };
 
