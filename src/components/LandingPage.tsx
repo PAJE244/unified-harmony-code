@@ -606,8 +606,8 @@ export default function LandingPage() {
         </motion.section>
 
 
-        {/* 5. TUTORIAL — Celular / Computador */}
-        <TutorialSection />
+
+
 
 
 
