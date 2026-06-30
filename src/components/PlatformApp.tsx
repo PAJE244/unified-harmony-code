@@ -1397,67 +1397,11 @@ export default function PlatformApp() {
                   </div>
                 )}
 
-                {/* Tab Content: Scripts Library Control */}
-                {adminTab === "scripts" && (
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h3 className="font-bold text-lg text-white">Scripts da Biblioteca</h3>
-                        <p className="text-xs text-[#666666]">Crie, edite e organize os scripts mostrados na biblioteca.</p>
-                      </div>
-                      <button
-                        onClick={() => { setAddScriptError(null); setShowAddScriptModal(true); }}
-                        className="bg-white text-black hover:bg-[#dddddd] px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 transition-all active:scale-98"
-                      >
-                        <Plus className="w-4 h-4" />
-                        <span>Novo Script</span>
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {scripts.map((script) => (
-                        <div key={script.id} className="bg-[#111111] border border-[#222222] p-6 rounded-[32px] flex flex-col justify-between shadow-lg">
-                          <div>
-                            <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-bold text-base text-white">{script.title}</h4>
-                              <span className="text-[9px] px-2 py-0.5 bg-white/5 border border-white/10 text-white/70 rounded-md font-mono uppercase tracking-wider">
-                                ID: {script.id}
-                              </span>
-                            </div>
-                            <p className="text-sm text-[#666666] mb-4 line-clamp-2">{script.description || "Sem descrição."}</p>
-                            
-                            <div className="bg-black/40 border border-white/5 rounded-2xl p-3.5 mb-4 max-h-24 overflow-y-auto font-mono text-[11px] text-[#666666] whitespace-pre-wrap">
-                              {script.content}
-                            </div>
-                          </div>
-
-                          <div className="flex justify-end gap-2 border-t border-[#222222] pt-4 mt-2">
-                            <button
-                              onClick={() => {
-                                setEditingScript(script);
-                                setEditScriptTitle(script.title);
-                                setEditScriptContent(script.content);
-                                setEditScriptDesc(script.description);
-                                setEditScriptError(null);
-                              }}
-                              className="px-3.5 py-1.5 rounded-xl bg-[#111111] hover:bg-[#1a1a1a] border border-[#222222] text-xs font-semibold text-white/70 hover:text-white transition-all flex items-center gap-1.5"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                              <span>Editar</span>
-                            </button>
-                            <button
-                              onClick={() => handleDeleteScript(script.id, script.title)}
-                              className="px-3.5 py-1.5 rounded-xl bg-[#111111] hover:bg-rose-950/20 border border-[#222222] hover:border-rose-900/40 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-all flex items-center gap-1.5"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                              <span>Excluir</span>
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                {/* Tab Content: Platforms (new premium editor) */}
+                {adminTab === "scripts" && token && (
+                  <PlatformsAdmin token={token} onToast={showToast} />
                 )}
+
 
                 {/* Tab Content: Action logs audit */}
                 {adminTab === "logs" && (
