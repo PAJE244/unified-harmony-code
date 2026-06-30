@@ -37,61 +37,25 @@ export type Database = {
       }
       app_scripts: {
         Row: {
-          accent_color: string | null
-          active: boolean
           content: string
           created_at: string
           description: string
-          extras: Json
-          icon: string
           id: string
-          images: Json
-          long_description: string
-          notices: Json
-          short_description: string
-          sort_order: number
-          status: string
           title: string
-          tutorial: string
-          updated_at: string
         }
         Insert: {
-          accent_color?: string | null
-          active?: boolean
           content: string
           created_at?: string
           description?: string
-          extras?: Json
-          icon?: string
           id?: string
-          images?: Json
-          long_description?: string
-          notices?: Json
-          short_description?: string
-          sort_order?: number
-          status?: string
           title: string
-          tutorial?: string
-          updated_at?: string
         }
         Update: {
-          accent_color?: string | null
-          active?: boolean
           content?: string
           created_at?: string
           description?: string
-          extras?: Json
-          icon?: string
           id?: string
-          images?: Json
-          long_description?: string
-          notices?: Json
-          short_description?: string
-          sort_order?: number
-          status?: string
           title?: string
-          tutorial?: string
-          updated_at?: string
         }
         Relationships: []
       }

@@ -5,7 +5,6 @@ import { apiCall } from "./scriptando-api.functions";
 
 export type Role = "admin" | "user";
 export type Status = "active" | "banned";
-export type PlatformStatus = "online" | "updated" | "maintenance" | "offline";
 
 export interface DbUser {
   id: string;
@@ -16,39 +15,13 @@ export interface DbUser {
 }
 export interface PublicUser extends DbUser {}
 
-export interface ScriptImage { url: string; caption?: string }
-export interface ScriptNotice { type: "info" | "warning" | "update" | "maintenance"; title: string; message: string }
-export interface ScriptExtras {
-  compatibility?: string;
-  browsers?: string;
-  version?: string;
-  lastUpdate?: string;
-  duration?: string;
-  notes?: string;
-}
-
-/** Sanitized public script — NEVER contains `content`. */
 export interface DbScript {
   id: string;
   title: string;
+  content: string;
   description: string;
-  icon: string;
-  status: PlatformStatus;
-  accentColor: string | null;
-  shortDescription: string;
-  longDescription: string;
-  tutorial: string;
-  images: ScriptImage[];
-  notices: ScriptNotice[];
-  extras: ScriptExtras;
-  sortOrder: number;
-  active: boolean;
   createdAt: string;
-  updatedAt: string;
 }
-
-/** Admin-only script — includes raw content. Never expose to non-admin UI. */
-export interface AdminScript extends DbScript { content: string }
 
 export interface DbLog {
   id: string;
@@ -198,39 +171,6 @@ export async function apiFetch(url: string, init?: RequestInit): Promise<MockRes
       status: 500,
       json: async () => ({ error: e?.message || "Erro de conexão" }),
     };
-  }
-}
-
-// ============ Secure copy helper ============
-/**
- * Fetches the script content from the server and IMMEDIATELY writes it to
- * the clipboard. The content is held only in a local variable inside this
- * function — never returned, never stored in React state, never rendered.
- */
-export async function copyScriptToClipboard(scriptId: string): Promise<boolean> {
-  const token = isBrowser() ? localStorage.getItem("scriptando_token") : null;
-  if (!token) return false;
-  try {
-    const r = await apiCall({ data: { url: `/api/scripts/${scriptId}/copy`, method: "POST", token } });
-    if (r.status !== 200 || !r.body?.content) return false;
-    const text = String(r.body.content);
-
-    if (navigator.clipboard?.writeText && window.isSecureContext) {
-      try { await navigator.clipboard.writeText(text); return true; } catch {}
-    }
-    // Fallback for iframe / older browsers
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.setAttribute("aria-hidden", "true");
-    ta.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1";
-    document.body.appendChild(ta);
-    ta.focus({ preventScroll: true });
-    ta.select();
-    let ok = false;
-    try { ok = document.execCommand("copy"); } finally { document.body.removeChild(ta); }
-    return ok;
-  } catch {
-    return false;
   }
 }
 
