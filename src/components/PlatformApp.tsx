@@ -68,17 +68,8 @@ export default function PlatformApp() {
   const [editUserStatus, setEditUserStatus] = useState<"active" | "banned">("active");
   const [editUserError, setEditUserError] = useState<string | null>(null);
 
-  const [showAddScriptModal, setShowAddScriptModal] = useState(false);
-  const [newScriptTitle, setNewScriptTitle] = useState("");
-  const [newScriptContent, setNewScriptContent] = useState("");
-  const [newScriptDesc, setNewScriptDesc] = useState("");
-  const [addScriptError, setAddScriptError] = useState<string | null>(null);
-
-  const [editingScript, setEditingScript] = useState<ScriptType | null>(null);
-  const [editScriptTitle, setEditScriptTitle] = useState("");
-  const [editScriptContent, setEditScriptContent] = useState("");
-  const [editScriptDesc, setEditScriptDesc] = useState("");
-  const [editScriptError, setEditScriptError] = useState<string | null>(null);
+  // Detail modal
+  const [detailScript, setDetailScript] = useState<ScriptType | null>(null);
 
   // Admin Self Change Credentials
   const [myUsernameInput, setMyUsernameInput] = useState("");
