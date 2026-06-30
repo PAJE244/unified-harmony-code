@@ -8,6 +8,9 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { apiFetch, subscribeRealtime, getSiteSettings, updateSiteSettings, DEFAULT_SETTINGS } from "@/lib/scriptando-db";
 import type { PublicUser as UserType, DbScript as ScriptType, DbLog as ActionLogType, SiteSettings } from "@/lib/scriptando-db";
+import PlatformCard from "@/components/scripts/PlatformCard";
+import ScriptDetailModal from "@/components/scripts/ScriptDetailModal";
+import PlatformsAdmin from "@/components/admin/PlatformsAdmin";
 import tut1 from "@/assets/tutorial/tutorial-1.jpg.asset.json";
 import tut2 from "@/assets/tutorial/tutorial-2.jpg.asset.json";
 import tut3 from "@/assets/tutorial/tutorial-3.jpg.asset.json";
