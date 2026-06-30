@@ -111,6 +111,28 @@
   transition-duration: 0.08s;
 }
 
+/* Premium dark input — used across admin editor + script detail pages */
+.input-dark {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  padding: 12px 16px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.input-dark::placeholder { color: rgba(255,255,255,0.35); }
+.input-dark:focus, .input-dark:focus-visible {
+  border-color: rgba(255,255,255,0.40);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.04);
+}
+
+
+
 .text-gradient {
   background: linear-gradient(135deg, #ffffff 0%, #a1a1a6 100%);
   -webkit-background-clip: text;
