@@ -36,8 +36,6 @@ import {
   ArrowLeft,
   ChevronLeft,
   CheckCircle,
-  Smartphone,
-  Laptop,
   HelpCircle
 } from 'lucide-react';
 
