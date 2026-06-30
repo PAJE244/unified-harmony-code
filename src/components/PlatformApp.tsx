@@ -1096,56 +1096,55 @@ export default function PlatformApp() {
                   </div>
                 </div>
 
-                {/* Library 5 Cards Showcase (Responsive Grid) */}
+                {/* Premium Platform Cards Grid */}
                 {filteredScripts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredScripts.map((script) => {
-                      const isSelected = selectedScriptId === script.id;
+                    {filteredScripts.map((script, idx) => {
+                      const Icon = PLATFORM_ICONS[script.icon] || PLATFORM_ICONS.Terminal;
+                      const status = STATUS_META[script.status] ?? STATUS_META.online;
                       return (
-                        <motion.div
+                        <motion.button
                           key={script.id}
                           layout
-                          className="bg-[#111111] border border-[#222222] hover:border-[#444444] rounded-[32px] p-6 transition-all duration-300 shadow-xl flex flex-col justify-between group relative overflow-hidden"
-                          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                          initial={{ opacity: 0, y: 14 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: idx * 0.04, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                          whileHover={{ y: -4 }}
+                          whileTap={{ scale: 0.99 }}
+                          onClick={() => setDetailScript(script)}
+                          className="text-left bg-gradient-to-b from-white/[0.04] to-white/[0.01] border border-white/[0.07] hover:border-white/20 rounded-[28px] p-6 transition-all duration-300 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)] flex flex-col gap-5 group relative overflow-hidden backdrop-blur-xl"
+                          style={script.accentColor ? { boxShadow: `0 30px 80px -50px ${script.accentColor}55` } : undefined}
                         >
-                          {/* Inner glowing top-border */}
-                          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                          <div>
-                            <div className="flex justify-between items-start mb-4">
-                              <h3 className="font-bold text-lg text-white group-hover:text-zinc-200 transition-colors">
-                                {script.title}
-                              </h3>
-                              <span className="px-2 py-1 bg-white/5 text-[9px] rounded-md border border-white/10 uppercase text-white/70 font-mono tracking-wider">
-                                Ativo
-                              </span>
-                            </div>
-
-                            <p className="text-sm text-[#666666] line-clamp-2 min-h-[40px] mb-5 leading-relaxed">
-                              {script.description || "Sem descrição adicional fornecida para este script premium."}
-                            </p>
-
-                            {/* Blur script area block (preview locked) */}
-                            <div className="relative rounded-2xl border border-white/5 bg-black/40 overflow-hidden mb-6 h-28">
-                              <div className="p-4 select-none font-mono text-[10px] leading-tight text-white/40 filter blur-[6px] opacity-40 whitespace-pre-wrap h-full pointer-events-none">
-                                {script.content}
-                                {"\n"}██████████████████████
-                                {"\n"}██████████████████████
-                                {"\n"}██████████████████████
-                              </div>
-                              <div className="absolute inset-0 bg-black/20" />
-                            </div>
-                          </div>
-
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleCopyScript(script.content, script.title)}
-                              className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
+                          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <div className="flex items-start justify-between gap-3">
+                            <div
+                              className="w-14 h-14 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center backdrop-blur-xl shrink-0 transition-transform duration-300 group-hover:scale-105"
+                              style={script.accentColor ? { boxShadow: `inset 0 0 0 1px ${script.accentColor}44` } : undefined}
                             >
-                              Copiar Script
-                            </button>
+                              <Icon className="w-6 h-6 text-white" />
+                            </div>
+                            <span className={`inline-flex items-center gap-1.5 text-[9px] uppercase tracking-widest font-mono px-2 py-1 rounded-md border ${status.cls}`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
+                              {status.label}
+                            </span>
                           </div>
-                        </motion.div>
+                          <div className="space-y-1.5">
+                            <h3 className="font-display font-semibold text-xl text-white tracking-tight group-hover:text-white">
+                              {script.title}
+                            </h3>
+                            <p className="text-sm text-zinc-400 line-clamp-2 leading-relaxed min-h-[40px]">
+                              {script.shortDescription || script.description || "Plataforma premium com automação otimizada."}
+                            </p>
+                          </div>
+                          <div className="flex items-center justify-between pt-4 mt-auto border-t border-white/5">
+                            <span className="text-[10px] uppercase tracking-widest font-mono text-zinc-500">
+                              {script.images?.length || 0} imagens · {script.notices?.length || 0} avisos
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-black text-xs font-bold transition-all group-hover:bg-zinc-100">
+                              Abrir <ChevronRight className="w-3.5 h-3.5" />
+                            </span>
+                          </div>
+                        </motion.button>
                       );
                     })}
                   </div>
