@@ -216,11 +216,35 @@ export const apiCall = createServerFn({ method: "POST" })
       const { data: scripts } = await db
         .from("app_scripts")
         .select("*")
+        .eq("active", true)
+        .order("sort_order", { ascending: true })
         .order("created_at", { ascending: true });
-      return res(200, (scripts || []).map((s: any) => ({
-        id: s.id, title: s.title, content: s.content,
-        description: s.description, createdAt: s.created_at,
-      })));
+      // NEVER expose content here — only metadata.
+      return res(200, (scripts || []).map((s: any) => mapScript(s)));
+    }
+
+    // Dedicated endpoint to fetch script body for clipboard copy. Auth-gated, single resource.
+    const copyMatch = url.match(/^\/api\/scripts\/([^/]+)\/copy$/);
+    if (copyMatch && method === "POST") {
+      const id = copyMatch[1];
+      const { data: s } = await db
+        .from("app_scripts").select("content,title,active").eq("id", id).maybeSingle() as any;
+      if (!s) return res(404, { error: "Script não encontrado" });
+      if (!s.active && me.role !== "admin")
+        return res(403, { error: "Script indisponível no momento." });
+      await addLog(me.username, `Copiou o script "${s.title}".`);
+      return res(200, { content: String(s.content ?? "") });
+    }
+
+    // Admin-only: list scripts WITH content (for editor).
+    if (url === "/api/admin/scripts" && method === "GET") {
+      if (me.role !== "admin") return res(403, { error: "Acesso restrito" });
+      const { data: scripts } = await db
+        .from("app_scripts")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true });
+      return res(200, (scripts || []).map((s: any) => mapScript(s, { includeContent: true })));
     }
 
     if (url === "/api/stats" && method === "GET") {
