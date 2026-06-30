@@ -380,19 +380,63 @@ export const apiCall = createServerFn({ method: "POST" })
       })));
     }
 
+    // ---- Admin: scripts CRUD ----
+    const buildPatch = (b: any) => {
+      const patch: any = {};
+      if (b.title !== undefined) patch.title = String(b.title).trim();
+      if (b.content !== undefined) patch.content = b.content;
+      if (b.description !== undefined) patch.description = String(b.description).trim();
+      if (b.shortDescription !== undefined) patch.short_description = String(b.shortDescription);
+      if (b.longDescription !== undefined) patch.long_description = String(b.longDescription);
+      if (b.tutorial !== undefined) patch.tutorial = String(b.tutorial);
+      if (b.icon !== undefined) patch.icon = String(b.icon);
+      if (b.status !== undefined) patch.status = String(b.status);
+      if (b.accentColor !== undefined) patch.accent_color = b.accentColor || null;
+      if (b.images !== undefined) patch.images = Array.isArray(b.images) ? b.images : [];
+      if (b.notices !== undefined) patch.notices = Array.isArray(b.notices) ? b.notices : [];
+      if (b.extras !== undefined) patch.extras = b.extras && typeof b.extras === "object" ? b.extras : {};
+      if (b.sortOrder !== undefined) patch.sort_order = Number(b.sortOrder) || 0;
+      if (b.active !== undefined) patch.active = !!b.active;
+      return patch;
+    };
+
     if (url === "/api/admin/scripts" && method === "POST") {
-      const { title, content, description } = body;
-      if (!title || !content) return res(400, { error: "Título e conteúdo são obrigatórios" });
+      const { title, content } = body;
+      if (!title || content === undefined) return res(400, { error: "Título e conteúdo são obrigatórios" });
+      const patch = buildPatch(body);
+      patch.title = String(title).trim();
+      if (!patch.short_description) patch.short_description = patch.description || "";
       const { data: created } = await db
-        .from("app_scripts")
-        .insert({ title: String(title).trim(), content, description: String(description || "").trim() })
-        .select().single() as any;
+        .from("app_scripts").insert(patch).select().single() as any;
       await addLog(me.username, `Adicionou o script "${created.title}".`);
       await broadcastScripts();
-      return res(201, {
-        id: created.id, title: created.title, content: created.content,
-        description: created.description, createdAt: created.created_at,
-      });
+      return res(201, mapScript(created, { includeContent: true }));
+    }
+
+    const scriptReorderMatch = url === "/api/admin/scripts/reorder" && method === "POST";
+    if (scriptReorderMatch) {
+      const order: string[] = Array.isArray(body.order) ? body.order : [];
+      await Promise.all(order.map((id, idx) =>
+        db.from("app_scripts").update({ sort_order: idx }).eq("id", id)
+      ));
+      await addLog(me.username, `Reordenou a biblioteca de scripts.`);
+      await broadcastScripts();
+      return res(200, { success: true });
+    }
+
+    const dupMatch = url.match(/^\/api\/admin\/scripts\/([^/]+)\/duplicate$/);
+    if (dupMatch && method === "POST") {
+      const id = dupMatch[1];
+      const { data: s } = await db.from("app_scripts").select("*").eq("id", id).maybeSingle() as any;
+      if (!s) return res(404, { error: "Script não encontrado" });
+      const copy: any = { ...s };
+      delete copy.id; delete copy.created_at; delete copy.updated_at;
+      copy.title = `${s.title} (cópia)`;
+      copy.active = false;
+      const { data: created } = await db.from("app_scripts").insert(copy).select().single() as any;
+      await addLog(me.username, `Duplicou o script "${s.title}".`);
+      await broadcastScripts();
+      return res(201, mapScript(created, { includeContent: true }));
     }
 
     const scriptMatch = url.match(/^\/api\/admin\/scripts\/([^/]+)$/);
@@ -407,18 +451,12 @@ export const apiCall = createServerFn({ method: "POST" })
         return res(200, { success: true });
       }
       if (method === "PUT") {
-        const patch: any = {};
-        if (body.title) patch.title = String(body.title).trim();
-        if (body.content !== undefined) patch.content = body.content;
-        if (body.description !== undefined) patch.description = String(body.description).trim();
+        const patch = buildPatch(body);
         const { data: updated } = await db
           .from("app_scripts").update(patch).eq("id", id).select().single() as any;
         await addLog(me.username, `Editou o script "${updated.title}".`);
         await broadcastScripts();
-        return res(200, {
-          id: updated.id, title: updated.title, content: updated.content,
-          description: updated.description, createdAt: updated.created_at,
-        });
+        return res(200, mapScript(updated, { includeContent: true }));
       }
     }
 
