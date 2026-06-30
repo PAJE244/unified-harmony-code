@@ -243,7 +243,7 @@ export default function LandingPage() {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
           <div className="w-11 h-11 rounded-2xl overflow-hidden bg-gradient-to-tr from-neutral-900 to-neutral-700 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.25)] ring-1 ring-white/20">
-            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover" />
+            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover scale-[1.7]" />
           </div>
 
           <div className="flex flex-col">
