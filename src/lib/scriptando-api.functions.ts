@@ -1,5 +1,4 @@
 // Server function — todas as operações do SCRIPTANDO contra o banco real.
-// O cliente chama `apiCall` com o mesmo formato URL/método/body do antigo apiFetch.
 import { createServerFn } from "@tanstack/react-start";
 
 const SALT = "paje_01_salt_premium";
@@ -28,11 +27,38 @@ interface ApiResult {
   events?: any[];
 }
 
+// Map DB row -> sanitized public platform (no content)
+function toPublicScript(s: any) {
+  return {
+    id: s.id,
+    title: s.title,
+    description: s.description ?? "",
+    icon: s.icon ?? "Terminal",
+    status: s.status ?? "online",
+    accentColor: s.accent_color ?? null,
+    shortDescription: s.short_description ?? "",
+    longDescription: s.long_description ?? "",
+    tutorial: s.tutorial ?? "",
+    images: s.images ?? [],
+    notices: s.notices ?? [],
+    extras: s.extras ?? {},
+    sortOrder: s.sort_order ?? 0,
+    active: s.active !== false,
+    createdAt: s.created_at,
+    updatedAt: s.updated_at ?? s.created_at,
+  };
+}
+
+// Admin includes content
+function toAdminScript(s: any) {
+  return { ...toPublicScript(s), content: s.content ?? "" };
+}
+
 export const apiCall = createServerFn({ method: "POST" })
   .inputValidator((d: ApiInput) => d)
   .handler(async ({ data }): Promise<ApiResult> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const db = supabaseAdmin;
+    const db = supabaseAdmin as any;
     const url = data.url;
     const method = (data.method || "GET").toUpperCase();
     const body = data.body || {};
@@ -93,19 +119,17 @@ export const apiCall = createServerFn({ method: "POST" })
       events.push({ type: "users_list_updated", data: (users || []).map(toPublic) });
     };
 
+    // Public broadcast — never includes script content
     const broadcastScripts = async () => {
       const { data: scripts } = await db
         .from("app_scripts")
         .select("*")
+        .order("sort_order", { ascending: true })
         .order("created_at", { ascending: true });
-      const mapped = (scripts || []).map((s: any) => ({
-        id: s.id,
-        title: s.title,
-        content: s.content,
-        description: s.description,
-        createdAt: s.created_at,
-      }));
-      events.push({ type: "scripts_updated", data: mapped });
+      events.push({
+        type: "scripts_updated",
+        data: (scripts || []).filter((s: any) => s.active !== false).map(toPublicScript),
+      });
     };
 
     const sessionUser = async (tok: string | null) => {
@@ -114,13 +138,13 @@ export const apiCall = createServerFn({ method: "POST" })
         .from("app_sessions")
         .select("*")
         .eq("token", tok)
-        .maybeSingle() as any;
+        .maybeSingle();
       if (!sess) return null;
       const { data: user } = await db
         .from("app_users")
         .select("*")
         .eq("id", sess.user_id)
-        .maybeSingle() as any;
+        .maybeSingle();
       if (!user || user.status === "banned") {
         await db.from("app_sessions").delete().eq("token", tok);
         return null;
@@ -140,7 +164,7 @@ export const apiCall = createServerFn({ method: "POST" })
         .from("app_users")
         .select("*")
         .ilike("username", String(username))
-        .maybeSingle() as any;
+        .maybeSingle();
       if (!user) return res(401, { error: "Credenciais incorretas" });
       if (user.status === "banned") return res(403, { error: "Sua conta foi banida pelo administrador." });
       if (user.password_hash !== hashPassword(password))
@@ -160,7 +184,7 @@ export const apiCall = createServerFn({ method: "POST" })
         .from("app_users")
         .select("id")
         .ilike("username", uname)
-        .maybeSingle() as any;
+        .maybeSingle();
       if (exists) return res(400, { error: "Este nome de usuário já está em uso." });
       const { data: created } = await db
         .from("app_users")
@@ -179,7 +203,7 @@ export const apiCall = createServerFn({ method: "POST" })
     }
 
     if (url === "/api/public/settings" && method === "GET") {
-      const { data: s } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle() as any;
+      const { data: s } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle();
       return res(200, s?.data || {});
     }
 
@@ -196,15 +220,25 @@ export const apiCall = createServerFn({ method: "POST" })
 
     if (url === "/api/me" && method === "GET") return res(200, { user: toPublic(me) });
 
+    // Public list — NO content, only active
     if (url === "/api/scripts" && method === "GET") {
       const { data: scripts } = await db
         .from("app_scripts")
         .select("*")
+        .order("sort_order", { ascending: true })
         .order("created_at", { ascending: true });
-      return res(200, (scripts || []).map((s: any) => ({
-        id: s.id, title: s.title, content: s.content,
-        description: s.description, createdAt: s.created_at,
-      })));
+      return res(200, (scripts || []).filter((s: any) => s.active !== false).map(toPublicScript));
+    }
+
+    // Secure copy endpoint — single path that returns content for end users
+    const copyMatch = url.match(/^\/api\/scripts\/([^/]+)\/copy$/);
+    if (copyMatch && method === "POST") {
+      const id = copyMatch[1];
+      const { data: s } = await db.from("app_scripts").select("*").eq("id", id).maybeSingle();
+      if (!s) return res(404, { error: "Script não encontrado" });
+      if (s.active === false && me.role !== "admin") return res(403, { error: "Script indisponível." });
+      await addLog(me.username, `Copiou o script "${s.title}".`);
+      return res(200, { content: s.content || "" });
     }
 
     if (url === "/api/stats" && method === "GET") {
@@ -216,7 +250,7 @@ export const apiCall = createServerFn({ method: "POST" })
       return res(200, { totalCount: totalCount || 0, onlineCount: Math.max(onlineCount || 0, 1) });
     }
 
-    // Admin
+    // Admin gate
     if (url.startsWith("/api/admin/") && me.role !== "admin")
       return res(403, { error: "Acesso restrito ao administrador" });
 
@@ -231,12 +265,12 @@ export const apiCall = createServerFn({ method: "POST" })
       if (!username || !password) return res(400, { error: "Usuário e senha são obrigatórios" });
       const uname = String(username).trim();
       const { data: exists } = await db
-        .from("app_users").select("id").ilike("username", uname).maybeSingle() as any;
+        .from("app_users").select("id").ilike("username", uname).maybeSingle();
       if (exists) return res(400, { error: "Este nome de usuário já está em uso" });
       const { data: created } = await db
         .from("app_users")
         .insert({ username: uname, password_hash: hashPassword(password), role: "user", status: "active" })
-        .select().single() as any;
+        .select().single();
       await addLog(me.username, `Criou o usuário "${uname}".`);
       await broadcastStats();
       await broadcastUsers();
@@ -247,7 +281,7 @@ export const apiCall = createServerFn({ method: "POST" })
     if (userIdMatch) {
       const id = userIdMatch[1];
       const sub = userIdMatch[3];
-      const { data: user } = await db.from("app_users").select("*").eq("id", id).maybeSingle() as any;
+      const { data: user } = await db.from("app_users").select("*").eq("id", id).maybeSingle();
       if (!user) return res(404, { error: "Usuário não encontrado" });
 
       if (method === "DELETE") {
@@ -282,7 +316,7 @@ export const apiCall = createServerFn({ method: "POST" })
         if (body.username && String(body.username).trim().toLowerCase() !== user.username.toLowerCase()) {
           const uname = String(body.username).trim();
           const { data: clash } = await db
-            .from("app_users").select("id").ilike("username", uname).neq("id", id).maybeSingle() as any;
+            .from("app_users").select("id").ilike("username", uname).neq("id", id).maybeSingle();
           if (clash) return res(400, { error: "Este nome de usuário já está em uso" });
           patch.username = uname;
         }
@@ -295,7 +329,7 @@ export const apiCall = createServerFn({ method: "POST" })
           patch.status = body.status;
         }
         const { data: updated } = await db
-          .from("app_users").update(patch).eq("id", id).select().single() as any;
+          .from("app_users").update(patch).eq("id", id).select().single();
         await addLog(me.username, `Editou o usuário "${oldUsername}"${passwordChanged ? " (senha alterada)" : ""}.`);
         events.push({
           type: "account_modified", targetUserId: id,
@@ -319,14 +353,14 @@ export const apiCall = createServerFn({ method: "POST" })
       if (body.username && String(body.username).trim() !== me.username) {
         const uname = String(body.username).trim();
         const { data: clash } = await db
-          .from("app_users").select("id").ilike("username", uname).neq("id", me.id).maybeSingle() as any;
+          .from("app_users").select("id").ilike("username", uname).neq("id", me.id).maybeSingle();
         if (clash) return res(400, { error: "Este nome de usuário já está em uso" });
         patch.username = uname;
       }
       if (body.password && String(body.password).trim() !== "")
         patch.password_hash = hashPassword(body.password);
       const { data: updated } = await db
-        .from("app_users").update(patch).eq("id", me.id).select().single() as any;
+        .from("app_users").update(patch).eq("id", me.id).select().single();
       await addLog(updated.username, `Atualizou as próprias credenciais (antes: "${oldUsername}").`);
       await broadcastUsers();
       return res(200, { username: updated.username });
@@ -340,50 +374,103 @@ export const apiCall = createServerFn({ method: "POST" })
       })));
     }
 
+    // ====== Admin scripts (with content) ======
+    if (url === "/api/admin/scripts" && method === "GET") {
+      const { data: scripts } = await db
+        .from("app_scripts")
+        .select("*")
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true });
+      return res(200, (scripts || []).map(toAdminScript));
+    }
+
+    function buildScriptPatch(b: any) {
+      const patch: any = {};
+      if (b.title !== undefined) patch.title = String(b.title).trim();
+      if (b.content !== undefined) patch.content = b.content;
+      if (b.description !== undefined) patch.description = String(b.description).trim();
+      if (b.icon !== undefined) patch.icon = String(b.icon).trim() || "Terminal";
+      if (b.status !== undefined) patch.status = String(b.status);
+      if (b.accentColor !== undefined) patch.accent_color = b.accentColor || null;
+      if (b.shortDescription !== undefined) patch.short_description = String(b.shortDescription);
+      if (b.longDescription !== undefined) patch.long_description = String(b.longDescription);
+      if (b.tutorial !== undefined) patch.tutorial = String(b.tutorial);
+      if (b.images !== undefined) patch.images = Array.isArray(b.images) ? b.images : [];
+      if (b.notices !== undefined) patch.notices = Array.isArray(b.notices) ? b.notices : [];
+      if (b.extras !== undefined) patch.extras = b.extras && typeof b.extras === "object" ? b.extras : {};
+      if (b.sortOrder !== undefined) patch.sort_order = Number(b.sortOrder) || 0;
+      if (b.active !== undefined) patch.active = !!b.active;
+      return patch;
+    }
+
     if (url === "/api/admin/scripts" && method === "POST") {
-      const { title, content, description } = body;
-      if (!title || !content) return res(400, { error: "Título e conteúdo são obrigatórios" });
+      const patch = buildScriptPatch(body);
+      if (!patch.title) return res(400, { error: "Título é obrigatório" });
+      if (patch.content === undefined) patch.content = "";
+      // assign sort_order at the end
+      if (patch.sort_order === undefined) {
+        const { data: maxRow } = await db
+          .from("app_scripts").select("sort_order").order("sort_order", { ascending: false }).limit(1).maybeSingle();
+        patch.sort_order = (maxRow?.sort_order ?? 0) + 1;
+      }
       const { data: created } = await db
         .from("app_scripts")
-        .insert({ title: String(title).trim(), content, description: String(description || "").trim() })
-        .select().single() as any;
-      await addLog(me.username, `Adicionou o script "${created.title}".`);
+        .insert(patch)
+        .select().single();
+      await addLog(me.username, `Adicionou a plataforma "${created.title}".`);
       await broadcastScripts();
-      return res(201, {
-        id: created.id, title: created.title, content: created.content,
-        description: created.description, createdAt: created.created_at,
-      });
+      return res(201, toAdminScript(created));
+    }
+
+    const scriptDuplicateMatch = url.match(/^\/api\/admin\/scripts\/([^/]+)\/duplicate$/);
+    if (scriptDuplicateMatch && method === "POST") {
+      const id = scriptDuplicateMatch[1];
+      const { data: s } = await db.from("app_scripts").select("*").eq("id", id).maybeSingle();
+      if (!s) return res(404, { error: "Script não encontrado" });
+      const { id: _id, created_at: _ca, updated_at: _ua, ...rest } = s;
+      rest.title = `${s.title} (cópia)`;
+      const { data: maxRow } = await db
+        .from("app_scripts").select("sort_order").order("sort_order", { ascending: false }).limit(1).maybeSingle();
+      rest.sort_order = (maxRow?.sort_order ?? 0) + 1;
+      const { data: created } = await db.from("app_scripts").insert(rest).select().single();
+      await addLog(me.username, `Duplicou a plataforma "${s.title}".`);
+      await broadcastScripts();
+      return res(201, toAdminScript(created));
+    }
+
+    if (url === "/api/admin/scripts/reorder" && method === "PUT") {
+      const ids: string[] = Array.isArray(body.ids) ? body.ids : [];
+      for (let i = 0; i < ids.length; i++) {
+        await db.from("app_scripts").update({ sort_order: i + 1 }).eq("id", ids[i]);
+      }
+      await addLog(me.username, "Reordenou as plataformas.");
+      await broadcastScripts();
+      return res(200, { success: true });
     }
 
     const scriptMatch = url.match(/^\/api\/admin\/scripts\/([^/]+)$/);
     if (scriptMatch) {
       const id = scriptMatch[1];
-      const { data: s } = await db.from("app_scripts").select("*").eq("id", id).maybeSingle() as any;
+      const { data: s } = await db.from("app_scripts").select("*").eq("id", id).maybeSingle();
       if (!s) return res(404, { error: "Script não encontrado" });
       if (method === "DELETE") {
         await db.from("app_scripts").delete().eq("id", id);
-        await addLog(me.username, `Excluiu o script "${s.title}".`);
+        await addLog(me.username, `Excluiu a plataforma "${s.title}".`);
         await broadcastScripts();
         return res(200, { success: true });
       }
       if (method === "PUT") {
-        const patch: any = {};
-        if (body.title) patch.title = String(body.title).trim();
-        if (body.content !== undefined) patch.content = body.content;
-        if (body.description !== undefined) patch.description = String(body.description).trim();
+        const patch = buildScriptPatch(body);
         const { data: updated } = await db
-          .from("app_scripts").update(patch).eq("id", id).select().single() as any;
-        await addLog(me.username, `Editou o script "${updated.title}".`);
+          .from("app_scripts").update(patch).eq("id", id).select().single();
+        await addLog(me.username, `Editou a plataforma "${updated.title}".`);
         await broadcastScripts();
-        return res(200, {
-          id: updated.id, title: updated.title, content: updated.content,
-          description: updated.description, createdAt: updated.created_at,
-        });
+        return res(200, toAdminScript(updated));
       }
     }
 
     if (url === "/api/admin/settings" && method === "PUT") {
-      const { data: cur } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle() as any;
+      const { data: cur } = await db.from("app_settings").select("data").eq("id", 1).maybeSingle();
       const merged = { ...((cur?.data as any) || {}), ...(body || {}) };
       await db.from("app_settings").upsert({ id: 1, data: merged });
       await addLog(me.username, "Atualizou as configurações do site.");

@@ -8,6 +8,9 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { apiFetch, subscribeRealtime, getSiteSettings, updateSiteSettings, DEFAULT_SETTINGS } from "@/lib/scriptando-db";
 import type { PublicUser as UserType, DbScript as ScriptType, DbLog as ActionLogType, SiteSettings } from "@/lib/scriptando-db";
+import PlatformCard from "@/components/scripts/PlatformCard";
+import ScriptDetailModal from "@/components/scripts/ScriptDetailModal";
+import PlatformsAdmin from "@/components/admin/PlatformsAdmin";
 import tut1 from "@/assets/tutorial/tutorial-1.jpg.asset.json";
 import tut2 from "@/assets/tutorial/tutorial-2.jpg.asset.json";
 import tut3 from "@/assets/tutorial/tutorial-3.jpg.asset.json";
@@ -55,6 +58,7 @@ export default function PlatformApp() {
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedScriptId, setSelectedScriptId] = useState<string | null>(null);
+  const [openedScript, setOpenedScript] = useState<ScriptType | null>(null);
 
   // Administrative Modals & Forms
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -1105,65 +1109,25 @@ export default function PlatformApp() {
                   </div>
                 </div>
 
-                {/* Library 5 Cards Showcase (Responsive Grid) */}
+                {/* Premium platform cards — no script ever exposed */}
                 {filteredScripts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredScripts.map((script) => {
-                      const isSelected = selectedScriptId === script.id;
-                      return (
-                        <motion.div
-                          key={script.id}
-                          layout
-                          className="bg-[#111111] border border-[#222222] hover:border-[#444444] rounded-[32px] p-6 transition-all duration-300 shadow-xl flex flex-col justify-between group relative overflow-hidden"
-                          whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                        >
-                          {/* Inner glowing top-border */}
-                          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                          <div>
-                            <div className="flex justify-between items-start mb-4">
-                              <h3 className="font-bold text-lg text-white group-hover:text-zinc-200 transition-colors">
-                                {script.title}
-                              </h3>
-                              <span className="px-2 py-1 bg-white/5 text-[9px] rounded-md border border-white/10 uppercase text-white/70 font-mono tracking-wider">
-                                Ativo
-                              </span>
-                            </div>
-
-                            <p className="text-sm text-[#666666] line-clamp-2 min-h-[40px] mb-5 leading-relaxed">
-                              {script.description || "Sem descrição adicional fornecida para este script premium."}
-                            </p>
-
-                            {/* Blur script area block (preview locked) */}
-                            <div className="relative rounded-2xl border border-white/5 bg-black/40 overflow-hidden mb-6 h-28">
-                              <div className="p-4 select-none font-mono text-[10px] leading-tight text-white/40 filter blur-[6px] opacity-40 whitespace-pre-wrap h-full pointer-events-none">
-                                {script.content}
-                                {"\n"}██████████████████████
-                                {"\n"}██████████████████████
-                                {"\n"}██████████████████████
-                              </div>
-                              <div className="absolute inset-0 bg-black/20" />
-                            </div>
-                          </div>
-
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleCopyScript(script.content, script.title)}
-                              className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
-                            >
-                              Copiar Script
-                            </button>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                    {filteredScripts.map((script, idx) => (
+                      <PlatformCard
+                        key={script.id}
+                        script={script}
+                        index={idx}
+                        onOpen={() => setOpenedScript(script)}
+                      />
+                    ))}
                   </div>
                 ) : (
                   <div className="text-center p-12 bg-zinc-950/40 border border-zinc-900 rounded-3xl">
                     <HelpCircle className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
-                    <h3 className="font-display font-medium text-lg text-white">Nenhum script encontrado</h3>
+                    <h3 className="font-display font-medium text-lg text-white">Nenhuma plataforma encontrada</h3>
                     <p className="text-sm text-zinc-500 mt-1">Experimente alterar a sua palavra de busca.</p>
                   </div>
+
                 )}
 
                 <div className="pt-8 border-t border-[#111111] flex flex-col sm:flex-row justify-between items-center text-[#444444] gap-4">
@@ -1433,67 +1397,11 @@ export default function PlatformApp() {
                   </div>
                 )}
 
-                {/* Tab Content: Scripts Library Control */}
-                {adminTab === "scripts" && (
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h3 className="font-bold text-lg text-white">Scripts da Biblioteca</h3>
-                        <p className="text-xs text-[#666666]">Crie, edite e organize os scripts mostrados na biblioteca.</p>
-                      </div>
-                      <button
-                        onClick={() => { setAddScriptError(null); setShowAddScriptModal(true); }}
-                        className="bg-white text-black hover:bg-[#dddddd] px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 transition-all active:scale-98"
-                      >
-                        <Plus className="w-4 h-4" />
-                        <span>Novo Script</span>
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {scripts.map((script) => (
-                        <div key={script.id} className="bg-[#111111] border border-[#222222] p-6 rounded-[32px] flex flex-col justify-between shadow-lg">
-                          <div>
-                            <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-bold text-base text-white">{script.title}</h4>
-                              <span className="text-[9px] px-2 py-0.5 bg-white/5 border border-white/10 text-white/70 rounded-md font-mono uppercase tracking-wider">
-                                ID: {script.id}
-                              </span>
-                            </div>
-                            <p className="text-sm text-[#666666] mb-4 line-clamp-2">{script.description || "Sem descrição."}</p>
-                            
-                            <div className="bg-black/40 border border-white/5 rounded-2xl p-3.5 mb-4 max-h-24 overflow-y-auto font-mono text-[11px] text-[#666666] whitespace-pre-wrap">
-                              {script.content}
-                            </div>
-                          </div>
-
-                          <div className="flex justify-end gap-2 border-t border-[#222222] pt-4 mt-2">
-                            <button
-                              onClick={() => {
-                                setEditingScript(script);
-                                setEditScriptTitle(script.title);
-                                setEditScriptContent(script.content);
-                                setEditScriptDesc(script.description);
-                                setEditScriptError(null);
-                              }}
-                              className="px-3.5 py-1.5 rounded-xl bg-[#111111] hover:bg-[#1a1a1a] border border-[#222222] text-xs font-semibold text-white/70 hover:text-white transition-all flex items-center gap-1.5"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                              <span>Editar</span>
-                            </button>
-                            <button
-                              onClick={() => handleDeleteScript(script.id, script.title)}
-                              className="px-3.5 py-1.5 rounded-xl bg-[#111111] hover:bg-rose-950/20 border border-[#222222] hover:border-rose-900/40 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-all flex items-center gap-1.5"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                              <span>Excluir</span>
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                {/* Tab Content: Platforms (new premium editor) */}
+                {adminTab === "scripts" && token && (
+                  <PlatformsAdmin token={token} onToast={showToast} />
                 )}
+
 
                 {/* Tab Content: Action logs audit */}
                 {adminTab === "logs" && (
@@ -1842,160 +1750,14 @@ export default function PlatformApp() {
         )}
       </AnimatePresence>
 
-      {/* Modal: Add New Script */}
-      <AnimatePresence>
-        {showAddScriptModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowAddScriptModal(false)}
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-lg bg-[#0a0a0a] border border-[#222222] rounded-[32px] p-8 shadow-2xl z-10 overflow-hidden"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-bold text-xl text-white">Adicionar Script Premium</h3>
-                <button 
-                  onClick={() => setShowAddScriptModal(false)}
-                  className="p-2 rounded-xl bg-[#111111] border border-[#222222] text-[#444444] hover:text-white transition-all"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+      {/* Premium platform detail modal — replaces old script-content modals */}
+      <ScriptDetailModal
+        script={openedScript}
+        open={!!openedScript}
+        onClose={() => setOpenedScript(null)}
+        onToast={(m, t) => showToast(m, (t as any) || 'success')}
+      />
 
-              <form onSubmit={handleAddScriptSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Título da Plataforma</label>
-                  <input
-                    type="text"
-                    value={newScriptTitle}
-                    onChange={(e) => setNewScriptTitle(e.target.value)}
-                    placeholder="Ex: Khan Academy"
-                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white placeholder-[#444444] outline-none transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Descrição Curta</label>
-                  <input
-                    type="text"
-                    value={newScriptDesc}
-                    onChange={(e) => setNewScriptDesc(e.target.value)}
-                    placeholder="Descrição breve da funcionalidade"
-                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white placeholder-[#444444] outline-none transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Conteúdo do Script</label>
-                  <textarea
-                    value={newScriptContent}
-                    onChange={(e) => setNewScriptContent(e.target.value)}
-                    placeholder="Insira as linhas de código ou o script aqui"
-                    rows={6}
-                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white placeholder-[#444444] font-mono outline-none transition-all resize-none"
-                  />
-                </div>
-
-                {addScriptError && (
-                  <div className="p-4 bg-rose-950/20 border border-rose-500/20 text-rose-300 text-xs rounded-xl">
-                    {addScriptError}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
-                >
-                  Salvar Script
-                </button>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Modal: Edit Existing Script */}
-      <AnimatePresence>
-        {editingScript && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setEditingScript(null)}
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-lg bg-[#0a0a0a] border border-[#222222] rounded-[32px] p-8 shadow-2xl z-10 overflow-hidden"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-bold text-xl text-white">Editar Script Premium</h3>
-                <button 
-                  onClick={() => setEditingScript(null)}
-                  className="p-2 rounded-xl bg-[#111111] border border-[#222222] text-[#444444] hover:text-white transition-all"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <form onSubmit={handleEditScriptSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Título da Plataforma</label>
-                  <input
-                    type="text"
-                    value={editScriptTitle}
-                    onChange={(e) => setEditScriptTitle(e.target.value)}
-                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white outline-none transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Descrição Curta</label>
-                  <input
-                    type="text"
-                    value={editScriptDesc}
-                    onChange={(e) => setEditScriptDesc(e.target.value)}
-                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white outline-none transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Conteúdo do Script</label>
-                  <textarea
-                    value={editScriptContent}
-                    onChange={(e) => setEditScriptContent(e.target.value)}
-                    rows={6}
-                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white font-mono outline-none transition-all resize-none"
-                  />
-                </div>
-
-                {editScriptError && (
-                  <div className="p-4 bg-rose-950/20 border border-rose-500/20 text-rose-300 text-xs rounded-xl">
-                    {editScriptError}
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
-                >
-                  Salvar Alterações
-                </button>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
     </div>
   );
