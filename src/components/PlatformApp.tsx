@@ -961,6 +961,21 @@ export default function PlatformApp() {
                   <span className="text-sm font-medium">Dashboard</span>
                 </button>
 
+                {currentUser.role !== "admin" && (
+                  <button
+                    onClick={() => { setView("tutorial"); setMobileMenuOpen(false); }}
+                    className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all border ${
+                      view === "tutorial"
+                        ? "bg-[#1a1a1a] border-[#333333] text-white"
+                        : "bg-transparent border-transparent text-[#666666] hover:bg-[#111111] hover:text-white"
+                    }`}
+                  >
+                    <div className={`w-2 h-2 rounded-full ${view === "tutorial" ? "bg-white shadow-[0_0_10px_#fff]" : "bg-[#333333]"}`} />
+                    <span className="text-sm font-medium">Tutorial</span>
+                  </button>
+                )}
+
+
                 {currentUser.role === "admin" && (
                   <button
                     onClick={() => { setView("admin"); setMobileMenuOpen(false); }}
