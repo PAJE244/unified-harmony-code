@@ -1176,7 +1176,69 @@ export default function PlatformApp() {
               </div>
             )}
 
-            {/* view: ADMIN PANEL */}
+            {/* view: TUTORIAL (apenas usuários comuns) */}
+            {view === "tutorial" && currentUser.role !== "admin" && (
+              <div className="flex-1 p-6 max-w-7xl mx-auto w-full space-y-8">
+                <div className="bg-[#0a0a0a] border border-[#222222] rounded-[32px] p-8 relative overflow-hidden shadow-2xl">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/[0.02] rounded-full blur-[80px]" />
+                  <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="space-y-2">
+                      <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-white/5 text-[9px] rounded-md border border-white/10 uppercase font-mono tracking-wider text-white">
+                        <Smartphone className="w-3 h-3" />
+                        <span>Tutorial para Celular</span>
+                      </div>
+                      <h2 className="text-3xl font-display font-semibold tracking-wide text-white">Como usar os scripts no celular</h2>
+                      <p className="text-[#666666] max-w-xl text-sm leading-relaxed">
+                        Um guia visual passo a passo. Siga as 8 etapas abaixo para configurar e executar qualquer script direto do seu navegador móvel.
+                      </p>
+                    </div>
+                    <div className="bg-black/40 border border-[#222222] p-4 rounded-2xl min-w-[130px] text-center">
+                      <span className="block text-[10px] font-mono text-[#444444] uppercase tracking-wide mb-1">Passos</span>
+                      <strong className="text-2xl font-display font-semibold text-white">{MOBILE_TUTORIAL_STEPS.length}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {MOBILE_TUTORIAL_STEPS.map((step, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                      className="group relative rounded-[28px] bg-[#0a0a0a] border border-[#222222] overflow-hidden hover:border-[#444444] hover:-translate-y-1 transition-all duration-500 flex flex-col shadow-xl"
+                    >
+                      <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                      <div className="relative aspect-[9/16] overflow-hidden bg-gradient-to-br from-[#111] via-black to-[#111] p-3">
+                        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black/60 ring-1 ring-white/10">
+                          <img
+                            src={step.img}
+                            alt={`Passo ${idx + 1} — ${step.title}`}
+                            loading="lazy"
+                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.03]"
+                          />
+                        </div>
+                        <div className="absolute top-5 left-5 w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center text-sm font-black shadow-xl shadow-black/40 ring-1 ring-white/40">
+                          {idx + 1}
+                        </div>
+                      </div>
+                      <div className="p-5 pt-4 space-y-1.5 flex-1 flex flex-col border-t border-white/5">
+                        <h3 className="text-white font-bold text-base tracking-tight leading-snug">{step.title}</h3>
+                        <p className="text-sm text-[#888888] leading-relaxed">{step.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="bg-[#0a0a0a] border border-[#222222] rounded-[24px] p-6 text-center">
+                  <p className="text-sm text-[#888888]">
+                    Dúvidas? Fale com o suporte no WhatsApp e receba ajuda em minutos.
+                  </p>
+                </div>
+              </div>
+            )}
+
+
             {view === "admin" && currentUser.role === "admin" && (
               <div className="flex-1 p-6 max-w-7xl mx-auto w-full space-y-8">
                 
