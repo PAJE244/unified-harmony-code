@@ -1029,7 +1029,7 @@ export default function PlatformApp() {
                 </button>
                 <div className="hidden sm:block">
                   <h2 className="text-xl font-medium text-white">
-                    {view === "dashboard" ? "Biblioteca Premium" : "Painel de Administração"}
+                    {view === "dashboard" ? "Biblioteca Premium" : view === "tutorial" ? "Tutorial — Como usar no Celular" : "Painel de Administração"}
                   </h2>
                   <p className="text-xs text-[#666666] mt-0.5">{formattedDate}</p>
                 </div>
