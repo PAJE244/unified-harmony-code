@@ -58,6 +58,7 @@ export default function PlatformApp() {
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedScriptId, setSelectedScriptId] = useState<string | null>(null);
+  const [openedScript, setOpenedScript] = useState<ScriptType | null>(null);
 
   // Administrative Modals & Forms
   const [showAddUserModal, setShowAddUserModal] = useState(false);
