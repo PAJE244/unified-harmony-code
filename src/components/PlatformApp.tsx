@@ -16,7 +16,7 @@ export default function PlatformApp() {
   const [token, setToken] = useState<string | null>(null);
   useEffect(() => { setToken(localStorage.getItem("scriptando_token")); }, []);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
-  const [view, setView] = useState<"login" | "dashboard" | "admin">("login");
+  const [view, setView] = useState<"login" | "dashboard" | "admin" | "tutorial">("login");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   
