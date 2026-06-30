@@ -16,9 +16,6 @@ import tut5 from "@/assets/tutorial/tutorial-5.jpg.asset.json";
 import tut6 from "@/assets/tutorial/tutorial-6.jpg.asset.json";
 import tut7 from "@/assets/tutorial/tutorial-7.jpg.asset.json";
 import tut8 from "@/assets/tutorial/tutorial-8.jpg.asset.json";
-import PlatformDetailModal from "./PlatformDetailModal";
-import AdminScriptsManager from "./AdminScriptsManager";
-import { PLATFORM_ICONS, STATUS_META } from "./platform-meta";
 
 const MOBILE_TUTORIAL_STEPS = [
   { img: tut1.url, title: "Copie o script", desc: 'Acesse o Scriptando e toque em "Copiar Script" da plataforma desejada.' },
@@ -57,7 +54,7 @@ export default function PlatformApp() {
 
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState("");
-  
+  const [selectedScriptId, setSelectedScriptId] = useState<string | null>(null);
 
   // Administrative Modals & Forms
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -71,8 +68,17 @@ export default function PlatformApp() {
   const [editUserStatus, setEditUserStatus] = useState<"active" | "banned">("active");
   const [editUserError, setEditUserError] = useState<string | null>(null);
 
-  // Detail modal
-  const [detailScript, setDetailScript] = useState<ScriptType | null>(null);
+  const [showAddScriptModal, setShowAddScriptModal] = useState(false);
+  const [newScriptTitle, setNewScriptTitle] = useState("");
+  const [newScriptContent, setNewScriptContent] = useState("");
+  const [newScriptDesc, setNewScriptDesc] = useState("");
+  const [addScriptError, setAddScriptError] = useState<string | null>(null);
+
+  const [editingScript, setEditingScript] = useState<ScriptType | null>(null);
+  const [editScriptTitle, setEditScriptTitle] = useState("");
+  const [editScriptContent, setEditScriptContent] = useState("");
+  const [editScriptDesc, setEditScriptDesc] = useState("");
+  const [editScriptError, setEditScriptError] = useState<string | null>(null);
 
   // Admin Self Change Credentials
   const [myUsernameInput, setMyUsernameInput] = useState("");
@@ -523,8 +529,179 @@ export default function PlatformApp() {
     }
   };
 
-  // Script CRUD + copy live inside AdminScriptsManager and PlatformDetailModal.
+  // SCRIPT ACTIONS
 
+  // Add Script
+  const handleAddScriptSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newScriptTitle.trim() || !newScriptContent.trim()) {
+      setAddScriptError("Título e conteúdo são obrigatórios.");
+      return;
+    }
+
+    setAddScriptError(null);
+    try {
+      const response = await apiFetch("/api/admin/scripts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: newScriptTitle.trim(),
+          content: newScriptContent,
+          description: newScriptDesc.trim()
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        showToast(`Script "${newScriptTitle}" adicionado com sucesso!`, "success");
+        setNewScriptTitle("");
+        setNewScriptContent("");
+        setNewScriptDesc("");
+        setShowAddScriptModal(false);
+        
+        // Refresh local scripts
+        setScripts((prev) => [...prev, data]);
+      } else {
+        setAddScriptError(data.error || "Erro ao adicionar script.");
+      }
+    } catch (err) {
+      setAddScriptError("Erro na conexão.");
+    }
+  };
+
+  // Edit Script
+  const handleEditScriptSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingScript) return;
+
+    setEditScriptError(null);
+    try {
+      const response = await apiFetch(`/api/admin/scripts/${editingScript.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: editScriptTitle.trim(),
+          content: editScriptContent,
+          description: editScriptDesc.trim()
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        showToast(`Script "${editScriptTitle}" atualizado!`, "success");
+        setEditingScript(null);
+        setScripts((prev) => prev.map((s) => s.id === editingScript.id ? data : s));
+      } else {
+        setEditScriptError(data.error || "Erro ao atualizar script.");
+      }
+    } catch (err) {
+      setEditScriptError("Erro na conexão.");
+    }
+  };
+
+  // Delete Script
+  const handleDeleteScript = async (scriptId: string, title: string) => {
+    if (!confirm(`Deseja excluir permanentemente o script "${title}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await apiFetch(`/api/admin/scripts/${scriptId}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (response.ok) {
+        showToast("Script removido com sucesso.", "success");
+        setScripts((prev) => prev.filter((s) => s.id !== scriptId));
+      } else {
+        const data = await response.json();
+        showToast(data.error || "Erro ao excluir script.", "error");
+      }
+    } catch (err) {
+      showToast("Erro de conexão.", "error");
+    }
+  };
+
+  const copyTextWithTextarea = (text: string) => {
+    const selection = document.getSelection();
+    const selectedRange = selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+    const textarea = document.createElement("textarea");
+
+    textarea.value = text;
+    textarea.readOnly = true;
+    textarea.setAttribute("aria-hidden", "true");
+    textarea.style.position = "fixed";
+    textarea.style.top = "0";
+    textarea.style.left = "0";
+    textarea.style.width = "1px";
+    textarea.style.height = "1px";
+    textarea.style.padding = "0";
+    textarea.style.border = "0";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+    textarea.style.zIndex = "-1";
+
+    document.body.appendChild(textarea);
+    textarea.focus({ preventScroll: true });
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } finally {
+      document.body.removeChild(textarea);
+      if (selectedRange && selection) {
+        selection.removeAllRanges();
+        selection.addRange(selectedRange);
+      }
+    }
+
+    return copied;
+  };
+
+  // Copy Script content to clipboard with a reliable fallback for iframe/mobile contexts
+  const handleCopyScript = async (scriptContent: string, _scriptTitle: string) => {
+    const textToCopy = String(scriptContent ?? "");
+
+    if (!textToCopy.trim()) {
+      showToast("Este script está vazio.", "warning");
+      return;
+    }
+
+    let copied = false;
+
+    try {
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(textToCopy);
+        copied = true;
+      }
+    } catch {
+      copied = false;
+    }
+
+    if (!copied) {
+      try {
+        copied = copyTextWithTextarea(textToCopy);
+      } catch {
+        copied = false;
+      }
+    }
+
+    if (copied) {
+      showToast("Script copiado com sucesso.", "success");
+      return;
+    }
+
+    window.prompt("Copie o script manualmente:", textToCopy);
+    showToast("O navegador bloqueou a cópia automática. O script foi aberto para copiar manualmente.", "info");
+  };
 
   // Filter and Search computed lists
   const filteredScripts = useMemo(() => {
@@ -928,55 +1105,56 @@ export default function PlatformApp() {
                   </div>
                 </div>
 
-                {/* Premium Platform Cards Grid */}
+                {/* Library 5 Cards Showcase (Responsive Grid) */}
                 {filteredScripts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredScripts.map((script, idx) => {
-                      const Icon = PLATFORM_ICONS[script.icon] || PLATFORM_ICONS.Terminal;
-                      const status = STATUS_META[script.status] ?? STATUS_META.online;
+                    {filteredScripts.map((script) => {
+                      const isSelected = selectedScriptId === script.id;
                       return (
-                        <motion.button
+                        <motion.div
                           key={script.id}
                           layout
-                          initial={{ opacity: 0, y: 14 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.04, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                          whileHover={{ y: -4 }}
-                          whileTap={{ scale: 0.99 }}
-                          onClick={() => setDetailScript(script)}
-                          className="text-left bg-gradient-to-b from-white/[0.04] to-white/[0.01] border border-white/[0.07] hover:border-white/20 rounded-[28px] p-6 transition-all duration-300 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)] flex flex-col gap-5 group relative overflow-hidden backdrop-blur-xl"
-                          style={script.accentColor ? { boxShadow: `0 30px 80px -50px ${script.accentColor}55` } : undefined}
+                          className="bg-[#111111] border border-[#222222] hover:border-[#444444] rounded-[32px] p-6 transition-all duration-300 shadow-xl flex flex-col justify-between group relative overflow-hidden"
+                          whileHover={{ y: -4, transition: { duration: 0.2 } }}
                         >
-                          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                          <div className="flex items-start justify-between gap-3">
-                            <div
-                              className="w-14 h-14 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center backdrop-blur-xl shrink-0 transition-transform duration-300 group-hover:scale-105"
-                              style={script.accentColor ? { boxShadow: `inset 0 0 0 1px ${script.accentColor}44` } : undefined}
-                            >
-                              <Icon className="w-6 h-6 text-white" />
+                          {/* Inner glowing top-border */}
+                          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                          <div>
+                            <div className="flex justify-between items-start mb-4">
+                              <h3 className="font-bold text-lg text-white group-hover:text-zinc-200 transition-colors">
+                                {script.title}
+                              </h3>
+                              <span className="px-2 py-1 bg-white/5 text-[9px] rounded-md border border-white/10 uppercase text-white/70 font-mono tracking-wider">
+                                Ativo
+                              </span>
                             </div>
-                            <span className={`inline-flex items-center gap-1.5 text-[9px] uppercase tracking-widest font-mono px-2 py-1 rounded-md border ${status.cls}`}>
-                              <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
-                              {status.label}
-                            </span>
-                          </div>
-                          <div className="space-y-1.5">
-                            <h3 className="font-display font-semibold text-xl text-white tracking-tight group-hover:text-white">
-                              {script.title}
-                            </h3>
-                            <p className="text-sm text-zinc-400 line-clamp-2 leading-relaxed min-h-[40px]">
-                              {script.shortDescription || script.description || "Plataforma premium com automação otimizada."}
+
+                            <p className="text-sm text-[#666666] line-clamp-2 min-h-[40px] mb-5 leading-relaxed">
+                              {script.description || "Sem descrição adicional fornecida para este script premium."}
                             </p>
+
+                            {/* Blur script area block (preview locked) */}
+                            <div className="relative rounded-2xl border border-white/5 bg-black/40 overflow-hidden mb-6 h-28">
+                              <div className="p-4 select-none font-mono text-[10px] leading-tight text-white/40 filter blur-[6px] opacity-40 whitespace-pre-wrap h-full pointer-events-none">
+                                {script.content}
+                                {"\n"}██████████████████████
+                                {"\n"}██████████████████████
+                                {"\n"}██████████████████████
+                              </div>
+                              <div className="absolute inset-0 bg-black/20" />
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between pt-4 mt-auto border-t border-white/5">
-                            <span className="text-[10px] uppercase tracking-widest font-mono text-zinc-500">
-                              {script.images?.length || 0} imagens · {script.notices?.length || 0} avisos
-                            </span>
-                            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-black text-xs font-bold transition-all group-hover:bg-zinc-100">
-                              Abrir <ChevronRight className="w-3.5 h-3.5" />
-                            </span>
+
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleCopyScript(script.content, script.title)}
+                              className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
+                            >
+                              Copiar Script
+                            </button>
                           </div>
-                        </motion.button>
+                        </motion.div>
                       );
                     })}
                   </div>
@@ -1257,7 +1435,64 @@ export default function PlatformApp() {
 
                 {/* Tab Content: Scripts Library Control */}
                 {adminTab === "scripts" && (
-                  <AdminScriptsManager token={token} onToast={showToast} />
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-bold text-lg text-white">Scripts da Biblioteca</h3>
+                        <p className="text-xs text-[#666666]">Crie, edite e organize os scripts mostrados na biblioteca.</p>
+                      </div>
+                      <button
+                        onClick={() => { setAddScriptError(null); setShowAddScriptModal(true); }}
+                        className="bg-white text-black hover:bg-[#dddddd] px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 transition-all active:scale-98"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Novo Script</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {scripts.map((script) => (
+                        <div key={script.id} className="bg-[#111111] border border-[#222222] p-6 rounded-[32px] flex flex-col justify-between shadow-lg">
+                          <div>
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-bold text-base text-white">{script.title}</h4>
+                              <span className="text-[9px] px-2 py-0.5 bg-white/5 border border-white/10 text-white/70 rounded-md font-mono uppercase tracking-wider">
+                                ID: {script.id}
+                              </span>
+                            </div>
+                            <p className="text-sm text-[#666666] mb-4 line-clamp-2">{script.description || "Sem descrição."}</p>
+                            
+                            <div className="bg-black/40 border border-white/5 rounded-2xl p-3.5 mb-4 max-h-24 overflow-y-auto font-mono text-[11px] text-[#666666] whitespace-pre-wrap">
+                              {script.content}
+                            </div>
+                          </div>
+
+                          <div className="flex justify-end gap-2 border-t border-[#222222] pt-4 mt-2">
+                            <button
+                              onClick={() => {
+                                setEditingScript(script);
+                                setEditScriptTitle(script.title);
+                                setEditScriptContent(script.content);
+                                setEditScriptDesc(script.description);
+                                setEditScriptError(null);
+                              }}
+                              className="px-3.5 py-1.5 rounded-xl bg-[#111111] hover:bg-[#1a1a1a] border border-[#222222] text-xs font-semibold text-white/70 hover:text-white transition-all flex items-center gap-1.5"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                              <span>Editar</span>
+                            </button>
+                            <button
+                              onClick={() => handleDeleteScript(script.id, script.title)}
+                              className="px-3.5 py-1.5 rounded-xl bg-[#111111] hover:bg-rose-950/20 border border-[#222222] hover:border-rose-900/40 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-all flex items-center gap-1.5"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span>Excluir</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
 
                 {/* Tab Content: Action logs audit */}
@@ -1607,13 +1842,160 @@ export default function PlatformApp() {
         )}
       </AnimatePresence>
 
-      {/* Detail modal */}
-      <PlatformDetailModal
-        script={detailScript}
-        token={token}
-        onClose={() => setDetailScript(null)}
-        onToast={showToast}
-      />
+      {/* Modal: Add New Script */}
+      <AnimatePresence>
+        {showAddScriptModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowAddScriptModal(false)}
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-lg bg-[#0a0a0a] border border-[#222222] rounded-[32px] p-8 shadow-2xl z-10 overflow-hidden"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="font-bold text-xl text-white">Adicionar Script Premium</h3>
+                <button 
+                  onClick={() => setShowAddScriptModal(false)}
+                  className="p-2 rounded-xl bg-[#111111] border border-[#222222] text-[#444444] hover:text-white transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleAddScriptSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Título da Plataforma</label>
+                  <input
+                    type="text"
+                    value={newScriptTitle}
+                    onChange={(e) => setNewScriptTitle(e.target.value)}
+                    placeholder="Ex: Khan Academy"
+                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white placeholder-[#444444] outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Descrição Curta</label>
+                  <input
+                    type="text"
+                    value={newScriptDesc}
+                    onChange={(e) => setNewScriptDesc(e.target.value)}
+                    placeholder="Descrição breve da funcionalidade"
+                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white placeholder-[#444444] outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Conteúdo do Script</label>
+                  <textarea
+                    value={newScriptContent}
+                    onChange={(e) => setNewScriptContent(e.target.value)}
+                    placeholder="Insira as linhas de código ou o script aqui"
+                    rows={6}
+                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white placeholder-[#444444] font-mono outline-none transition-all resize-none"
+                  />
+                </div>
+
+                {addScriptError && (
+                  <div className="p-4 bg-rose-950/20 border border-rose-500/20 text-rose-300 text-xs rounded-xl">
+                    {addScriptError}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
+                >
+                  Salvar Script
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal: Edit Existing Script */}
+      <AnimatePresence>
+        {editingScript && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setEditingScript(null)}
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-lg bg-[#0a0a0a] border border-[#222222] rounded-[32px] p-8 shadow-2xl z-10 overflow-hidden"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="font-bold text-xl text-white">Editar Script Premium</h3>
+                <button 
+                  onClick={() => setEditingScript(null)}
+                  className="p-2 rounded-xl bg-[#111111] border border-[#222222] text-[#444444] hover:text-white transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleEditScriptSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Título da Plataforma</label>
+                  <input
+                    type="text"
+                    value={editScriptTitle}
+                    onChange={(e) => setEditScriptTitle(e.target.value)}
+                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Descrição Curta</label>
+                  <input
+                    type="text"
+                    value={editScriptDesc}
+                    onChange={(e) => setEditScriptDesc(e.target.value)}
+                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono uppercase tracking-widest text-[#444444] mb-2">Conteúdo do Script</label>
+                  <textarea
+                    value={editScriptContent}
+                    onChange={(e) => setEditScriptContent(e.target.value)}
+                    rows={6}
+                    className="w-full bg-[#111111] border border-[#222222] focus:border-[#444444] rounded-xl py-3 px-4 text-sm text-white font-mono outline-none transition-all resize-none"
+                  />
+                </div>
+
+                {editScriptError && (
+                  <div className="p-4 bg-rose-950/20 border border-rose-500/20 text-rose-300 text-xs rounded-xl">
+                    {editScriptError}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-white text-black rounded-2xl font-bold text-sm hover:bg-[#dddddd] transition-all flex items-center justify-center gap-2 active:scale-98"
+                >
+                  Salvar Alterações
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

@@ -15,42 +15,11 @@ export interface DbUser {
 }
 export interface PublicUser extends DbUser {}
 
-export type ScriptStatus = "online" | "updated" | "maintenance" | "offline";
-
-export interface ScriptNotice {
-  id: string;
-  type: "info" | "warning" | "success" | "critical";
-  title: string;
-  body: string;
-}
-
-export interface ScriptExtras {
-  compatibility?: string;
-  browsers?: string;
-  version?: string;
-  lastUpdate?: string;
-  estimatedTime?: string;
-  notes?: string;
-}
-
 export interface DbScript {
   id: string;
   title: string;
-  /** Body is NEVER sent in list views — only via dedicated copy endpoint. */
-  content?: string;
+  content: string;
   description: string;
-  shortDescription: string;
-  longDescription: string;
-  tutorial: string;
-  icon: string;
-  status: ScriptStatus;
-  accentColor: string | null;
-  images: string[];
-  notices: ScriptNotice[];
-  extras: ScriptExtras;
-  sortOrder: number;
-  active: boolean;
-  updatedAt: string;
   createdAt: string;
 }
 
