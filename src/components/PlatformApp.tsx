@@ -8,6 +8,25 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { apiFetch, subscribeRealtime, getSiteSettings, updateSiteSettings, DEFAULT_SETTINGS } from "@/lib/scriptando-db";
 import type { PublicUser as UserType, DbScript as ScriptType, DbLog as ActionLogType, SiteSettings } from "@/lib/scriptando-db";
+import tut1 from "@/assets/tutorial/tutorial-1.jpg.asset.json";
+import tut2 from "@/assets/tutorial/tutorial-2.jpg.asset.json";
+import tut3 from "@/assets/tutorial/tutorial-3.jpg.asset.json";
+import tut4 from "@/assets/tutorial/tutorial-4.jpg.asset.json";
+import tut5 from "@/assets/tutorial/tutorial-5.jpg.asset.json";
+import tut6 from "@/assets/tutorial/tutorial-6.jpg.asset.json";
+import tut7 from "@/assets/tutorial/tutorial-7.jpg.asset.json";
+import tut8 from "@/assets/tutorial/tutorial-8.jpg.asset.json";
+
+const MOBILE_TUTORIAL_STEPS = [
+  { img: tut1.url, title: "Copie o script", desc: 'Acesse o Scriptando e toque em "Copiar Script" da plataforma desejada.' },
+  { img: tut2.url, title: "Adicione aos favoritos", desc: "Abra o menu do navegador e toque na estrela para salvar o site nos favoritos." },
+  { img: tut3.url, title: "Abra seus favoritos", desc: 'Toque em "Favoritos" para visualizar a lista de sites salvos.' },
+  { img: tut4.url, title: "Edite o favorito", desc: 'Toque nos três pontos ao lado do favorito recém criado e selecione "Editar".' },
+  { img: tut5.url, title: "Renomeie (opcional)", desc: "Altere o nome do favorito para algo fácil de identificar depois." },
+  { img: tut6.url, title: "Cole o script na URL", desc: "Apague a URL existente e cole o script copiado no campo de endereço. Salve." },
+  { img: tut7.url, title: "Abra a plataforma", desc: "Acesse normalmente a plataforma escolar onde deseja executar o script." },
+  { img: tut8.url, title: "Execute o favorito", desc: "Toque no favorito que você criou e veja a automação acontecer instantaneamente." },
+];
 
 interface ToastType { id: string; message: string; type: "success" | "error" | "info" | "warning"; }
 
