@@ -2,14 +2,30 @@ import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2 } from 'lucide-react';
 
-const NAMES = [
-  'Lucas Almeida', 'Mariana Silva', 'Rafael Oliveira', 'Beatriz Costa',
-  'Gabriel Santos', 'Julia Ferreira', 'Pedro Henrique', 'Larissa Souza',
-  'Matheus Rocha', 'Ana Clara', 'Felipe Lima', 'Camila Ribeiro',
-  'Bruno Carvalho', 'Isabela Martins', 'Thiago Nunes', 'Letícia Araújo',
-  'Vinícius Barbosa', 'Sofia Mendes', 'Enzo Cardoso', 'Manuela Dias',
-  'Guilherme Pereira', 'Yasmin Correia', 'Arthur Gomes', 'Helena Ramos',
-  'Diego Moreira', 'Nicole Freitas', 'André Machado', 'Valentina Pires',
+type Person = { name: string; avatar: string };
+
+// pravatar image IDs curated by apparent gender (natural portraits)
+const FEMALE_AVATAR_IDS = [1, 5, 9, 10, 16, 19, 20, 21, 23, 24, 25, 26, 29, 32, 36, 38, 40, 44, 45, 47, 48, 49];
+const MALE_AVATAR_IDS   = [3, 7, 8, 11, 12, 13, 14, 15, 17, 18, 22, 33, 34, 37, 39, 41, 42, 43, 50, 51, 52, 53, 54, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68];
+
+const FEMALE_NAMES = [
+  'Mariana Silva', 'Beatriz Costa', 'Julia Ferreira', 'Larissa Souza', 'Ana Clara',
+  'Camila Ribeiro', 'Isabela Martins', 'Letícia Araújo', 'Sofia Mendes', 'Manuela Dias',
+  'Yasmin Correia', 'Helena Ramos', 'Nicole Freitas', 'Valentina Pires', 'Amanda Rocha',
+  'Bruna Cardoso', 'Carolina Nogueira', 'Débora Teixeira', 'Eduarda Moraes', 'Fernanda Lopes',
+  'Giovanna Barros', 'Ingrid Cavalcanti', 'Jéssica Andrade', 'Karina Fernandes', 'Luana Vieira',
+  'Melissa Pinto', 'Natália Duarte', 'Patrícia Campos', 'Renata Azevedo', 'Sabrina Melo',
+  'Tainá Batista', 'Vanessa Freire', 'Priscila Tavares', 'Rafaela Assis', 'Milena Reis',
+];
+
+const MALE_NAMES = [
+  'Lucas Almeida', 'Rafael Oliveira', 'Gabriel Santos', 'Pedro Henrique', 'Matheus Rocha',
+  'Felipe Lima', 'Bruno Carvalho', 'Thiago Nunes', 'Vinícius Barbosa', 'Enzo Cardoso',
+  'Guilherme Pereira', 'Arthur Gomes', 'Diego Moreira', 'André Machado', 'Caio Monteiro',
+  'Daniel Vasconcelos', 'Eduardo Siqueira', 'Fábio Guimarães', 'Gustavo Pacheco', 'Henrique Aguiar',
+  'Igor Fonseca', 'João Vitor', 'Kaique Bezerra', 'Leonardo Prado', 'Murilo Sales',
+  'Nicolas Xavier', 'Otávio Brandão', 'Paulo Ricardo', 'Renan Coelho', 'Samuel Antunes',
+  'Tiago Bittencourt', 'Vitor Hugo', 'Wesley Marques', 'Yuri Peixoto', 'Alexandre Meireles',
 ];
 
 const MESSAGES = [
@@ -20,8 +36,32 @@ const MESSAGES = [
 
 const TIMES = ['agora', 'há poucos segundos', 'há 1 min'];
 
-// pravatar returns natural human portraits (men & women mixed)
-const AVATAR_IDS = [1,3,5,7,8,9,11,12,13,14,15,16,20,23,25,26,27,28,29,31,32,33,36,38,40,41,44,45,47,49,51,52,54,56,60,64,65,68];
+function shuffle<T>(arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildPeoplePool(): Person[] {
+  const females = shuffle(FEMALE_NAMES);
+  const males = shuffle(MALE_NAMES);
+  const fAvatars = shuffle(FEMALE_AVATAR_IDS);
+  const mAvatars = shuffle(MALE_AVATAR_IDS);
+
+  const people: Person[] = [];
+  const fCount = Math.min(females.length, fAvatars.length);
+  for (let i = 0; i < fCount; i++) {
+    people.push({ name: females[i], avatar: `https://i.pravatar.cc/100?img=${fAvatars[i]}` });
+  }
+  const mCount = Math.min(males.length, mAvatars.length);
+  for (let i = 0; i < mCount; i++) {
+    people.push({ name: males[i], avatar: `https://i.pravatar.cc/100?img=${mAvatars[i]}` });
+  }
+  return shuffle(people);
+}
 
 function pick<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -45,6 +85,10 @@ type Toast = {
   avatar: string;
 };
 
+// 2–4 minutes between notifications
+const MIN_GAP_MS = 2 * 60 * 1000;
+const MAX_GAP_MS = 4 * 60 * 1000;
+
 export default function SocialProofToasts() {
   const [toast, setToast] = useState<Toast | null>(null);
   const lastMessageRef = useRef<string | null>(null);
@@ -52,6 +96,8 @@ export default function SocialProofToasts() {
   const hideTimerRef = useRef<number | null>(null);
   const idRef = useRef(0);
   const visibleRef = useRef(true);
+  const poolRef = useRef<Person[]>(buildPeoplePool());
+  const cursorRef = useRef(0);
 
   useEffect(() => {
     const clearTimers = () => {
@@ -59,29 +105,37 @@ export default function SocialProofToasts() {
       if (hideTimerRef.current) { window.clearTimeout(hideTimerRef.current); hideTimerRef.current = null; }
     };
 
+    const nextPerson = (): Person => {
+      if (cursorRef.current >= poolRef.current.length) {
+        // fully exhausted → rebuild a fresh shuffled pool
+        poolRef.current = buildPeoplePool();
+        cursorRef.current = 0;
+      }
+      return poolRef.current[cursorRef.current++];
+    };
+
     const showOne = () => {
       if (!visibleRef.current) return;
       const message = pickDifferent(MESSAGES, lastMessageRef.current);
       lastMessageRef.current = message;
-      const avatarId = pick(AVATAR_IDS);
+      const person = nextPerson();
       idRef.current += 1;
       const next: Toast = {
         id: idRef.current,
-        name: pick(NAMES),
+        name: person.name,
+        avatar: person.avatar,
         message,
         time: pick(TIMES),
-        avatar: `https://i.pravatar.cc/100?img=${avatarId}`,
       };
       setToast(next);
-      // Visible ~5s, then fade out, then schedule next
       hideTimerRef.current = window.setTimeout(() => {
         setToast(null);
-        timerRef.current = window.setTimeout(showOne, randRange(15000, 35000));
+        timerRef.current = window.setTimeout(showOne, randRange(MIN_GAP_MS, MAX_GAP_MS));
       }, 5000);
     };
 
-    // First toast after 6–12s so it doesn't feel spammy
-    timerRef.current = window.setTimeout(showOne, randRange(6000, 12000));
+    // First toast after 8–20s so it doesn't feel spammy on load
+    timerRef.current = window.setTimeout(showOne, randRange(8000, 20000));
 
     const onVisibility = () => {
       if (document.hidden) {
@@ -90,7 +144,7 @@ export default function SocialProofToasts() {
         setToast(null);
       } else if (!visibleRef.current) {
         visibleRef.current = true;
-        timerRef.current = window.setTimeout(showOne, randRange(15000, 35000));
+        timerRef.current = window.setTimeout(showOne, randRange(MIN_GAP_MS, MAX_GAP_MS));
       }
     };
     document.addEventListener('visibilitychange', onVisibility);
