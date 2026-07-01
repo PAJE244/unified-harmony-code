@@ -83,14 +83,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Scriptando" },
       { property: "og:description", content: "Plataforma premium de scripts por Pajé 01" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/__l5e/assets-v1/815866a2-da72-4753-881e-4f567524853b/scriptando-icon.png" },
+      { property: "og:image", content: "/__l5e/assets-v1/483e1a8d-d60d-43f6-bb1b-8595210d30e0/scriptando-logo.png" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:image", content: "/__l5e/assets-v1/815866a2-da72-4753-881e-4f567524853b/scriptando-icon.png" },
+      { name: "twitter:image", content: "/__l5e/assets-v1/483e1a8d-d60d-43f6-bb1b-8595210d30e0/scriptando-logo.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/png", href: "/__l5e/assets-v1/815866a2-da72-4753-881e-4f567524853b/scriptando-icon.png" },
-      { rel: "apple-touch-icon", href: "/__l5e/assets-v1/815866a2-da72-4753-881e-4f567524853b/scriptando-icon.png" },
+      { rel: "icon", type: "image/png", href: "/__l5e/assets-v1/483e1a8d-d60d-43f6-bb1b-8595210d30e0/scriptando-logo.png" },
+      { rel: "apple-touch-icon", href: "/__l5e/assets-v1/483e1a8d-d60d-43f6-bb1b-8595210d30e0/scriptando-logo.png" },
     ],
   }),
 
