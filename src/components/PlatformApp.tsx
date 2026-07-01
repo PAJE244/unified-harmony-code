@@ -16,6 +16,7 @@ import tut5 from "@/assets/tutorial/tutorial-5.jpg.asset.json";
 import tut6 from "@/assets/tutorial/tutorial-6.jpg.asset.json";
 import tut7 from "@/assets/tutorial/tutorial-7.jpg.asset.json";
 import tut8 from "@/assets/tutorial/tutorial-8.jpg.asset.json";
+import scriptandoIcon from "@/assets/scriptando-icon.png.asset.json";
 
 const MOBILE_TUTORIAL_STEPS = [
   { img: tut1.url, title: "Copie o script", desc: 'Acesse o Scriptando e toque em "Copiar Script" da plataforma desejada.' },
