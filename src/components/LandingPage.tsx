@@ -11,6 +11,7 @@ import photoLucas from '@/assets/testimonials/CRiROwG.jpg.asset.json';
 import photoLarissa from '@/assets/testimonials/CRiRSP2.jpg.asset.json';
 import photoMariaE from '@/assets/testimonials/CRiRgFS.jpg.asset.json';
 import useEmblaCarousel from 'embla-carousel-react';
+import SocialProofToasts from '@/components/SocialProofToasts';
 
 import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
@@ -278,6 +279,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-[#f5f5f7] selection:bg-white selection:text-black relative overflow-hidden font-sans antialiased">
+      <SocialProofToasts />
       
       {/* Luzes de Fundo Estilo Apple */}
       <div className="fixed top-[-15%] left-[15%] w-[700px] h-[700px] rounded-full bg-gradient-to-br from-white/[0.04] via-neutral-800/[0.03] to-transparent blur-[160px] pointer-events-none -z-10" />
