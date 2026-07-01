@@ -105,6 +105,69 @@ const stepTransition: any = {
   exit: { opacity: 0, x: -20, scale: 0.98, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }
 };
 
+const COUNTDOWN_KEY = 'scriptando_urgency_countdown_v1';
+const PHASE1_MS = 15 * 60 * 1000;
+const PHASE2_MS = 10 * 60 * 1000;
+
+function readCountdownState(): { phase: 1 | 2; startTs: number } {
+  if (typeof window === 'undefined') return { phase: 1, startTs: Date.now() };
+  try {
+    const raw = localStorage.getItem(COUNTDOWN_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if ((parsed.phase === 1 || parsed.phase === 2) && typeof parsed.startTs === 'number') {
+        return parsed;
+      }
+    }
+  } catch {}
+  const init = { phase: 1 as const, startTs: Date.now() };
+  try { localStorage.setItem(COUNTDOWN_KEY, JSON.stringify(init)); } catch {}
+  return init;
+}
+
+function formatMMSS(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const m = Math.floor(total / 60).toString().padStart(2, '0');
+  const s = (total % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function UrgencyCountdown() {
+  const [state, setState] = useState<{ phase: 1 | 2; startTs: number }>(() => readCountdownState());
+  const [now, setNow] = useState<number>(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const duration = state.phase === 1 ? PHASE1_MS : PHASE2_MS;
+  const remaining = state.startTs + duration - now;
+
+  useEffect(() => {
+    if (remaining <= 0 && state.phase === 1) {
+      const next = { phase: 2 as const, startTs: Date.now() };
+      try { localStorage.setItem(COUNTDOWN_KEY, JSON.stringify(next)); } catch {}
+      setState(next);
+    }
+  }, [remaining, state.phase]);
+
+  const isPhase1 = state.phase === 1;
+  const label = isPhase1 ? 'ÚLTIMAS 3 VAGAS: R$9,90' : 'SEGUNDA CHANCE — COMPRE AGORA';
+  const timeLeft = Math.max(0, remaining);
+
+  return (
+    <>
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-black text-[10px] font-extrabold tracking-wider animate-pulse">
+        <Flame className="w-3 h-3 text-black fill-black" /> {label}
+      </span>
+      <span className="inline-flex items-center gap-1 font-mono tabular-nums text-white">
+        <Clock className="w-3.5 h-3.5" /> {formatMMSS(timeLeft)}
+      </span>
+    </>
+  );
+}
+
 export default function LandingPage() {
   // Modal de checkout
   const [checkoutOpen, setCheckoutOpen] = useState(false);
