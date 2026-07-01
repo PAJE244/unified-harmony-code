@@ -302,9 +302,8 @@ export default function LandingPage() {
           className="flex items-center gap-3 cursor-pointer"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-11 h-11 rounded-2xl overflow-hidden bg-gradient-to-tr from-neutral-900 to-neutral-700 flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.25)] ring-1 ring-white/20">
-            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover scale-[1.7]" />
-          </div>
+          <img src={scriptandoIcon.url} alt="Scriptando" className="w-11 h-11 object-contain" />
+
 
           <div className="flex flex-col">
             <span className="font-extrabold tracking-tight text-lg text-white leading-none">SCRIPTANDO</span>
@@ -1116,9 +1115,8 @@ export default function LandingPage() {
       {/* RODAPÉ MINIMALISTA */}
       <footer className="border-t border-white/10 bg-black py-16 px-6 text-center space-y-8 text-xs text-neutral-500 font-mono relative z-10">
         <div className="flex items-center justify-center gap-3 text-white font-sans font-extrabold tracking-tight text-lg">
-          <div className="w-9 h-9 rounded-xl overflow-hidden ring-1 ring-white/20 shadow-[0_0_24px_rgba(255,255,255,0.2)]">
-            <img src={scriptandoIcon.url} alt="Scriptando" className="w-full h-full object-cover scale-[1.7]" />
-          </div>
+          <img src={scriptandoIcon.url} alt="Scriptando" className="w-9 h-9 object-contain" />
+
           <span>SCRIPTANDO PLATFORM</span>
         </div>
 

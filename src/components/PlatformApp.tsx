@@ -16,6 +16,7 @@ import tut5 from "@/assets/tutorial/tutorial-5.jpg.asset.json";
 import tut6 from "@/assets/tutorial/tutorial-6.jpg.asset.json";
 import tut7 from "@/assets/tutorial/tutorial-7.jpg.asset.json";
 import tut8 from "@/assets/tutorial/tutorial-8.jpg.asset.json";
+import scriptandoIcon from "@/assets/scriptando-icon.png.asset.json";
 
 const MOBILE_TUTORIAL_STEPS = [
   { img: tut1.url, title: "Copie o script", desc: 'Acesse o Scriptando e toque em "Copiar Script" da plataforma desejada.' },
@@ -816,9 +817,9 @@ export default function PlatformApp() {
               <motion.div
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
-                className="inline-flex p-4 rounded-2xl bg-[#111111] border border-[#222222] mb-4"
+                className="inline-flex mb-4"
               >
-                <Terminal className="w-8 h-8 text-white" />
+                <img src={scriptandoIcon.url} alt="Scriptando" className="w-20 h-20 object-contain" />
               </motion.div>
               <h2 className="text-3xl font-display font-bold tracking-tighter text-white">SCRIPTANDO</h2>
               <p className="text-[10px] text-[#444444] uppercase tracking-[0.2em] mt-1 italic">By Pajé 01</p>
