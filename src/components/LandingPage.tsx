@@ -339,14 +339,6 @@ export default function LandingPage() {
         {/* 1. SEÇÃO HERÓI */}
         <section className="text-center space-y-6 sm:space-y-8 pt-2 sm:pt-6 md:pt-16 max-w-4xl mx-auto relative">
           
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-neutral-300 text-xs sm:text-sm font-mono tracking-wider mb-4 shadow-inner"
-          >
-            <Terminal className="w-4 h-4 text-white" /> Automação Exclusiva para Estudantes do PR
-          </motion.div>
 
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
@@ -656,32 +648,6 @@ export default function LandingPage() {
 
 
 
-        {/* 6. AVISO LEGAL */}
-        <motion.section 
-          variants={fadeInUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-3xl mx-auto rounded-3xl p-8 md:p-12 border border-neutral-800 bg-gradient-to-b from-neutral-900/60 to-[#050505] text-center space-y-6 shadow-2xl"
-        >
-          <div className="inline-flex p-3.5 rounded-2xl bg-neutral-800 border border-neutral-700 text-white mb-2 shadow">
-            <AlertTriangle className="w-7 h-7 text-amber-400" />
-          </div>
-          
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white uppercase">
-            VERDADES QUE PRECISAM SER DITAS
-          </h2>
-
-          <p className="text-neutral-400 text-sm md:text-base leading-relaxed text-justify sm:text-center font-light">
-            Vamos ser claros: <span className="text-white font-medium">isso é ilegal</span>. Você estará burlando o sistema. 
-            Eu, o <strong className="text-white font-bold">Pajé</strong>, não me responsabilizo por qualquer dano, suspensão ou problema escolar que você possa ter. 
-            Use por sua conta e risco. 
-          </p>
-
-          <p className="text-neutral-300 font-medium text-sm md:text-base italic pt-2">
-            "Mas vamos combinar... o risco faz parte da emoção, não é mesmo?"
-          </p>
-        </motion.section>
 
 
         {/* ===================================================================== */}
