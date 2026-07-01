@@ -252,18 +252,6 @@ export default function LandingPage() {
           </div>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="hidden md:flex items-center gap-6 text-xs font-mono tracking-widest uppercase text-neutral-400 bg-white/[0.03] px-5 py-2.5 rounded-full border border-white/10 backdrop-blur-md"
-        >
-          <span className="flex items-center gap-2 text-white font-sans font-medium">
-            <Sparkles className="w-3.5 h-3.5 text-neutral-200" /> Criado com Magia pelo Pajé
-          </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-          <span className="text-emerald-400 font-sans font-semibold">Online no PR</span>
-        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, x: 20 }}
@@ -435,7 +423,7 @@ export default function LandingPage() {
               O QUE A ESCOLA NÃO QUER QUE VOCÊ SAIBA
             </h2>
             <p className="text-neutral-400 text-sm md:text-base">
-              O sistema foi feito para você se esforçar. O SCRIPTANDO foi feito para você vencer.
+              Não se adapte às regras deles. Programe as suas.
             </p>
           </div>
 
@@ -1058,7 +1046,7 @@ export default function LandingPage() {
           className="text-center py-10 max-w-2xl mx-auto border-t border-white/10"
         >
           <p className="text-sm md:text-base font-mono tracking-widest uppercase text-neutral-400 font-medium">
-            "O sistema foi feito para você se esforçar. O SCRIPTANDO foi feito para você vencer."
+            "Não se adapte às regras deles. Programe as suas."
           </p>
         </motion.section>
 
