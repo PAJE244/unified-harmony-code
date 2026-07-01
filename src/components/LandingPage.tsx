@@ -227,10 +227,7 @@ export default function LandingPage() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="sticky top-0 z-50 bg-[#050505]/85 backdrop-blur-xl border-b border-white/10 px-4 py-2.5 text-center text-xs md:text-sm font-medium tracking-wide flex items-center justify-center gap-2 text-neutral-300 shadow-2xl"
       >
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-black text-[10px] font-extrabold tracking-wider animate-pulse">
-          <Flame className="w-3 h-3 text-black fill-black" /> ÚLTIMAS 3 VAGAS: R$9,90
-        </span>
-        <span className="truncate">{settings.loteText}</span>
+        <UrgencyCountdown />
       </motion.div>
 
       {/* NAVEGAÇÃO PRINCIPAL */}
