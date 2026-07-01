@@ -52,7 +52,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   supportEmail: "gabrieldacechen6@gmail.com",
   heroTitle: "CANSADO DE PERDER TEMPO COM ATIVIDADES ESCOLARES?",
   heroSubtitle: "Automatize Khan Academy, Quizizz, Redação PR, Inglês PR e Leia PR em segundos.",
-  loteText: "Últimos 37 acessos liberados por R$9,90. O valor sobe amanhã.",
+  loteText: "[CRONÔMETRO: 15 min] Preço triplica amanhã.",
   priceLabel: "R$9,90",
 };
 
