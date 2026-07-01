@@ -816,9 +816,9 @@ export default function PlatformApp() {
               <motion.div
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
-                className="inline-flex p-4 rounded-2xl bg-[#111111] border border-[#222222] mb-4"
+                className="inline-flex mb-4"
               >
-                <Terminal className="w-8 h-8 text-white" />
+                <img src={scriptandoIcon.url} alt="Scriptando" className="w-20 h-20 object-contain" />
               </motion.div>
               <h2 className="text-3xl font-display font-bold tracking-tighter text-white">SCRIPTANDO</h2>
               <p className="text-[10px] text-[#444444] uppercase tracking-[0.2em] mt-1 italic">By Pajé 01</p>
