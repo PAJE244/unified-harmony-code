@@ -1143,17 +1143,18 @@ export default function LandingPage() {
 type Testimonial = { name: string; photo: string; text: string };
 
 const TESTIMONIALS: Testimonial[] = [
-  { name: 'Gabriel Martins', photo: photoGabriel.url, text: 'cara, sem brincadeira, o script do leia paraná e da redação me poupou umas 5 horas de tela por semana. mto facil de usar, só dar o play e ir jogar um valorant kkkk recomendo dms rapaziada, de vdd' },
-  { name: 'Ana Clara Souza', photo: photoAna.url, text: 'Geeeente, eu tava desesperada com as tarefas de inglês e a bendita da khan academy acumulada de três bimestres kkkkkkk comprei meio com medo mas é bizarro de bom, fez tudo mto rápido. juro, comprem sem medo!!! 💖' },
-  { name: 'Pedro Henrique Lima', photo: photoAnon.url, text: 'o bgl é funcional de verdade. quizizz e khan academy resolvidos em minutos. o suporte dos caras no whats tbm é bem firmeza pra tirar as duvidas de instalação, mto de confiança' },
-  { name: 'Júlia Ferreira', photo: photoAnon.url, text: 'O de redação paraná é simplesmente perfeito! Pra quem odeia aquele corretor chato do governo isso aqui é a salvação da vida kkkkk nota máxima em todas as redações sem precisar ficar reescrevendo mil vezes' },
-  { name: 'João Victor Almeida', photo: photoJoao.url, text: 'salvou minha pele no final do bimestre agora... ia ficar de recuperação em matematica por causa da khan academy pq nao tinha feito nada o ano todo kkkkkkkkk valeu dms msm mano' },
-  { name: 'Maria Oliveira', photo: photoAnon.url, text: 'confesso que achei que era golpe no começo pq tem mto site mentiroso por ai, mas decidi arriscar e deu super certo. Uso mais pro leia paraná e inglês paraná. Muito seguro msm, podem comprar tranquilos' },
-  { name: 'Lucas Henrique Costa', photo: photoLucas.url, text: 'Pra quem quer farmar nota sem ter q ficar lendo livro chato ou fazendo conta infinita... comprem logo kkkk facinho de configurar no pc e roda liso' },
-  { name: 'Larissa Rocha', photo: photoLarissa.url, text: 'nossa sério, minha amiga q me passou o link de vcs e eu comprei correndo kkkkk a melhor compra do ano sem dúvidas. me livrei de ficar o fim de semana inteiro fazendo tarefa atrasada da escola' },
-  { name: 'Rafael Mendes', photo: photoAnon.url, text: 'Fiquei meio com o pé atrás por causa de ban e tal, mas faz mais de 2 meses q uso direto no meu login do seed e tá suave, o sistema deles é bem inteligente msm. Nota 10 pro trampo de vcs' },
-  { name: 'Maria Eduarda Ribeiro', photo: photoMariaE.url, text: 'aaaaa vcs sao perfeitos!!! odeio com todas as minhas forças o ingles paraná e agr nao preciso mais sofrer com aquelas lições repetitivas kkkkk recomendo de olhos fechados obg!!' },
+  { name: 'Gabriel Martins', photo: photoGabriel.url, text: 'mn sem zueira, o script do quizz é muito fd a ia acertar tudo rapidao mto facil de usar, só dar o play e ir jogar um valorant kkkk recomendo dms rapaziada, de vdd' },
+  { name: 'Ana Clara Souza', photo: photoAna.url, text: 'funciona msm? to com medo de pagar e nao conseguir instalar sou meio lerda kkkkkkkk mas minhas amigas tudo tao usando' },
+  { name: 'Pedro Henrique Lima', photo: photoAnon.url, text: 'vlw mano funcionou certinho aqui' },
+  { name: 'Júlia Ferreira', photo: photoAnon.url, text: 'minhas amg tava fld disso, realmente mt bom dms' },
+  { name: 'João Victor Almeida', photo: photoJoao.url, text: 'deu boa dmss' },
+  { name: 'Maria Oliveira', photo: photoAnon.url, text: 'confesso que achei que era golpe no começo mais decidi arriscar e deu super certo Uso mais pro redação muito seguro msm, pode comprar tranquilos' },
+  { name: 'Lucas Henrique Costa', photo: photoLucas.url, text: 'mano o cara da biblioteca passou aq e eu me caguei kkkkkkkkkkkkk o bagulho rodando em segundo plano no negócio de matemática e ele nem se viu kkk' },
+  { name: 'Larissa Rocha', photo: photoLarissa.url, text: 'nossa sério, minha amiga q me passou o link de vcs e eu comprei correndo kkkjjh a melhor compra do ano sem dúvidas' },
+  { name: 'Rafael Mendes', photo: photoAnon.url, text: 'mano kkkkkkkkk eu e os pia da sala rachou o acesso ontem deu tipo 2 pila pra cada melhor coisa q a gente fez, ngm mais faz porra nenhuma de ingles kkk' },
+  { name: 'Maria Eduarda Ribeiro', photo: photoMariaE.url, text: 'plmdds n aguentava mais o ingles paraná kkkkk tipo assim mt coisa p fzr, agora coloco pra ir sozinho e vou ver tiktok kkkkkj' },
 ];
+
 
 // Hash determinístico do nome → data fixa entre 02/04/2026 e hoje
 function dateForName(name: string): string {
