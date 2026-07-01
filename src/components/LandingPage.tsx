@@ -11,6 +11,7 @@ import photoLucas from '@/assets/testimonials/CRiROwG.jpg.asset.json';
 import photoLarissa from '@/assets/testimonials/CRiRSP2.jpg.asset.json';
 import photoMariaE from '@/assets/testimonials/CRiRgFS.jpg.asset.json';
 import useEmblaCarousel from 'embla-carousel-react';
+import SocialProofToasts from '@/components/SocialProofToasts';
 
 import { getSiteSettings, subscribeRealtime, type SiteSettings } from '@/lib/scriptando-db';
 import { 
